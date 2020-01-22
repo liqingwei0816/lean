@@ -28,22 +28,37 @@ public class SentinelApplication {
         String remoteAddress="127.0.0.1:2181";
         String degradePath= ZookeeperConfigUtil.getDegradePath(appName);
         String flowPath= ZookeeperConfigUtil.getFlowPath(appName);
+        String systemPath= ZookeeperConfigUtil.getSYSTEMPath(appName);
 
-        //注册降级规则数据源
+        //注册降级规则数据源 zk
         ReadableDataSource<String, List<DegradeRule>> degradeRuleDataSource = new ZookeeperDataSource<>(remoteAddress, degradePath,
                 source -> JSON.parseObject(source, new TypeReference<List<DegradeRule>>() {
                 }));
         DegradeRuleManager.register2Property(degradeRuleDataSource.getProperty());
-        //注册流控规则数据源
+        //注册流控规则数据源 zk
         ReadableDataSource<String, List<FlowRule>> flowRuleDataSource = new ZookeeperDataSource<>(remoteAddress, flowPath,
                 source -> JSON.parseObject(source, new TypeReference<List<FlowRule>>() {
                 }));
         FlowRuleManager.register2Property(flowRuleDataSource.getProperty());
 
-
-        SystemRule systemRule = new SystemRule();
-
-        SystemRuleManager.loadSystemConf(systemRule);
+        //注册系统规则数据源 zk
+        ReadableDataSource<String, List<SystemRule>> systemRuleDataSource = new ZookeeperDataSource<>(remoteAddress, systemPath,
+                source -> JSON.parseObject(source, new TypeReference<List<SystemRule>>() {
+                }));
+        SystemRuleManager.register2Property(systemRuleDataSource.getProperty());
+        /*//自适应限流规则 只适用于类Unix系统
+        SystemRule rule = new SystemRule();
+        // max load is 3
+        rule.setHighestSystemLoad(Runtime.getRuntime().availableProcessors()*2.5);
+        // max cpu usage is 60%
+        rule.setHighestCpuUsage(0.6);
+        // max avg rt of all request is 10 ms
+        rule.setAvgRt(10);
+        // max total qps is 20
+        rule.setQps(20);
+        // max parallel working thread is 10
+        rule.setMaxThread(10);
+        SystemRuleManager.loadRules(Collections.singletonList(rule));*/
     }
 
     @Bean

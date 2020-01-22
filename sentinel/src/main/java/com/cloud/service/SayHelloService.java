@@ -46,12 +46,12 @@ public class SayHelloService implements ServletContextListener {
 
         //do some log here
         log.warn("降级处理");
-        return "Oops, error occurred at " + name;
+        return "降级处理 " + name;
     }
 
     public String helloFallback(String name, Throwable ex) {
         log.warn("异常处理");
-        return "helloFallback  " + ex.getMessage();
+        return "异常处理  " + ex.getMessage();
     }
 
     /**

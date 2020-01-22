@@ -23,10 +23,14 @@ public class ZookeeperConfigUtil {
     //添加不同规则路径问题
     public static final String RULE_FLOW_PATH = "/flow_rule_config";
     public static final String RULE_DEGRADE_PATH = "/degrade_rule_config";
+    public static final String RULE_SYSTEM_PATH = "/system_rule_config";
 
 
     public static String getFlowPath(String appName) {
         return getPath(appName, RULE_FLOW_PATH);
+    }
+    public static String getSYSTEMPath(String appName) {
+        return getPath(appName, RULE_SYSTEM_PATH);
     }
 
     public static String getDegradePath(String appName) {
