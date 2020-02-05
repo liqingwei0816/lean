@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.guttv.mapper.RightsMapper">
+    <sql id="Base_Column_List">
+        code,id
+    </sql>
+
+    <sql id="where_column_list">
+
+        <if test="code != null and code !=''">
+            and code = #{code}
+        </if>
+        <if test="id != null">
+            and id = #{id}
+        </if>
+
+    </sql>
+    <select id="selectList" resultType="com.guttv.bean.Rights" parameterType="com.guttv.bean.Rights">
+        select
+        <include refid="Base_Column_List"/>
+        from t_rights
+        <where>
+            <include refid="where_column_list"/>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectOne" resultType="com.guttv.bean.Rights" parameterType="com.guttv.bean.Rights">
+        select
+        <include refid="Base_Column_List"/>
+        from t_rights
+        <where>
+            <include refid="where_column_list"/>
+        </where>
+        limit 1
+    </select>
+
+
+    <insert id="insert" parameterType="com.guttv.bean.Rights">
+        insert into t_rights
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            
+            <if test="code != null">
+                 code,
+            </if>
+            <if test="id != null">
+                 id,
+            </if>
+            
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            
+            <if test="code != null">
+                #{code},
+            </if>
+            <if test="id != null">
+                #{id},
+            </if>
+            
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.guttv.bean.Rights">
+        update t_rights
+        <set>
+            
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="id != null">
+                id = #{id},
+            </if>
+            
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

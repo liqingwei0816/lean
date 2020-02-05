@@ -1,24 +1,28 @@
 package com.guttv.generator.util;
 
+import com.guttv.generator.GeneratorProperty;
+import com.guttv.generator.entity.Table;
+import com.guttv.util.SpringUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
+@Slf4j
 public class ThymeleafUtil {
 
     private SpringTemplateEngine springTemplateEngine;
@@ -28,130 +32,155 @@ public class ThymeleafUtil {
         springTemplateEngine = new SpringTemplateEngine();
         StringTemplateResolver stringTemplateResolver = new StringTemplateResolver();
         stringTemplateResolver.setTemplateMode(TemplateMode.TEXT);
-
         springTemplateEngine.setTemplateResolver(stringTemplateResolver);
     }
 
     /**
      * 根据text模板生成
      */
-    public String createByTextTemplate(String templateName,Context data) throws URISyntaxException, IOException {
-        URI resource = this.getClass().getResource(templateName).toURI();
-        String templateString = new String(Files.readAllBytes(Paths.get(resource)), StandardCharsets.UTF_8);
-        return springTemplateEngine.process(templateString, data);
-    }
-    /**
-     * 根据text模板生成并写入文件
-     */
-    public Path createByTextTemplate(String templateName,Context data,String filePath) throws URISyntaxException, IOException {
-        Path path = Paths.get(filePath);
-        if (!path.toFile().getParentFile().exists()) {
-            path.toFile().getParentFile().mkdirs();
+    public String createByTextTemplate(String templateName, Context data) throws IOException {
+        Resource resource = new ClassPathResource(templateName);
+        if (!resource.exists()) {
+            log.error("文件不存在：{}", resource.getURI().getPath());
+            return null;
+        } else {
+
+            byte[] bytes = Files.readAllBytes(resource.getFile().toPath());
+            String templateString = new String(bytes, StandardCharsets.UTF_8);
+            return springTemplateEngine.process(templateString, data);
         }
-        return Files.write(path, createByTextTemplate(templateName,data).getBytes(StandardCharsets.UTF_8));
+
     }
+
     /**
      * 根据text模板生成并写入文件
      */
-    public void createBean(String templateName,Context data,String filePath) throws URISyntaxException, IOException {
-        createByTextTemplate(templateName,data,filePath);
+    public Path createByTextTemplate(String templateName, Context data, String filePath) throws IOException {
+        File file = new File(filePath);
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+        return Files.write(file.toPath(), createByTextTemplate(templateName, data).getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * 根据text模板生成并写入文件
+     */
+    public void createBean(Table table) throws URISyntaxException, IOException {
+        Context context = getContext(table);
+        String path = getObjectPath();
+        String packageName = context.getVariable("packageName").toString();
+        path = path + "src\\main\\java\\" + packageName.replace(".", File.separator) + File.separator + "bean" + File.separator + table.getEntityName() + ".java";
+        Path byTextTemplate = createByTextTemplate("templates/generator/bean.java", context, path);
+        log.info("生成实体类文件，位置为：{}", byTextTemplate.toUri().getPath());
+    }
+
+    /**
+     * 根据text模板生成Mapper相关并写入文件
+     */
+    public void createMapper(Table table) throws URISyntaxException, IOException {
+        {
+            //mapper xml
+            String path = getObjectPath();
+            path = path + "src\\main\\resources\\mapper" + File.separator + table.getEntityName() + "Mapper.xml";
+            Path byTextTemplate = createByTextTemplate("templates/generator/mapper.xml", getContext(table), path);
+            log.info("生成MapperXml文件，位置为：{}", byTextTemplate.toUri().getPath());
+        }
+
+        {
+            //mapper java
+            String path = getClassPath(table);
+            path = path + "mapper" + File.separator + table.getEntityName() + "Mapper.java";
+            Path byTextTemplate = createByTextTemplate("templates/generator/mapper.java", getContext(table), path);
+            log.info("生成mapper类文件，位置为：{}", byTextTemplate.toUri().getPath());
+        }
+    }
+
+    /**
+     * 根据text模板生成service相关并写入文件
+     */
+    public void createService(Table table) throws URISyntaxException, IOException {
+        String pathBash = getClassPath(table);
+        {
+            //service
+            String path = pathBash + "service" + File.separator + table.getEntityName() + "Service.java";
+            Path byTextTemplate = createByTextTemplate("templates/generator/service.java", getContext(table), path);
+            log.info("生成service接口文件，位置为：{}", byTextTemplate.toUri().getPath());
+        }
+
+        {
+            //service impl
+            String path = pathBash + "service" + File.separator + "impl" + File.separator + table.getEntityName() + "ServiceImpl.java";
+            Path byTextTemplate = createByTextTemplate("templates/generator/serviceImpl.java", getContext(table), path);
+            log.info("生成serviceImpl类文件，位置为：{}", byTextTemplate.toUri().getPath());
+        }
+    }
+
+    /**
+     * 根据text模板生成controller相关并写入文件
+     */
+    public void createController(Table table) throws URISyntaxException, IOException {
+
+        String pathBash = getClassPath(table);
+
+        //controller
+        String path = pathBash + "controller" + File.separator + table.getEntityName() + "Controller.java";
+        Path byTextTemplate = createByTextTemplate("templates/generator/controller.java", getContext(table), path);
+        log.info("生成controller类文件，位置为：{}", byTextTemplate.toUri().getPath());
+
+
+    }
+
+    /**
+     * 根据text模板生成页面文件相关并写入文件
+     */
+    public void createHtml(Table table) throws URISyntaxException, IOException {
+
+        //list
+        String path = getObjectPath();
+        path = path + "src\\main\\resources\\templates" + File.separator + table.getBeanName() + File.separator + "list.html";
+        Path byTextTemplate = createByTextTemplate("templates/generator/html.html", getContext(table), path);
+        log.info("生成html.html文件，位置为：{}", byTextTemplate.toUri().getPath());
     }
 
 
+    public void createCode(Table table,boolean html) throws IOException, URISyntaxException {
+        createBean(table);
+        createMapper(table);
+        createService(table);
+        createController(table);
+        if (html){
+            createHtml(table);
+        }
+    }
 
 
+    private String getObjectPath() throws URISyntaxException {
+        String path = this.getClass().getResource(".").toURI().getPath();
+        return path.substring(0, path.indexOf("target"));
+    }
 
-    /*public void create(String tableSchema, String tableName, String packageName, String beanName, String projectName, boolean controller) throws IOException, URISyntaxException {
-        //项目路径
-        String fileRoot = "\\templates";//UnicodeUtil.class.getResource("/").getPath().split("generator")[0] + projectName;
-        StringBuilder stringBuilder = new StringBuilder();
-        Arrays.stream(fileRoot.split("/")).filter(s1 -> !s1.equals("")).forEach(e -> stringBuilder.append(e).append("\\"));
-        fileRoot = stringBuilder.toString();
+    /**
+     * 不包含service等层的路径
+     */
+    private String getClassPath(Table table) throws URISyntaxException {
+        String path = getObjectPath();
+        Context context = getContext(table);
+        String packageName = context.getVariable("packageName").toString();
+        return path + "src\\main\\java\\" + packageName.replace(".", File.separator) + File.separator;
+    }
 
-        String base = fileRoot + "src\\main\\java\\" + packageName.replace('.', '\\') + "\\";
-        List<TableInfoBean> tableInfo = baseMapper.getTableInfo(tableSchema, tableName);
 
-        //转换大写及mybatis和mysql类型映射
-        tableInfo.forEach(e -> {
-            if (Objects.equals(e.getDataType(), "int")) {
-                e.setDataType("Integer");
-            }
-        });
-        //1.获取数据库表信息
-        Map<String, Object> table = new HashMap<>();
-        table.put("packageName", packageName);
-        table.put("beanName", beanName);
-        table.put("tableName", tableName);
-        table.put("tableInfo", tableInfo);
-        StringBuilder sqlList = new StringBuilder();
-        tableInfo.forEach(e -> sqlList.append(e.getColumnName()).append(","));
-        table.put("keyList", sqlList.deleteCharAt(sqlList.length() - 1));
+    private Context getContext(Table table) {
+        Map<String, Object> tableMap = new HashMap<>();
+        GeneratorProperty generatorProperty = SpringUtil.getBean(GeneratorProperty.class);
+        tableMap.put("packageName", generatorProperty.getPackageName());
+        tableMap.put("table", table);
 
         //3.准备数据
         Context context = new Context();
-        context.setVariables(table);
-        //4.根据表信息生成文件 mapper.xml，beanMapper,service,serviceImpl,controller
-
-
-        //生成文件Mapper.xml
-        String mapperXml = createMapperText("/mapperModel.text", context);
-        Path mapperPath = Paths.get(fileRoot + "src\\main\\resources\\mapper\\" + beanName + "Mapper.xml");
-        if (!mapperPath.toFile().getParentFile().exists()) {
-            mapperPath.toFile().getParentFile().mkdirs();
-        }
-        Files.write(mapperPath, mapperXml.replace("\r\n\r\n", "").getBytes(StandardCharsets.UTF_8));
-
-        //生成文件Mapper接口
-        String mapperInterface = createMapperText("/mapperInterface.text", context);
-        Path mapperInterfacePath = Paths.get(base + "/mapper/" + beanName + "Mapper.java");
-        if (!mapperInterfacePath.toFile().getParentFile().exists()) {
-            mapperInterfacePath.toFile().getParentFile().mkdirs();
-        }
-
-        Files.write(mapperInterfacePath, mapperInterface.getBytes(StandardCharsets.UTF_8));
-
-        //生成文件service接口
-        String service = createMapperText("/service.text", context);
-        Path servicePath = Paths.get(base + "/service/" + beanName + "Service.java");
-        if (!servicePath.toFile().getParentFile().exists()) {
-            servicePath.toFile().getParentFile().mkdirs();
-        }
-
-        Files.write(servicePath, service.getBytes(StandardCharsets.UTF_8));
-
-
-        //生成文件serviceImpl
-        String serviceImpl = createMapperText("/serviceImpl.text", context);
-        Path serviceImplPath = Paths.get(base + "/service/impl/" + beanName + "ServiceImpl.java");
-        if (!serviceImplPath.toFile().getParentFile().exists()) {
-            serviceImplPath.toFile().getParentFile().mkdirs();
-        }
-        Files.write(serviceImplPath, serviceImpl.getBytes(StandardCharsets.UTF_8));
-
-
-        if (controller) {
-            //生成文件controller
-            String controllerStr = createMapperText("/controller.text", context);
-            // String controllerPath = base.replaceAll("mdn-common", "mdn-console").replace("common", "console");
-            Path controllerPathObj = Paths.get(fileRoot + "\\controller\\" + beanName + "Controller.java");
-            if (!controllerPathObj.toFile().getParentFile().exists()) {
-                controllerPathObj.toFile().getParentFile().mkdirs();
-            }
-            Files.write(controllerPathObj, controllerStr.getBytes(StandardCharsets.UTF_8));
-        }
-
-        //生成文件bean.java
-        createBean(table);
-        String beanXml = createMapperText("/bean.text", context);
-        Path beanPath = Paths.get(base + "/bean/" + beanName + ".java");
-        if (!beanPath.toFile().getParentFile().exists()) {
-            beanPath.toFile().getParentFile().mkdirs();
-        }
-
-        Files.write(beanPath, beanXml.getBytes());
-    }*/
-
-
-
+        context.setVariables(tableMap);
+        return context;
+    }
 
 }

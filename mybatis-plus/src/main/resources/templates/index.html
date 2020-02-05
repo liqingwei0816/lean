@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>layout 后台大布局 - Layui</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <style>
+        iframe {
+            padding: 0;
+            margin: 0;
+            border: 0;
+            width: 100%;
+            height: 1000px;
+        }
+
+        .layui-tab-content {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">admin</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <!--<ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="">控制台</a></li>
+            <li class="layui-nav-item"><a href="">商品管理</a></li>
+            <li class="layui-nav-item"><a href="">用户</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:">其它系统</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">邮件管理</a></dd>
+                    <dd><a href="">消息管理</a></dd>
+                    <dd><a href="">授权管理</a></dd>
+                </dl>
+            </li>
+        </ul>-->
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:">
+                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img" alt="">
+                    贤心
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">基本资料</a></dd>
+                    <dd><a href="">安全设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="">退了</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li lay-id="setting" class="tabSelect layui-nav-item layui-nav-itemed"><a href="javascript:">网站设置</a>
+                </li>
+                <li lay-id="table" class="layui-nav-item"><a class="tabSelect" href="/table/list">表单管理</a></li>
+                <li lay-id="auth" class="layui-nav-item"><a class="tabSelect" href="/rights/list">权限分配</a></li>
+                <li lay-id="user" class="layui-nav-item"><a class="tabSelect" href="/user/list">用户管理</a></li>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:">所有商品</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:">列表一</a></dd>
+                        <dd><a href="javascript:">列表二</a></dd>
+                        <dd><a href="javascript:">列表三</a></dd>
+                        <dd><a href="">超链接</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:">解决方案</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:">列表一</a></dd>
+                        <dd><a href="javascript:">列表二</a></dd>
+                        <dd><a href="javascript:">超链接</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="">云市场</a></li>
+                <li class="layui-nav-item"><a href="">发布商品</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body" style="overflow: hidden;height: max-content">
+        <!-- 内容主体区域 -->
+        <div class="layui-tab" lay-allowClose="true" lay-filter="tab">
+            <ul class="layui-tab-title">
+                <li lay-id="setting">网站设置</li>
+                <li lay-id="order">订单管理</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">1</div>
+                <div class="layui-tab-item">2</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © layui.com - 底部固定区域
+    </div>
+</div>
+<script src="/layui/layui.all.js"></script>
+<script type="text/javascript">
+    //todo 动态tab
+    let $ = layui.$;
+    $('.tabSelect').click(function () {
+        let layId = $(this).parent().attr('lay-id');
+        let length = $('ul.layui-tab-title > [lay-id="' + layId + '"]').length;
+        if (length === 0) {
+            let title = $(this).text();
+            //$.get($(this).attr('href'), function (data) {
+            layui.element.tabAdd('tab', {
+                title: title
+                , content: '<iframe  src="' + $(this).attr('href') + '"></iframe>'
+                , id: layId
+            });
+            //切换tab
+            layui.element.tabChange('tab', layId);
+            // });
+        } else {
+            //切换tab
+            layui.element.tabChange('tab', layId);
+        }
+
+        return false;
+    });
+
+
+</script>
+</body>
+</html>

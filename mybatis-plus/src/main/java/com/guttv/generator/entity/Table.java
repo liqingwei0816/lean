@@ -1,45 +1,70 @@
 package com.guttv.generator.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.pagehelper.IPage;
+import com.guttv.generator.GeneratorProperty;
+import com.guttv.generator.mapper.TableMapper;
+import com.guttv.util.SpringUtil;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Data
-public class Table {
+@NoArgsConstructor
+public class Table implements IPage {
 
     private String name;
     private String entityName;
+    private String beanName;
     private String comment;
-    private String namePrefix = "t_";
+    //属性名
+    private String keyList;
+    private String namePrefix;
     List<Field> fields;
+    //分页
+    private String orderBy;
+    @JsonIgnore
+    private Integer pageSize = 20;
+    @JsonIgnore
+    private Integer pageNum = 1;
 
+    public List<Field> getFields() {
+        TableMapper tableMapper = SpringUtil.getBean(TableMapper.class);
+        return tableMapper.getFields(name);
+    }
+
+    public String getBeanName() {
+        String entityName = getEntityName();
+        return entityName.replaceFirst(String.valueOf(entityName.charAt(0)), String.valueOf(entityName.charAt(0)).toLowerCase());
+    }
+
+    public String getKeyList() {
+        return getFields().stream().map(Field::getName).collect(Collectors.joining(","));
+    }
+
+    @SuppressWarnings("unused")
+    public String getNamePrefix() {
+        GeneratorProperty generatorProperty = SpringUtil.getBean(GeneratorProperty.class);
+        return generatorProperty.getTablePrefix();
+    }
 
     @SuppressWarnings("unused")
     public String getEntityName() {
-        StringBuilder nameVo;
-        //表单前缀
-        if (StringUtils.isEmpty(namePrefix)) {
-            nameVo =new StringBuilder(name);
-        } else {
-            nameVo = new StringBuilder(name.replaceFirst(namePrefix, ""));
-        }
-
-        //改驼峰
-        int i = nameVo.lastIndexOf("_");
-        while (i != -1) {
-            nameVo.deleteCharAt(i);
-            String c = nameVo.charAt(i) + "";
-            nameVo.setCharAt(i, c.toUpperCase().charAt(0));
-            i = nameVo.lastIndexOf("_");
-        }
-        String c = nameVo.charAt(0) + "";
-        nameVo.setCharAt(0, c.toUpperCase().charAt(0));
-        return nameVo.toString();
-
-
+        //beanName
+        //去除表名前缀
+        GeneratorProperty generatorProperty = SpringUtil.getBean(GeneratorProperty.class);
+        String beanName = name.replaceFirst(generatorProperty.getTablePrefix(), "");
+        //转驼峰
+        beanName = Stream.of(beanName.split("_")).map(e -> {
+            String s = String.valueOf(e.charAt(0));
+            return e.replaceFirst(s, s.toUpperCase());
+        }).collect(Collectors.joining());
+        return beanName;
     }
 
     public static List<Table> parse(List<Map<String, Object>> list) {
@@ -50,5 +75,4 @@ public class Table {
         }).collect(Collectors.toList());
 
     }
-
 }
