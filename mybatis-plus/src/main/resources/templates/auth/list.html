@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Layui</title>
+    <meta name="renderer" content="webkit">
+    <!--post方式csrf问题-->
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+</head>
+<body>
+<div id="auth"></div>
+
+<script type="text/html" id="addOrUpdate">
+    <form id="formTemplate" class="layui-form" lay-filter="formTemplate">
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="title">标题</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" id="title" required lay-verify="required" placeholder="请输入标题"
+                       autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="url">路经</label>
+            <div class="layui-input-block">
+                <input type="text" name="url" id="url" required placeholder="请输入路径" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="note">注释</label>
+            <div class="layui-input-block">
+                <input type="text" name="note" id="note" required placeholder="请输入注释" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+    </form>
+</script>
+
+
+<script src="/layui/layui.all.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+
+    let tree = layui.tree;
+    let $ = layui.$;let authTree;
+    $.get('/auth/dataList', function (result) {
+        if (result.code === 0) {
+            let baseData = result.data;
+
+            authTree = tree.render({
+                elem: '#auth',  //绑定元素
+                edit: ['add', 'del'],
+                data: baseData,
+                operate: function (obj) {
+                    let type = obj.type; //得到操作类型：add、edit、del
+                    let data = obj.data; //得到当前节点的数据
+                    let elem = obj.elem; //得到当前节点元素
+                    //Ajax 操作
+                    let id = data.id; //得到节点索引
+                    if (type === 'add') { //增加节点
+                        layer.open({
+                            offset: 't',
+                            content: $('#addOrUpdate').html(),
+                            yes: function (index) {
+                                let formData = layui.form.val('formTemplate');
+                                formData.parentNode = id;
+                                $.ajax({
+                                    type: "post",
+                                    url: '/auth/addOrUpdate',
+                                    contentType: "application/json; charset=utf-8",
+                                    data: JSON.stringify(formData),
+                                    beforeSend: function (request) {
+                                        //csrf
+                                        let token = $("meta[name='_csrf']").attr('content');
+                                        let tokenName = $("meta[name='_csrf_header']").attr('content');
+                                        request.setRequestHeader(tokenName, token);
+                                    },
+                                    success: function (result) {
+                                        layer.msg(result.msg);
+                                        if (result.code === 0) {
+                                            authTree.reload({data: result.data});
+                                            layer.close(index);
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }  else if (type === 'del') { //删除节点
+                        return deleteObj(data);
+                    }
+                }
+            });
+        } else {
+            alert(data.msg);
+        }
+    });
+
+    function deleteObj(data){
+            $.ajax({
+                type: "post",
+                url: '/auth/delete',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(data),
+                beforeSend: function (request) {
+                    //csrf
+                    let token = $("meta[name='_csrf']").attr('content');
+                    let tokenName = $("meta[name='_csrf_header']").attr('content');
+                    request.setRequestHeader(tokenName, token);
+                },
+                success: function (result) {
+                    layer.msg(result.msg);
+                    if (result.code === 0) {
+                        authTree.reload({data: result.data});
+                    }
+                }
+            });
+    }
+
+</script>
+
+</body>
+</html>

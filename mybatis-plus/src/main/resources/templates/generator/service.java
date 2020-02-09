@@ -13,5 +13,7 @@ public interface [(${table.entityName})]Service {
 
     Integer delete(Integer id);
 
+    Integer insert([(${table.entityName})] [(${table.beanName})]);
+
     Integer updateById(@NotNull [(${table.entityName})] [(${table.beanName})]);
 }

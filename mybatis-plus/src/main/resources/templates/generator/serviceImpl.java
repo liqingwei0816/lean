@@ -31,6 +31,11 @@ public class [(${table.entityName})]ServiceImpl implements [(${table.entityName}
     }
 
     @Override
+    public Integer insert([(${table.entityName})] [(${table.beanName})]){
+        return [(${table.beanName})]Mapper.insert([(${table.beanName})]);
+    };
+
+    @Override
     public Integer updateById(@NotNull [(${table.entityName})] [(${table.beanName})]) {
         return [(${table.beanName})]Mapper.updateById([(${table.beanName})]);
     }

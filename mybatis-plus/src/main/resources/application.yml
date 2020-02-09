@@ -11,9 +11,11 @@ spring:
     time-zone: GMT+8
   thymeleaf:
     cache: false
+  security:
+    user:
+      password: 123456
 mybatis:
   mapper-locations: classpath:mapper/*.xml
-
 generator:
   package: com.guttv
   table:

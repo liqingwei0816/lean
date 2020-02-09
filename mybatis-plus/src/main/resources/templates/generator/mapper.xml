@@ -38,7 +38,7 @@
     </select>
 
 
-    <insert id="insert" parameterType="[(${packageName})].bean.[(${table.entityName})]">
+    <insert id="insert" parameterType="[(${packageName})].bean.[(${table.entityName})]"  useGeneratedKeys="true" keyProperty="id">
         insert into [(${table.name})]
         <trim prefix="(" suffix=")" suffixOverrides=",">
             [# th:each="field : ${table.fields}"]

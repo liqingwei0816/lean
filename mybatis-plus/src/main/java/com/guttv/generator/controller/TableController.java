@@ -14,7 +14,6 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -33,16 +32,22 @@ public class TableController {
     }
 
     @RequestMapping("createCode")
-    public ResultUtils createCode(Table table,Boolean html) {
+    public ResultUtils createCode(Table table,boolean html,boolean service,boolean api) {
         try {
             String name = table.getName();
             List<Table> tables = tableService.getTables();
             Optional<Table> optional = tables.stream().filter(e -> e.getName().equals(name)).findAny();
             table=optional.orElseThrow(()->new NullPointerException("对应表单不存在"+name));
-            thymeleafUtil.createBean(table);
-            thymeleafUtil.createMapper(table);
-            thymeleafUtil.createService(table);
-            thymeleafUtil.createController(table);
+            if (service){
+                thymeleafUtil.createServiceAndLowerLevel(table);
+            }
+            if (html){
+                thymeleafUtil.createController(table);
+                thymeleafUtil.createHtml(table);
+            }
+            if (api){
+                thymeleafUtil.createApi(table,html);
+            }
             return ResultUtils.success();
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
@@ -52,7 +57,7 @@ public class TableController {
 
     @RequestMapping("list")
     public ModelAndView list(ModelAndView model) {
-        model.setViewName("table/list");
+        model.setViewName("generator/table/list");
         return model;
     }
 

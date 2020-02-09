@@ -31,6 +31,9 @@ public class ResultUtils {
     public static ResultUtils success(String message){
         return new ResultUtils(0 , message ,null);
     }
+    public static ResultUtils success(String message,Object data){
+        return new ResultUtils(0 , message ,data);
+    }
     public static ResultUtils success(){
         return new ResultUtils(0 , "success" ,null);
     }

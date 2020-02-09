@@ -57,30 +57,17 @@
         <div class="layui-side-scroll">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree" lay-filter="test">
-                <li lay-id="setting" class="tabSelect layui-nav-item layui-nav-itemed"><a href="javascript:">网站设置</a>
-                </li>
                 <li lay-id="table" class="layui-nav-item"><a class="tabSelect" href="/table/list">表单管理</a></li>
-                <li lay-id="auth" class="layui-nav-item"><a class="tabSelect" href="/rights/list">权限分配</a></li>
+                <li lay-id="rights" class="layui-nav-item"><a class="tabSelect" href="/rights/list">权限分配</a></li>
                 <li lay-id="user" class="layui-nav-item"><a class="tabSelect" href="/user/list">用户管理</a></li>
-                <li class="layui-nav-item layui-nav-itemed">
-                    <a class="" href="javascript:">所有商品</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:">列表一</a></dd>
-                        <dd><a href="javascript:">列表二</a></dd>
-                        <dd><a href="javascript:">列表三</a></dd>
-                        <dd><a href="">超链接</a></dd>
-                    </dl>
-                </li>
                 <li class="layui-nav-item">
-                    <a href="javascript:">解决方案</a>
+                    <a class="" href="javascript:">系统权限</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:">列表一</a></dd>
-                        <dd><a href="javascript:">列表二</a></dd>
-                        <dd><a href="javascript:">超链接</a></dd>
+                        <dd lay-id="sysUser"><a class="tabSelect" href="/sysUser/list">管理员</a></dd>
+                        <dd lay-id="auth"><a class="tabSelect" href="/auth/list">权限管理</a></dd>
+                        <dd lay-id="role"><a class="tabSelect" href="/role/list">角色管理</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item"><a href="">云市场</a></li>
-                <li class="layui-nav-item"><a href="">发布商品</a></li>
             </ul>
         </div>
     </div>
@@ -89,12 +76,11 @@
         <!-- 内容主体区域 -->
         <div class="layui-tab" lay-allowClose="true" lay-filter="tab">
             <ul class="layui-tab-title">
-                <li lay-id="setting">网站设置</li>
-                <li lay-id="order">订单管理</li>
+                <li lay-id="setting">首页</li>
+
             </ul>
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">1</div>
-                <div class="layui-tab-item">2</div>
             </div>
         </div>
 

@@ -40,7 +40,7 @@
     </select>
 
 
-    <insert id="insert" parameterType="com.guttv.bean.User">
+    <insert id="insert" parameterType="com.guttv.bean.User"  useGeneratedKeys="true" keyProperty="id">
         insert into t_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             

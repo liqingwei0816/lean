@@ -13,5 +13,7 @@ public interface UserService {
 
     Integer delete(Integer id);
 
+    Integer insert(User user);
+
     Integer updateById(@NotNull User user);
 }

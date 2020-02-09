@@ -7,21 +7,23 @@ import lombok.Data;
 public class User {
 
 
-    /**
-     *
-     */
+        
+        /**
+         *   
+         */
+        
+        private Integer id;
+        
+        /**
+         *   
+         */
+        
+        private String name;
 
-    private Integer id;
-
-    /**
-     *
-     */
-
-    private String name;
-    @JsonIgnore
-    private Integer pageNum;
-    @JsonIgnore
-    private Integer pageSize;
-    @JsonIgnore
-    private String orderBy;
+        @JsonIgnore
+        private Integer pageNum;
+        @JsonIgnore
+        private Integer pageSize;
+        @JsonIgnore
+        private String orderBy;
 }

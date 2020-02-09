@@ -130,12 +130,29 @@ public class ThymeleafUtil {
 
 
     }
+    /**
+     * 根据text模板生成controller相关并写入文件
+     * @param  apiName  Controller的名称是否添加Api后缀 添加后为table.getEntityName() + "ControllerApi.java"
+     */
+    public void createApi(Table table,boolean apiName) throws URISyntaxException, IOException {
+        String pathBash = getClassPath(table);
+        String controllerName;
+        if (apiName){
+            controllerName =table.getEntityName() + "ControllerApi.java";
+        }else {
+            controllerName =table.getEntityName() + "Controller.java";
+        }
+        String path = pathBash + "controller" + File.separator + controllerName;
+        Path byTextTemplate = createByTextTemplate("templates/generator/controllerApi.java", getContext(table), path);
+        log.info("生成controllerApi类文件，位置为：{}", byTextTemplate.toUri().getPath());
+
+
+    }
 
     /**
      * 根据text模板生成页面文件相关并写入文件
      */
     public void createHtml(Table table) throws URISyntaxException, IOException {
-
         //list
         String path = getObjectPath();
         path = path + "src\\main\\resources\\templates" + File.separator + table.getBeanName() + File.separator + "list.html";
@@ -143,15 +160,13 @@ public class ThymeleafUtil {
         log.info("生成html.html文件，位置为：{}", byTextTemplate.toUri().getPath());
     }
 
-
-    public void createCode(Table table,boolean html) throws IOException, URISyntaxException {
+    /**
+     * 生成 service mapper bean
+     */
+    public void createServiceAndLowerLevel(Table table) throws IOException, URISyntaxException {
         createBean(table);
         createMapper(table);
         createService(table);
-        createController(table);
-        if (html){
-            createHtml(table);
-        }
     }
 
 
@@ -182,5 +197,4 @@ public class ThymeleafUtil {
         context.setVariables(tableMap);
         return context;
     }
-
 }

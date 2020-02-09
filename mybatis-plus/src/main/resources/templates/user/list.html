@@ -1,16 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <title>Layui</title>
     <meta name="renderer" content="webkit">
+    <!--post方式csrf问题 请求时请求头必须带上 否则403-->
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="/layui/css/layui.css" media="all">
 </head>
 <body>
 
-<table class="layui-table" id="table" lay-filter="table"></table>
+<table class="layui-table" hidden id="table" lay-filter="table"></table>
 
 <!--头工具栏-->
 <script type="text/html" id="toolbar">
@@ -53,10 +57,9 @@
         cols: [
             [
                 {type: 'checkbox', fixed: 'left'},
-
-                {field: 'id', title: 'id', width: 170},
-                {field: 'name', title: 'name', width: 170},
-
+                
+                {field: 'id', title: '', width: 170},
+                {field: 'name', title: '', width: 170},
                 {fixed: 'right', width: 178, align: 'center', toolbar: '#barRights'}
             ]
         ]
