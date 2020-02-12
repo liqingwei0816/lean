@@ -38,6 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //允许同域下frame嵌套
+        http.csrf().disable();
         http.headers().frameOptions().sameOrigin().and().formLogin().and().httpBasic();
         http.authorizeRequests().antMatchers("/login**").anonymous().anyRequest().authenticated();
 

@@ -33,8 +33,20 @@ public class Auth {
      */
 
     private String note;
-
+    /**
+     * 是否展开
+     */
     private Boolean spread;
+
+    /**
+     * 是否选中
+     */
+    private Boolean checked;
+
+    /**
+     * 是否禁用
+     */
+    private Boolean disabled;
 
     /**
      * 上级节点

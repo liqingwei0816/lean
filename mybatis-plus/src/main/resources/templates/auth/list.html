@@ -4,9 +4,6 @@
     <meta charset="utf-8">
     <title>Layui</title>
     <meta name="renderer" content="webkit">
-    <!--post方式csrf问题-->
-    <meta name="_csrf" th:content="${_csrf.token}">
-    <meta name="_csrf_header" th:content="${_csrf.headerName}">
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -74,12 +71,6 @@
                                     url: '/auth/addOrUpdate',
                                     contentType: "application/json; charset=utf-8",
                                     data: JSON.stringify(formData),
-                                    beforeSend: function (request) {
-                                        //csrf
-                                        let token = $("meta[name='_csrf']").attr('content');
-                                        let tokenName = $("meta[name='_csrf_header']").attr('content');
-                                        request.setRequestHeader(tokenName, token);
-                                    },
                                     success: function (result) {
                                         layer.msg(result.msg);
                                         if (result.code === 0) {
@@ -106,12 +97,6 @@
                 url: '/auth/delete',
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(data),
-                beforeSend: function (request) {
-                    //csrf
-                    let token = $("meta[name='_csrf']").attr('content');
-                    let tokenName = $("meta[name='_csrf_header']").attr('content');
-                    request.setRequestHeader(tokenName, token);
-                },
                 success: function (result) {
                     layer.msg(result.msg);
                     if (result.code === 0) {
