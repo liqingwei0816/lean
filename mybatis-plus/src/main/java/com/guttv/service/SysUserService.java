@@ -16,4 +16,6 @@ public interface SysUserService {
     Integer insert(SysUser sysUser);
 
     Integer updateById(@NotNull SysUser sysUser);
+
+    SysUser getByUserName(String userName);
 }

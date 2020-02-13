@@ -22,8 +22,8 @@
             <input type="text" name="code" required placeholder="编码" autocomplete="off" class="layui-input">
         </div>
     </form>
-    <button class="layui-btn" lay-event="search">查询</button>
-    <button class="layui-btn" lay-event="reset">重置</button>
+    <button class="layui-btn layui-btn-sm" lay-event="search">查询</button>
+    <button class="layui-btn layui-btn-sm" lay-event="reset">重置</button>
 </script>
 <!--工具条-->
 <script type="text/html" id="barRights">
@@ -34,7 +34,7 @@
 
 
 <script type="text/html" id="addOrUpdate">
-    <form id="formTemplate" class="layui-form" lay-filter="formTemplate">
+    <form id="formTemplate" class="layui-form" style="padding-top: 10px;padding-right: 15px"  lay-filter="formTemplate">
         [# th:each="field : ${table.fields}"]
         <div class="layui-form-item">
             <label class="layui-form-label" for="[(${field.name})]">[(${field.comment})]</label>
@@ -45,6 +45,9 @@
             </div>
         </div>
         [/]
+        <div class="layui-layer-btn layui-layer-btn-">
+            <button type="submit" style="border: 0;background: white"><a class="layui-layer-btn0">确定</a></button>
+        </div>
     </form>
 </script>
 
@@ -155,34 +158,42 @@ function objDel(obj) {
     function add(data) {
     layer.open({
         offset: 't',
+        title: '表单',
+        type:1,
         content: $('#addOrUpdate').html(),
-        success:function(){
+        success:function(layero, index){
             if (data){
                 layui.form.val('formTemplate',data);
             }
-        },
-        yes: function (index) {
-            let formData = layui.form.val('formTemplate');
-            $.ajax({
-                type: "post",
-                url: '/[(${table.beanName})]/addOrUpdate',
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(formData),
-                success: function (result) {
-                    layer.msg(result.msg);
-                    if (result.code === 0) {
-                        $table.reload({page: {
-                                curr: 1 //重新从第 1 页开始
-                            }});
-                        layer.close(index);
+            //绑定提交事件
+            layui.form.on('submit(formTemplate)', function(data){
+                let formData = layui.form.val('formTemplate');
+                $.ajax({
+                    type: "post",
+                    url: '/[(${table.beanName})]/addOrUpdate',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(formData),
+                    success: function (result) {
+                        if (result.code === 0) {
+                            $table.reload({
+                                page: {
+                                    curr: 1 //重新从第 1 页开始
+                                }
+                            });
+                            layer.close(index);
+                        }else {
+                            layer.msg(result.msg);
+                        }
+                    },
+                    error:function (result) {
+                        layer.alert(result.msg);
                     }
-                }
+                });
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
-        }
+        },
     });
-
 }
-
 </script>
 
 </body>

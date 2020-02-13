@@ -28,7 +28,6 @@ public interface AuthService {
         List<Auth> list = getList(new Auth());
         list.forEach(e -> e.setAllAuth(list));
         list.stream().filter(e-> e.getId().equals(auth.getId())).forEach(this::setSpread);
-        //list.stream().filter(e -> Objects.equals(e.getId(), auth.getParentNode())).forEach(this::setSpread);
         return list.stream().filter(e -> e.getParentNode() == null).collect(Collectors.toList());
     }
 

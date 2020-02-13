@@ -29,7 +29,10 @@ public class AuthController {
     @RequestMapping("dataList")
     public ResultUtils dataList() {
         List<Auth> list = authService.getList(new Auth());
-        list.forEach(e -> e.setAllAuth(list));
+        list.forEach(e -> {
+            e.setAllAuth(list);
+            e.setSpread(true);
+        });
         List<Auth> collect = list.stream().filter(e -> e.getParentNode() == null).collect(Collectors.toList());
         return ResultUtils.success(collect);
     }

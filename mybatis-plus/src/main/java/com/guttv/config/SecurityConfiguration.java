@@ -3,6 +3,7 @@ package com.guttv.config;
 import com.guttv.bean.SysUser;
 import com.guttv.mapper.AuthMapper;
 import com.guttv.mapper.SysUserMapper;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,7 +33,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             }
             List<SimpleGrantedAuthority> authorities = authMapper.authoritiesByUsernameQuery(userName).stream().map(e -> new SimpleGrantedAuthority(e.getUrl())).collect(Collectors.toList());
             return new User(userName, sysUser.getPassword(), sysUser.getAvailable(), true, true, true, authorities);
-        }).passwordEncoder(new BCryptPasswordEncoder());
+        }).passwordEncoder(bCryptPasswordEncoder());
     }
 
     @Override
@@ -43,4 +44,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/login**").anonymous().anyRequest().authenticated();
 
     }
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
 }

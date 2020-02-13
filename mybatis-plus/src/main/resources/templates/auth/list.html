@@ -79,7 +79,11 @@
                                         }
                                     }
                                 });
-                            }
+                            },
+                            cancel: function(index){
+                                authTree.reload();
+                                layer.close(index);
+                        }
                         });
                     }  else if (type === 'del') { //删除节点
                         return deleteObj(data);

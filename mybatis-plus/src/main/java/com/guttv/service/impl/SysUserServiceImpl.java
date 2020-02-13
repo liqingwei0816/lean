@@ -30,6 +30,7 @@ public class SysUserServiceImpl implements SysUserService {
         return sysUserMapper.deleteById(id);
     }
 
+    @Override
     public Integer insert(SysUser sysUser){
         return sysUserMapper.insert(sysUser);
     };
@@ -37,6 +38,12 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public Integer updateById(@NotNull SysUser sysUser) {
         return sysUserMapper.updateById(sysUser);
+    }
+
+    @Override
+    public SysUser getByUserName(String userName) {
+        SysUser sysUser =new SysUser();sysUser.setUserName(userName);
+        return getOne(sysUser);
     }
 
 }
