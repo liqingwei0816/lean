@@ -21,7 +21,7 @@
     <thead>
     <tr>
         <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
-        <th lay-data="{field:'name', width:80, sort: true, fixed: true}">表名</th>
+        <th lay-data="{field:'name', width:170, sort: true, fixed: true}">表名</th>
         <th lay-data="{field:'entityName', width:170}">实体名</th>
         <th lay-data="{field:'beanName', width:170}">bean名称</th>
         <th lay-data="{field:'comment', width:170}">备注</th>
@@ -32,7 +32,6 @@
 </table>
 
 <script type="text/html" id="barTable">
-    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-xs" lay-event="do">代码生成</a>
 </script>
@@ -69,9 +68,7 @@
     //监听工具条
     table.on('tool(' + tableName + ')', function (obj) {
         let data = obj.data;
-        if (obj.event === 'detail') {
-            layer.msg('ID：' + data.id + ' 的查看操作');
-        } else if (obj.event === 'del') {
+         if (obj.event === 'del') {
             layer.confirm('真的删除行么', function (index) {
                 obj.del();
                 layer.close(index);

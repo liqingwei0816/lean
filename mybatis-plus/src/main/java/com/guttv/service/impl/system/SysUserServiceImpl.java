@@ -1,8 +1,9 @@
-package com.guttv.service.impl;
+package com.guttv.service.impl.system;
 
-import com.guttv.bean.SysUser;
+import com.guttv.bean.system.Role;
+import com.guttv.bean.system.SysUser;
 import com.guttv.mapper.SysUserMapper;
-import com.guttv.service.SysUserService;
+import com.guttv.service.system.SysUserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -33,7 +34,7 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public Integer insert(SysUser sysUser){
         return sysUserMapper.insert(sysUser);
-    };
+    }
 
     @Override
     public Integer updateById(@NotNull SysUser sysUser) {
@@ -44,6 +45,11 @@ public class SysUserServiceImpl implements SysUserService {
     public SysUser getByUserName(String userName) {
         SysUser sysUser =new SysUser();sysUser.setUserName(userName);
         return getOne(sysUser);
+    }
+
+    @Override
+    public List<Role> getRoles(Integer sysUserId) {
+        return this.sysUserMapper.selectRoles(sysUserId);
     }
 
 }

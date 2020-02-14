@@ -1,10 +1,11 @@
-package com.guttv.service.impl;
+package com.guttv.service.impl.system;
 
-import com.guttv.bean.Auth;
-import com.guttv.bean.Role;
+import com.guttv.bean.system.Auth;
+import com.guttv.bean.system.Role;
 import com.guttv.mapper.RoleMapper;
-import com.guttv.service.AuthService;
-import com.guttv.service.RoleService;
+import com.guttv.service.system.AuthService;
+import com.guttv.service.system.RoleAuthService;
+import com.guttv.service.system.RoleService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,8 @@ public class RoleServiceImpl implements RoleService {
     @Resource
     private RoleMapper roleMapper;
     @Resource
+    private RoleAuthService roleAuthService;
+    @Resource
     private AuthService authService;
 
     @Override
@@ -33,9 +36,9 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Integer delete(Integer id) {
-        authService.deleteBondingByRoleId(id);
+        roleAuthService.deleteByRoleId(id);
         return roleMapper.deleteById(id);
     }
 
@@ -58,7 +61,6 @@ public class RoleServiceImpl implements RoleService {
         list.forEach(e ->{
             e.setAllAuth(list);
             e.setChecked(authByRole.contains(e.getId())&&!parentNode.contains(e.getId()));
-           // e.setDisabled(parentNode.contains(e.getId()));
             e.setSpread(true);
         });
         return list.stream().filter(e -> e.getParentNode() == null).collect(Collectors.toList());

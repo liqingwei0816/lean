@@ -1,8 +1,8 @@
-package com.guttv.service.impl;
+package com.guttv.service.impl.system;
 
-import com.guttv.bean.RoleAuth;
+import com.guttv.bean.system.RoleAuth;
 import com.guttv.mapper.RoleAuthMapper;
-import com.guttv.service.RoleAuthService;
+import com.guttv.service.system.RoleAuthService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -33,11 +33,20 @@ public class RoleAuthServiceImpl implements RoleAuthService {
     @Override
     public Integer insert(RoleAuth roleAuth){
         return roleAuthMapper.insert(roleAuth);
-    };
+    }
 
     @Override
     public Integer updateById(@NotNull RoleAuth roleAuth) {
         return roleAuthMapper.updateById(roleAuth);
+    }
+
+    @Override
+    public void deleteByAuthId(Integer authId) {
+        roleAuthMapper.deleteByAuthId(authId);
+    }
+    @Override
+    public void deleteByRoleId(Integer roleId) {
+        roleAuthMapper.deleteByRoleId(roleId);
     }
 
 }

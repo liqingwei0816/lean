@@ -1,16 +1,15 @@
-package com.guttv.controller;
+package com.guttv.controller.system;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.guttv.bean.SysUser;
-import com.guttv.service.SysUserService;
+import com.guttv.bean.system.SysUser;
+import com.guttv.bean.system.SysUserRole;
+import com.guttv.service.system.SysUserRoleService;
+import com.guttv.service.system.SysUserService;
 import com.guttv.util.ResultUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
@@ -24,7 +23,7 @@ public class SysUserController {
 
     @RequestMapping("list")
     public ModelAndView list(ModelAndView model) {
-        model.setViewName("sysUser/list");
+        model.setViewName("system/sysUser/list");
         return model;
     }
 
@@ -69,6 +68,34 @@ public class SysUserController {
         return ResultUtils.success(delete);
     }
 
-    //todo 管理员角色绑定问题  查看按钮问题
+    @Resource
+    private SysUserRoleService sysUserRoleService;
+
+    /**
+     *
+     * @param checked true 添加  否则 删除
+     */
+    @PostMapping("addRole")
+    public ResultUtils addRole(SysUserRole userRole, Boolean checked) {
+        if (checked) {
+            Assert.notNull(userRole.getRoleId(),"参数 roleId 不能为空");
+            Assert.notNull(userRole.getSysUserId(),"参数 sysUserId 不能为空");
+            sysUserRoleService.insertNoExists(userRole);
+        }else {
+            Assert.notNull(userRole.getId(),"参数 sysUserId 不能为空");
+            sysUserRoleService.delete(userRole.getId());
+        }
+        return ResultUtils.success("操作成功");
+    }
+
+
+    /**
+     * @param sysUserId 管理员Id
+     * @return 当前查询用户拥有的权限，返回所有权限列表，拥有的角色为选中状态
+     */
+    @GetMapping("roles/{sysUserId}")
+    public ResultUtils roles(@PathVariable Integer sysUserId) {
+        return ResultUtils.success(sysUserService.getRoles(sysUserId));
+    }
 
 }

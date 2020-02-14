@@ -8,6 +8,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class MybatisPlusApplication {
 
     public static void main(String[] args) {
+
         ConfigurableApplicationContext run = SpringApplication.run(MybatisPlusApplication.class, args);
 
     }

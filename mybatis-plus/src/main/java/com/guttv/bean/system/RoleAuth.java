@@ -1,4 +1,4 @@
-package com.guttv.bean;
+package com.guttv.bean.system;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;

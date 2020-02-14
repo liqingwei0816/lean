@@ -1,9 +1,11 @@
-package com.guttv.service.impl;
+package com.guttv.service.impl.system;
 
-import com.guttv.bean.Auth;
+import com.guttv.bean.system.Auth;
 import com.guttv.mapper.AuthMapper;
-import com.guttv.service.AuthService;
+import com.guttv.service.system.AuthService;
+import com.guttv.service.system.RoleAuthService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
@@ -14,6 +16,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Resource
     private AuthMapper authMapper;
+
+    @Resource
+    private RoleAuthService roleAuthService;
 
     @Override
     public List<Auth> getList(Auth auth) {
@@ -26,7 +31,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer delete(Integer id) {
+        roleAuthService.deleteByAuthId(id);
         return authMapper.deleteById(id);
     }
 
@@ -38,11 +45,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public Integer insert(@NotNull Auth auth) {
         return authMapper.insert(auth);
-    }
-
-    @Override
-    public void deleteBondingByRoleId(Integer id) {
-        authMapper.deleteBondingByRoleId(id);
     }
 
 }

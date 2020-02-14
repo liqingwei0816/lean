@@ -1,42 +1,32 @@
-package com.guttv.bean;
+package com.guttv.bean.system;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 @Data
-public class SysUser {
+public class Role {
 
 
         
         /**
          *   
          */
-        
         private Integer id;
         
         /**
-         *   
+         *   角色名
          */
-        
-        private String userName;
-        
-        /**
-         *   
-         */
-        @JsonIgnore
-        private String password;
-        
-        /**
-         *   是否可用
-         */
-        
-        private Boolean available;
+        private String roleName;
         
         /**
          *   注释
          */
-        
         private String note;
+
+        /**
+         *   是否选中
+         */
+        private Boolean checked;
 
         @JsonIgnore
         private Integer pageNum;

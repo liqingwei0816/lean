@@ -24,7 +24,7 @@
 
 
     </sql>
-    <select id="selectList" resultType="com.guttv.bean.Role" parameterType="com.guttv.bean.Role">
+    <select id="selectList" resultType="com.guttv.bean.system.Role" parameterType="com.guttv.bean.system.Role">
         select
         <include refid="Base_Column_List"/>
         from t_role
@@ -34,7 +34,7 @@
         order by id desc
     </select>
 
-    <select id="selectOne" resultType="com.guttv.bean.Role" parameterType="com.guttv.bean.Role">
+    <select id="selectOne" resultType="com.guttv.bean.system.Role" parameterType="com.guttv.bean.system.Role">
         select
         <include refid="Base_Column_List"/>
         from t_role
@@ -45,7 +45,7 @@
     </select>
 
 
-    <insert id="insert" parameterType="com.guttv.bean.Role"  useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.guttv.bean.system.Role" useGeneratedKeys="true" keyProperty="id">
         insert into t_role
         <trim prefix="(" suffix=")" suffixOverrides=",">
             
@@ -75,7 +75,7 @@
         </trim>
     </insert>
 
-    <update id="updateById" parameterType="com.guttv.bean.Role">
+    <update id="updateById" parameterType="com.guttv.bean.system.Role">
         update t_role
         <set>
             

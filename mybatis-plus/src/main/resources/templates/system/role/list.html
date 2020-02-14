@@ -7,12 +7,18 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="/css/app.css">
 </head>
 <body>
-
-<table class="layui-table" hidden id="table" lay-filter="table"></table>
+<div>
+    <div style="width: 800px;display: inline-block;float: left">
+        <table class="layui-table" hidden id="table" lay-filter="table"></table>
+    </div>
+    <div style="display: inline-block;float: left">
+        <div id="auth"></div>
+    </div>
+</div>
 
 <!--头工具栏-->
 <script type="text/html" id="toolbar">
@@ -26,29 +32,21 @@
     <button class="layui-btn layui-btn-sm" lay-event="reset">重置</button>
 </script>
 <!--工具条-->
-<script type="text/html" id="barRights">
-    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+<script type="text/html" id="barTools">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="auth">权限</a>
 </script>
 
 
 <script type="text/html" id="addOrUpdate">
-    <form id="formTemplate" class="layui-form" style="padding-top: 10px;padding-right: 15px"  lay-filter="formTemplate">
-        <input type="hidden" name="id" id="id">
+    <form id="formTemplate" class="layui-form" lay-filter="formTemplate">
+        <input type="hidden" name="id">
         <div class="layui-form-item">
-            <label class="layui-form-label" for="userName">用户名</label>
+            <label class="layui-form-label" for="roleName">名称</label>
             <div class="layui-input-block">
-                <input type="text" name="userName" id="userName" required lay-verify="required" placeholder="请输入用户名"
+                <input type="text" name="roleName" id="roleName" required lay-verify="required" placeholder="请输入名称"
                        autocomplete="off"
-                       class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label" for="password">密码</label>
-            <div class="layui-input-block">
-                <input type="password" name="password" id="password" required lay-verify="required" placeholder="请输入密码"
-                       autocomplete="new-password"
                        class="layui-input">
             </div>
         </div>
@@ -59,9 +57,6 @@
                        autocomplete="off"
                        class="layui-input">
             </div>
-        </div>
-        <div class="layui-layer-btn layui-layer-btn-">
-            <button type="submit" style="border: 0;background: white"><a class="layui-layer-btn0">确定</a></button>
         </div>
 
     </form>
@@ -74,7 +69,7 @@
     let $table = table.render({
         height: 'full-0',
         elem: '#table',
-        url: '/sysUser/dataList',
+        url: '/role/dataList',
         page: true,
         limits: [20, 50, 100],
         limit: 20,
@@ -92,12 +87,10 @@
         cols: [
             [
                 {type: 'checkbox', fixed: 'left'},
-                /*{field: 'id', title: '', width: 170},*/
-                {field: 'userName', title: '用户名', width: 170},
-                /* {field: 'password', title: '', width: 170},*/
-                {field: 'available', title: '是否可用', width: 170},
+                {field: 'id', title: '', width: 170},
+                {field: 'roleName', title: '角色名', width: 170},
                 {field: 'note', title: '注释', width: 170},
-                {fixed: 'right', width: 178, align: 'center', toolbar: '#barRights'}
+                {fixed: 'right', title: '操作', width: 178, align: 'center', toolbar: '#barTools'}
             ]
         ]
     });
@@ -138,15 +131,58 @@
     //监听工具条
     table.on('tool(table)', function (obj) {
         let data = obj.data;
-        if (obj.event === 'detail') {
-            layer.msg('ID：' + data.id + ' 的查看操作');
+        if (obj.event === 'auth') {
+            showAuth(obj);
         } else if (obj.event === 'del') {
             objDel(obj);
         } else if (obj.event === 'edit') {
+            console.log(data);
             add(data);
-            //layer.alert('编辑行：<br>' + JSON.stringify(data))
         }
     });
+
+
+    /**
+     * 显示角色的权限信息
+     */
+    function showAuth(obj) {
+        let roleId = obj.data.id;
+        $.get('/role/auth/' + roleId, function (result) {
+            if (result.code === 0) {
+                // tree组件初始回调问题  渲染完成执行回调
+                layui.tree.render({
+                    elem: "#auth",
+                    data: result.data,
+                    showCheckbox: true,
+                    oncheck: function (obj) {
+                        if (obj.data.checked !== obj.checked) {
+                            obj.data.checked = obj.checked;
+                            //参数拼接
+                            let param = {};
+                            param.checked = obj.checked;
+                            param.roleId = roleId;
+                            param.authId = obj.data.id;
+                            $.post('/role/addAuth', param, function (result) {
+                                layer.msg(result.msg);
+                            });
+                        }
+                        removePack();
+                    },
+                });
+                removePack();
+            } else {
+                layer.msg(result.msg);
+            }
+        });
+    }
+
+    /**
+     * layui-tree 取消父节点复选框
+     */
+    function removePack() {
+        $('.layui-tree-pack').siblings().find('.layui-form-checkbox').remove();
+    }
+
 
     /**
      * 单个删除
@@ -156,7 +192,7 @@
         layer.confirm('真的删除行么', function (index) {
             $.ajax({
                 type: "post",
-                url: '/sysUser/delete',
+                url: '/role/delete',
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(obj.data),
                 success: function (result) {
@@ -171,45 +207,43 @@
     }
 
     /**
-     *
-     * @param data 需要填充的表单属性对象
+     * 角色添加更新弹窗
+     * @param data 更新时要填充的表单属性对象
      */
     function add(data) {
         layer.open({
-            title: '表单',
-            type:1,
-            offset:'t',
+            offset: 't',
             content: $('#addOrUpdate').html(),
-            success: function (layero, index) {
+            success: function () {
                 if (data) {
                     layui.form.val('formTemplate', data);
                 }
-                //绑定提交事件
-                layui.form.on('submit(formTemplate)', function(data){
-                    let formData = layui.form.val('formTemplate');
-                    $.ajax({
-                        type: "post",
-                        url: '/sysUser/addOrUpdate',
-                        contentType: "application/json; charset=utf-8",
-                        data: JSON.stringify(formData),
-                        success: function (result) {
-                            if (result.code === 0) {
-                                $table.reload({
-                                    page: {
-                                        curr: 1 //重新从第 1 页开始
-                                    }
-                                });
-                                layer.close(index);
-                            }else {
-                                layer.tips(result.msg, '#formTemplate');
-                            }
-                        }
-                    });
-                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
-                });
             },
+            yes: function (index) {
+                let formData = layui.form.val('formTemplate');
+                $.ajax({
+                    type: "post",
+                    url: '/role/addOrUpdate',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(formData),
+                    success: function (result) {
+                        layer.msg(result.msg);
+                        if (result.code === 0) {
+                            $table.reload({
+                                page: {
+                                    curr: 1 //重新从第 1 页开始
+                                }
+                            });
+                            layer.close(index);
+                        }
+                    }
+                });
+            }
         });
+
+
     }
+
 </script>
 
 </body>

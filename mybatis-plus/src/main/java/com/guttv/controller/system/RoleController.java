@@ -1,12 +1,12 @@
-package com.guttv.controller;
+package com.guttv.controller.system;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.guttv.bean.Auth;
-import com.guttv.bean.Role;
-import com.guttv.bean.RoleAuth;
-import com.guttv.service.RoleAuthService;
-import com.guttv.service.RoleService;
+import com.guttv.bean.system.Auth;
+import com.guttv.bean.system.Role;
+import com.guttv.bean.system.RoleAuth;
+import com.guttv.service.system.RoleAuthService;
+import com.guttv.service.system.RoleService;
 import com.guttv.util.ResultUtils;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +24,7 @@ public class RoleController {
 
     @RequestMapping("list")
     public ModelAndView list(ModelAndView model) {
-        model.setViewName("role/list");
+        model.setViewName("system/role/list");
         return model;
     }
 

@@ -1,9 +1,11 @@
 package com.guttv.mapper;
 
 import com.github.pagehelper.PageHelper;
-import com.guttv.bean.SysUser;
+import com.guttv.bean.system.Role;
+import com.guttv.bean.system.SysUser;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -30,4 +32,6 @@ public interface SysUserMapper {
     Integer insert(@NotNull SysUser sysUser);
 
     Integer updateById(@NotNull SysUser sysUser);
+    @Select("SELECT *,(id IN (SELECT roleId FROM t_sys_user_role WHERE sysUserId = #{sysUserId})) AS checked FROM t_role")
+    List<Role> selectRoles(Integer sysUserId);
 }

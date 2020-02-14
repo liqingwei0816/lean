@@ -1,7 +1,7 @@
 package com.guttv.mapper;
 
 import com.github.pagehelper.PageHelper;
-import com.guttv.bean.Auth;
+import com.guttv.bean.system.Auth;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -37,7 +37,4 @@ public interface AuthMapper {
     Integer insert(@NotNull Auth auth);
 
     Integer updateById(@NotNull Auth auth);
-
-    @Delete("delete  from t_role_auth where roleId = #{roleId}")
-    void deleteBondingByRoleId(Integer roleId);
 }

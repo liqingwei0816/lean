@@ -1,4 +1,4 @@
-package com.guttv.bean;
+package com.guttv.bean.system;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -25,8 +25,11 @@ public class Auth {
     /**
      * 权限名
      */
-
     private String title;
+    /**
+     *  权限代码
+     */
+    private String authCode;
 
     /**
      * 注释
@@ -43,10 +46,6 @@ public class Auth {
      */
     private Boolean checked;
 
-    /**
-     * 是否禁用
-     */
-    private Boolean disabled;
 
     /**
      * 上级节点

@@ -1,7 +1,7 @@
-package com.guttv.service;
+package com.guttv.service.system;
 
-import com.guttv.bean.Auth;
-import com.guttv.bean.Role;
+import com.guttv.bean.system.Auth;
+import com.guttv.bean.system.Role;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;

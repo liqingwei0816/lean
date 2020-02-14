@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.guttv.mapper.SysUserRoleMapper">
+    <sql id="Base_Column_List">
+        id,roleId,sysUserId
+    </sql>
+
+    <sql id="where_column_list">
+        <if test='id != null'>
+            and id = #{id}
+        </if>
+        <if test='roleId != null'>
+            and roleId = #{roleId}
+        </if>
+        <if test='sysUserId != null'>
+            and sysUserId = #{sysUserId}
+        </if>
+    </sql>
+    <select id="selectList" resultType="com.guttv.bean.system.SysUserRole" parameterType="com.guttv.bean.system.SysUserRole">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_user_role
+        <where>
+            <include refid="where_column_list"/>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectOne" resultType="com.guttv.bean.system.SysUserRole" parameterType="com.guttv.bean.system.SysUserRole">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_user_role
+        <where>
+            <include refid="where_column_list"/>
+        </where>
+        limit 1
+    </select>
+
+
+    <insert id="insert" parameterType="com.guttv.bean.system.SysUserRole" useGeneratedKeys="true" keyProperty="id">
+        insert into t_sys_user_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                 id,
+            </if>
+            <if test="roleId != null">
+                 roleId,
+            </if>
+            <if test="sysUserId != null">
+                 sysUserId,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="roleId != null">
+                #{roleId},
+            </if>
+            <if test="sysUserId != null">
+                #{sysUserId},
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="insertNoExists" parameterType="com.guttv.bean.system.SysUserRole" useGeneratedKeys="true" keyProperty="id">
+        insert into t_sys_user_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                 id,
+            </if>
+            <if test="roleId != null">
+                 roleId,
+            </if>
+            <if test="sysUserId != null">
+                 sysUserId,
+            </if>
+        </trim>
+        SELECT
+        <trim prefix="" suffix="" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="roleId != null">
+                #{roleId},
+            </if>
+            <if test="sysUserId != null">
+                #{sysUserId},
+            </if>
+        </trim>
+        FROM  DUAL
+        WHERE NOT EXISTS ( SELECT * FROM t_role WHERE roleId = #{roleId} and sysUserId=sysUserId)
+    </insert>
+
+    <update id="updateById" parameterType="com.guttv.bean.system.SysUserRole">
+        update t_sys_user_role
+        <set>
+            <if test="id != null">
+                id = #{id},
+            </if>
+            <if test="roleId != null">
+                roleId = #{roleId},
+            </if>
+            <if test="sysUserId != null">
+                sysUserId = #{sysUserId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

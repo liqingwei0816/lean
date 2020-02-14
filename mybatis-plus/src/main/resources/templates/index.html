@@ -61,17 +61,16 @@
         <div class="layui-side-scroll">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree" lay-filter="test">
-                <li lay-id="table" class="layui-nav-item"><a class="tabSelect" href="/table/list">表单管理</a></li>
-                <li lay-id="rights" class="layui-nav-item"><a class="tabSelect" href="/rights/list">权限分配</a></li>
                 <li lay-id="user" class="layui-nav-item"><a class="tabSelect" href="/user/list">用户管理</a></li>
                 <li class="layui-nav-item">
-                    <a class="" href="javascript:">系统权限</a>
+                    <a class="" href="javascript:">系统管理</a>
                     <dl class="layui-nav-child">
                         <dd lay-id="sysUser"><a class="tabSelect" href="/sysUser/list">管理员</a></dd>
                         <dd lay-id="auth"><a class="tabSelect" href="/auth/list">权限管理</a></dd>
                         <dd lay-id="role"><a class="tabSelect" href="/role/list">角色管理</a></dd>
                     </dl>
                 </li>
+                <li lay-id="table" class="layui-nav-item"><a class="tabSelect" href="/table/list">表单管理</a></li>
             </ul>
         </div>
     </div>
@@ -99,21 +98,15 @@
     //todo 动态tab
     let $ = layui.$;
     let sideH = $('.layui-side').css('height').replace('px','')-90;
-    console.log(sideH);
-   // $('iframe,.layui-tab-item').css('height',sideH+'px');
     $(window).resize(function () {
-        console.log($('.layui-side').css('height'));
+        sideH = $('.layui-side').css('height').replace('px','')-90;
     });
-
-
-
 
     $('.tabSelect').click(function () {
         let layId = $(this).parent().attr('lay-id');
         let length = $('ul.layui-tab-title > [lay-id="' + layId + '"]').length;
         if (length === 0) {
             let title = $(this).text();
-            //$.get($(this).attr('href'), function (data) {
             layui.element.tabAdd('tab', {
                 title: title
                 , content: '<iframe height="'+sideH+'" src="' + $(this).attr('href') + '"></iframe>'

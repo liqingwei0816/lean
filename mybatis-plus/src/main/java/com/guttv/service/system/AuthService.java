@@ -1,6 +1,6 @@
-package com.guttv.service;
+package com.guttv.service.system;
 
-import com.guttv.bean.Auth;
+import com.guttv.bean.system.Auth;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -41,5 +41,4 @@ public interface AuthService {
         }
     }
 
-    void deleteBondingByRoleId(Integer id);
 }

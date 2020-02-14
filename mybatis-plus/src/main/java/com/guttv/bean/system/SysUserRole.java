@@ -1,10 +1,10 @@
-package com.guttv.bean;
+package com.guttv.bean.system;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 @Data
-public class Role {
+public class SysUserRole {
 
 
         
@@ -15,16 +15,16 @@ public class Role {
         private Integer id;
         
         /**
-         *   
+         *   角色ID
          */
         
-        private String roleName;
+        private Integer roleId;
         
         /**
-         *   注释
+         *   用户ID
          */
         
-        private String note;
+        private Integer sysUserId;
 
         @JsonIgnore
         private Integer pageNum;

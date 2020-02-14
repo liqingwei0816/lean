@@ -1,7 +1,7 @@
-package com.guttv.controller;
+package com.guttv.controller.system;
 
-import com.guttv.bean.Auth;
-import com.guttv.service.AuthService;
+import com.guttv.bean.system.Auth;
+import com.guttv.service.system.AuthService;
 import com.guttv.util.ResultUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +22,7 @@ public class AuthController {
 
     @RequestMapping("list")
     public ModelAndView list(ModelAndView model) {
-        model.setViewName("auth/list");
+        model.setViewName("system/auth/list");
         return model;
     }
 
@@ -51,13 +51,12 @@ public class AuthController {
 
     @PostMapping(value = "delete")
     public ResultUtils delete(@RequestBody Auth auth) {
-        if (auth.getChildren()!=null){
-            return ResultUtils.success("存在下级节点，无法删除",authService.getTreeAndSpreadParent(auth));
+        if (auth.getChildren() != null && !auth.getChildren().isEmpty()) {
+            return ResultUtils.success("存在下级节点，无法删除", authService.getTreeAndSpreadParent(auth));
         }
         authService.delete(auth.getId());
         return ResultUtils.success(authService.getTreeAndSpreadParent(auth));
     }
-
 
 
 }

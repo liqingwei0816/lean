@@ -1,7 +1,7 @@
 package com.guttv.mapper;
 
 import com.github.pagehelper.PageHelper;
-import com.guttv.bean.Role;
+import com.guttv.bean.system.Role;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;

@@ -25,6 +25,9 @@ public class ResultUtils {
     public static ResultUtils error(String message){
         return new ResultUtils(-1, message,null);
     }
+    public static ResultUtils error(){
+        return new ResultUtils(-1, "error",null);
+    }
     public static ResultUtils error(Integer code,String message){
         return new ResultUtils(code, message,null);
     }
