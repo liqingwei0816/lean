@@ -29,7 +29,8 @@ public class SysUserController {
 
     @RequestMapping("dataList")
     public ResultUtils dataList(SysUser sysUser) {
-        PageInfo<Object> pageInfo = PageHelper.startPage(sysUser.getPageNum(), sysUser.getPageSize()).doSelectPageInfo(() -> sysUserService.getList(sysUser));
+        PageInfo<SysUser> pageInfo = PageHelper.startPage(sysUser.getPageNum(), sysUser.getPageSize()).doSelectPageInfo(() -> sysUserService.getList(sysUser));
+        pageInfo.getList().forEach(e->e.setPassword(null));
         return ResultUtils.success(pageInfo);
     }
 

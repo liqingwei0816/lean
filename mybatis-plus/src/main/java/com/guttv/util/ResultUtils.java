@@ -19,7 +19,7 @@ public class ResultUtils {
     public static ResultUtils success(Object data){
         return new ResultUtils(0, "success", data);
     }
-    public static ResultUtils success(PageInfo<Object> data){
+    public static <T> ResultUtils success(PageInfo<T> data){
         return new ResultUtils(0, "success", data.getTotal(),data.getList());
     }
     public static ResultUtils error(String message){

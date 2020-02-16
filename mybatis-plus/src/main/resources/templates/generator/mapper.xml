@@ -5,18 +5,15 @@
         [(${table.keyList})]
     </sql>
 
-    <sql id="where_column_list">
-[# th:each="field : ${table.fields}"]
-[# th:if="${field.javaType}=='String'"]
+    <sql id="where_column_list"> [# th:each="field : ${table.fields}"][# th:if="${field.javaType}=='String'"]
         <if test='[(${field.name})] != null and [(${field.name})] != ""'>
             and [(${field.name})] = #{[(${field.name})]}
-        </if>[/]
-[# th:if="${field.javaType}!='String'"]
+        </if> [/] [# th:if="${field.javaType}!='String'"]
         <if test='[(${field.name})] != null'>
             and [(${field.name})] = #{[(${field.name})]}
-        </if>[/]
-[/]
+        </if> [/] [/]
     </sql>
+
     <select id="selectList" resultType="[(${packageName})].bean.[(${table.entityName})]" parameterType="[(${packageName})].bean.[(${table.entityName})]">
         select
         <include refid="Base_Column_List"/>

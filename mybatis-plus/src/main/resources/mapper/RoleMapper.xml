@@ -6,24 +6,17 @@
     </sql>
 
     <sql id="where_column_list">
-
-
-
         <if test='id != null'>
             and id = #{id}
         </if>
-
         <if test='roleName != null and roleName != ""'>
-            and roleName = #{roleName}
+            and roleName like concat('%',#{roleName},'%')
         </if>
-
-
         <if test='note != null and note != ""'>
             and note = #{note}
         </if>
-
-
     </sql>
+
     <select id="selectList" resultType="com.guttv.bean.system.Role" parameterType="com.guttv.bean.system.Role">
         select
         <include refid="Base_Column_List"/>

@@ -58,7 +58,10 @@ public class ThymeleafUtil {
     public Path createByTextTemplate(String templateName, Context data, String filePath) throws IOException {
         File file = new File(filePath);
         if (!file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
+            boolean mkdir = file.getParentFile().mkdirs();
+            if (!mkdir){
+                throw new RuntimeException("创建文件夹失败:"+file.getParentFile().getPath());
+            }
         }
         return Files.write(file.toPath(), createByTextTemplate(templateName, data).getBytes(StandardCharsets.UTF_8));
     }

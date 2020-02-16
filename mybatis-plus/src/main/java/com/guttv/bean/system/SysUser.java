@@ -23,7 +23,6 @@ public class SysUser {
         /**
          *   
          */
-        @JsonIgnore
         private String password;
         
         /**

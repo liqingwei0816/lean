@@ -66,9 +66,6 @@
     <insert id="insertNoExists" parameterType="com.guttv.bean.system.SysUserRole" useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_user_role
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                 id,
-            </if>
             <if test="roleId != null">
                  roleId,
             </if>
@@ -78,9 +75,6 @@
         </trim>
         SELECT
         <trim prefix="" suffix="" suffixOverrides=",">
-            <if test="id != null">
-                #{id},
-            </if>
             <if test="roleId != null">
                 #{roleId},
             </if>
@@ -89,7 +83,7 @@
             </if>
         </trim>
         FROM  DUAL
-        WHERE NOT EXISTS ( SELECT * FROM t_role WHERE roleId = #{roleId} and sysUserId=sysUserId)
+        WHERE NOT EXISTS ( SELECT * FROM t_sys_user_role WHERE roleId = #{roleId} and sysUserId=#{sysUserId})
     </insert>
 
     <update id="updateById" parameterType="com.guttv.bean.system.SysUserRole">

@@ -11,7 +11,7 @@
         </if>
 
         <if test='userName != null and userName != ""'>
-            and userName = #{userName}
+            and userName  like concat('%',#{userName},'%')
         </if>
 
         <if test='password != null and password != ""'>

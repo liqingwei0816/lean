@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -16,10 +17,12 @@
         .layui-tab-content {
             padding: 0;
         }
-        .layui-body{
+
+        .layui-body {
             overflow: hidden;
         }
-        .layui-tab{
+
+        .layui-tab {
             margin: 5px 0;
         }
     </style>
@@ -46,7 +49,7 @@
             <li class="layui-nav-item">
                 <a href="javascript:">
                     <img src="http://t.cn/RCzsdCq" class="layui-nav-img" alt="">
-                    贤心
+                    贤
                 </a>
                 <dl class="layui-nav-child">
                     <dd><a href="">基本资料</a></dd>
@@ -61,16 +64,16 @@
         <div class="layui-side-scroll">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree" lay-filter="test">
-                <li lay-id="user" class="layui-nav-item"><a class="tabSelect" href="/user/list">用户管理</a></li>
+                <li lay-id="user" class="layui-nav-item" sec:authorize-url="/user/list"><a class="tabSelect" href="/user/list">用户管理</a></li>
                 <li class="layui-nav-item">
                     <a class="" href="javascript:">系统管理</a>
                     <dl class="layui-nav-child">
-                        <dd lay-id="sysUser"><a class="tabSelect" href="/sysUser/list">管理员</a></dd>
-                        <dd lay-id="auth"><a class="tabSelect" href="/auth/list">权限管理</a></dd>
-                        <dd lay-id="role"><a class="tabSelect" href="/role/list">角色管理</a></dd>
+                        <dd lay-id="sysUser" sec:authorize-url="/sysUser/list"><a class="tabSelect" href="/sysUser/list">管理员</a></dd>
+                        <dd lay-id="auth" sec:authorize-url="/auth/list"><a class="tabSelect" href="/auth/list">权限管理</a></dd>
+                        <dd lay-id="role" sec:authorize-url="/role/list"><a class="tabSelect" href="/role/list">角色管理</a></dd>
                     </dl>
                 </li>
-                <li lay-id="table" class="layui-nav-item"><a class="tabSelect" href="/table/list">表单管理</a></li>
+                <li  lay-id="table" class="layui-nav-item"><a class="tabSelect" href="/table/list">表单管理</a></li>
             </ul>
         </div>
     </div>
@@ -95,11 +98,10 @@
 </div>
 <script src="/layui/layui.all.js"></script>
 <script type="text/javascript">
-    //todo 动态tab
     let $ = layui.$;
-    let sideH = $('.layui-side').css('height').replace('px','')-90;
+    let sideH = $('.layui-side').css('height').replace('px', '') - 90;
     $(window).resize(function () {
-        sideH = $('.layui-side').css('height').replace('px','')-90;
+        sideH = $('.layui-side').css('height').replace('px', '') - 90;
     });
 
     $('.tabSelect').click(function () {
@@ -109,7 +111,7 @@
             let title = $(this).text();
             layui.element.tabAdd('tab', {
                 title: title
-                , content: '<iframe height="'+sideH+'" src="' + $(this).attr('href') + '"></iframe>'
+                , content: '<iframe height="' + sideH + '" src="' + $(this).attr('href') + '"></iframe>'
                 , id: layId
             });
             //切换tab

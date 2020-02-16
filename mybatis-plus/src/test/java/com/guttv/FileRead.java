@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 public class FileRead {
 
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
 
         File file = new File("D:\\迅雷下载\\任务组_20200212_1439");
         File[] files = file.listFiles();
@@ -30,6 +30,6 @@ public class FileRead {
 
         });
 
-    }
+    }*/
 
 }

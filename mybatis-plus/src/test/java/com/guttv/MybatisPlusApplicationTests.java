@@ -31,6 +31,29 @@ class MybatisPlusApplicationTests {
         System.out.println(file.toPath().toUri().getPath());
 
     }
+   /* @Test
+    public void testFreeMack() throws IOException, TemplateException {
+        StringTemplateLoader stringTemplateLoader = new StringTemplateLoader();
+
+        String templateContent="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+                "<ADI Priority=\"1\" BizDomain=\"0\">\n" +
+                "    <Objects>\n" +
+                "        <Object>\n" +
+                "            <Property Name=\"OrgAirDate\">${((orgairdate)?date?string('yyyyMMdd'))!?replace('-','')!''}</Property>\n" +
+                "\t</Object>\n" +
+                "    </Objects>\n" +
+                "</ADI>";
+
+        stringTemplateLoader.putTemplate("name",templateContent);
+        Configuration configuration = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
+        configuration.setTemplateLoader(stringTemplateLoader);
+
+        Template name = configuration.getTemplate("name");
+        HashMap<String, Object> model = new HashMap<>();
+        model.put("orgairdate", LocalDateTime.now());
+        String s = FreeMarkerTemplateUtils.processTemplateIntoString(name, model);
+
+    }*/
     @Test
     public void test1() throws URISyntaxException, MalformedURLException {
         URI resource = ThymeleafUtil.class.getResource(".").toURI();
@@ -68,6 +91,7 @@ class MybatisPlusApplicationTests {
 
 
     }
+
     @Test
     public void testHtml() {
         Table table = new Table();

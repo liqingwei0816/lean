@@ -8,11 +8,14 @@ import com.guttv.bean.system.RoleAuth;
 import com.guttv.service.system.RoleAuthService;
 import com.guttv.service.system.RoleService;
 import com.guttv.util.ResultUtils;
+import lombok.Data;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -30,7 +33,6 @@ public class RoleController {
 
     @RequestMapping("dataList")
     public ResultUtils dataList(Role role) {
-
         PageInfo<Object> pageInfo = PageHelper.startPage(role.getPageNum(), role.getPageSize()).doSelectPageInfo(() -> roleService.getList(role));
         return ResultUtils.success(pageInfo);
     }
@@ -56,31 +58,20 @@ public class RoleController {
 
     @RequestMapping("auth/{roleId}")
     public ResultUtils auth(@PathVariable Integer roleId) {
-        List<Auth> authList = this.roleService.auth(roleId);
-        return ResultUtils.success(authList);
+        return ResultUtils.success(this.roleService.auth(roleId));
     }
 
-    @Resource
-    private RoleAuthService roleAuthService;
-
     @PostMapping("addAuth")
-    public ResultUtils addAuth(RoleAuth roleAuth, Boolean checked) {
-        Assert.notNull(checked, "参数 checked 不能为空");
-        Assert.notNull(roleAuth, "参数 roleId 和 authId 不能为空");
-        Assert.notNull(roleAuth.getRoleId(), "参数 roleId 不能为空");
-        Assert.notNull(roleAuth.getAuthId(), "参数 authId 不能为空");
-        RoleAuth roleAuthDb = roleAuthService.getOne(roleAuth);
-        if (checked) {
-            if (roleAuthDb == null) {
-                roleAuthService.insert(roleAuth);
-            }
-            return ResultUtils.success("添加完成");
-        } else {
-            if (roleAuthDb != null) {
-                roleAuthService.delete(roleAuthDb.getId());
-            }
-            return ResultUtils.success("删除完成");
-        }
+    public ResultUtils addAuth(@RequestBody RoleVo roleVo ) {
+        Assert.notEmpty(roleVo.getAuthIds(), "参数 authIds 不能为空");
+        Assert.notNull(roleVo.getRoleId(), "参数 roleId 不能为空");
+        roleService.changeAuth(roleVo);
+        return ResultUtils.success("完成");
+    }
+    @Data
+    public static class RoleVo{
+        List<Integer> authIds;
+        Integer roleId;
     }
 
 }

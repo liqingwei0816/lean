@@ -12,10 +12,10 @@
 </head>
 <body>
 <div>
-    <div style="width: 800px;display: inline-block;float: left">
+    <div style="width: 50%;display: inline-block;float: left">
         <table class="layui-table" hidden id="table" lay-filter="table"></table>
     </div>
-    <div style="display: inline-block;float: left">
+    <div style="width: 45%;display: inline-block;float: left">
         <div id="auth"></div>
     </div>
 </div>
@@ -25,7 +25,7 @@
     <!--查询表单-->
     <form name="search" lay-filter="search" class="layui-form layui-inline">
         <div class="layui-input-inline">
-            <input type="text" name="code" required placeholder="编码" autocomplete="off" class="layui-input">
+            <input type="text" name="roleName" required placeholder="角色名" autocomplete="off" class="layui-input">
         </div>
     </form>
     <button class="layui-btn layui-btn-sm" lay-event="search">查询</button>
@@ -82,15 +82,14 @@
             title: '新增'
             , layEvent: 'add'
             , icon: 'layui-icon-add-circle'
-        }, 'filter', 'exports', 'print'],
+        }, 'exports'],
         request: {pageName: 'pageNum', limitName: 'pageSize'},
         cols: [
             [
                 {type: 'checkbox', fixed: 'left'},
-                {field: 'id', title: '', width: 170},
-                {field: 'roleName', title: '角色名', width: 170},
-                {field: 'note', title: '注释', width: 170},
-                {fixed: 'right', title: '操作', width: 178, align: 'center', toolbar: '#barTools'}
+                {field: 'roleName', title: '角色名', width: 110},
+                {field: 'note', title: '注释', width: 110},
+                {fixed: 'right', title: '操作', width: 170, align: 'center', toolbar: '#barTools'}
             ]
         ]
     });
@@ -136,53 +135,72 @@
         } else if (obj.event === 'del') {
             objDel(obj);
         } else if (obj.event === 'edit') {
-            console.log(data);
             add(data);
         }
     });
 
+    layui.config({
+        base: '../'
+    }).extend({
+        treeTable: 'treeTable/treeTable'
+    });
 
     /**
      * 显示角色的权限信息
      */
     function showAuth(obj) {
         let roleId = obj.data.id;
-        $.get('/role/auth/' + roleId, function (result) {
-            if (result.code === 0) {
-                // tree组件初始回调问题  渲染完成执行回调
-                layui.tree.render({
-                    elem: "#auth",
-                    data: result.data,
-                    showCheckbox: true,
-                    oncheck: function (obj) {
-                        if (obj.data.checked !== obj.checked) {
-                            obj.data.checked = obj.checked;
-                            //参数拼接
-                            let param = {};
-                            param.checked = obj.checked;
-                            param.roleId = roleId;
-                            param.authId = obj.data.id;
-                            $.post('/role/addAuth', param, function (result) {
-                                layer.msg(result.msg);
-                            });
-                        }
-                        removePack();
-                    },
+        layui.use(['layer', 'util', 'treeTable'], function () {
+            let $ = layui.jquery;
+            let layer = layui.layer;
+            let treeTable = layui.treeTable;
+            // 渲染表格
+            let insTb = treeTable.render({
+                elem: '#auth',
+                tree: {
+                    iconIndex: 1,
+                    pidName: 'parentNode',
+                    isPidData: true
+                },
+                cols: [
+                    {type: 'checkbox'},
+                    {field: 'title',align: 'center',width:220 ,title: '<button style="float: left" class="save layui-btn-xs layui-btn layui-btn-danger">保存</button>标题' },
+                    {field: 'url', title: '路径'},
+                    {field: 'authCode', title: '权限码', edit: 'text'},
+                    {field: 'note', title: '注释'},
+                ],
+                reqData: function (data, callback) {
+                    $.get('/role/auth/' + obj.data.id, function (res) {
+                        callback(res.data.data);
+                        insTb.setChecked(res.data.checkedList);
+                    });
+                },
+                style: 'margin-top:0;'
+            });
+            $('.save').click(function () {
+                let load = layer.load();
+                //获取选中数据
+                let dataList = insTb.checkStatus();
+                let param={};
+                param.authIds=[];
+                param.roleId=roleId;
+                for (let i=0;i<dataList.length;i++){
+                    param.authIds.push(dataList[i].id);
+                }
+                $.ajax({
+                    type: "post",
+                    url: '/role/addAuth',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(param),
+                    success: function (result) {
+                        layer.close(load);
+                        layer.msg(result.msg);
+                    }
                 });
-                removePack();
-            } else {
-                layer.msg(result.msg);
-            }
+            });
         });
-    }
 
-    /**
-     * layui-tree 取消父节点复选框
-     */
-    function removePack() {
-        $('.layui-tree-pack').siblings().find('.layui-form-checkbox').remove();
     }
-
 
     /**
      * 单个删除

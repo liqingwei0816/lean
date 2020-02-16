@@ -47,4 +47,9 @@ public class AuthServiceImpl implements AuthService {
         return authMapper.insert(auth);
     }
 
+    @Override
+    public Long count(Auth auth) {
+        return authMapper.selectCount(auth);
+    }
+
 }

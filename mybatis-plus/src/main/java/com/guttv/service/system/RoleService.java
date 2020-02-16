@@ -2,6 +2,7 @@ package com.guttv.service.system;
 
 import com.guttv.bean.system.Auth;
 import com.guttv.bean.system.Role;
+import com.guttv.controller.system.RoleController;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -19,8 +20,10 @@ public interface RoleService {
     Integer updateById(@NotNull Role role);
 
     /**
-     * 根据roleId获取拥有的权限信息,返回全部权限信息,拥有的权限的checked值为true
+     * 根据roleId获取拥有的权限信息,返回全部权限信息,拥有的权限的id值
      * @param roleId 查询的roleId
      */
-    List<Auth> auth(Integer roleId);
+   Object auth(Integer roleId);
+
+    void changeAuth(RoleController.RoleVo roleVo);
 }

@@ -11,7 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("auth")
@@ -29,12 +28,8 @@ public class AuthController {
     @RequestMapping("dataList")
     public ResultUtils dataList() {
         List<Auth> list = authService.getList(new Auth());
-        list.forEach(e -> {
-            e.setAllAuth(list);
-            e.setSpread(true);
-        });
-        List<Auth> collect = list.stream().filter(e -> e.getParentNode() == null).collect(Collectors.toList());
-        return ResultUtils.success(collect);
+        list.forEach(e->e.setOpen(true));
+        return ResultUtils.success(list);
     }
 
     @PostMapping("addOrUpdate")
@@ -43,19 +38,23 @@ public class AuthController {
             //add
             authService.insert(auth);
         } else {
-            //update
+            //update todo mapper属性对应 角色 权限绑定页面重写
             authService.updateById(auth);
         }
-        return ResultUtils.success(authService.getTreeAndSpreadParent(auth));
+        return ResultUtils.success("完成");
     }
 
     @PostMapping(value = "delete")
     public ResultUtils delete(@RequestBody Auth auth) {
-        if (auth.getChildren() != null && !auth.getChildren().isEmpty()) {
-            return ResultUtils.success("存在下级节点，无法删除", authService.getTreeAndSpreadParent(auth));
+        Auth authQuery = new Auth();
+        authQuery.setParentNode(auth.getId());
+        Long count = authService.count(authQuery);
+        if (count==0){
+            authService.delete(auth.getId());
+            return ResultUtils.success();
+        }else {
+            return ResultUtils.error("只能删除子节点");
         }
-        authService.delete(auth.getId());
-        return ResultUtils.success(authService.getTreeAndSpreadParent(auth));
     }
 
 

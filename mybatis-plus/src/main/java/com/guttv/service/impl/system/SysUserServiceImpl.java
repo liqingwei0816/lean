@@ -3,8 +3,10 @@ package com.guttv.service.impl.system;
 import com.guttv.bean.system.Role;
 import com.guttv.bean.system.SysUser;
 import com.guttv.mapper.SysUserMapper;
+import com.guttv.service.system.SysUserRoleService;
 import com.guttv.service.system.SysUserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
@@ -15,6 +17,9 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Resource
     private SysUserMapper sysUserMapper;
+
+    @Resource
+    private SysUserRoleService sysUserRoleService;
 
     @Override
     public List<SysUser> getList(SysUser sysUser) {
@@ -27,7 +32,9 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer delete(Integer id) {
+        sysUserRoleService.deleteBySysUserId(id);
         return sysUserMapper.deleteById(id);
     }
 

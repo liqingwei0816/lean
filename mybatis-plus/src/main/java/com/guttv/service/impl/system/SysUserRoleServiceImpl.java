@@ -46,4 +46,9 @@ public class SysUserRoleServiceImpl implements SysUserRoleService {
         return sysUserRoleMapper.updateById(sysUserRole);
     }
 
+    @Override
+    public void deleteBySysUserId(Integer sysUserId) {
+        sysUserRoleMapper.deleteBySysUserId(sysUserId);
+    }
+
 }

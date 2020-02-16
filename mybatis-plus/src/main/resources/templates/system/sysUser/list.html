@@ -23,7 +23,7 @@
     <!--查询表单-->
     <form name="search" lay-filter="search" class="layui-form layui-inline">
         <div class="layui-input-inline">
-            <input type="text" name="code" required placeholder="编码" autocomplete="off" class="layui-input">
+            <input type="text" name="userName" required placeholder="用户名" autocomplete="off" class="layui-input">
         </div>
     </form>
     <button class="layui-btn layui-btn-sm" lay-event="search">查询</button>
@@ -158,7 +158,7 @@
      * @param obj 工具条事件对象
      */
     function objDel(obj) {
-        layer.confirm('真的删除行么', function (index) {
+        layer.confirm('真的删除么', function (index) {
             $.ajax({
                 type: "post",
                 url: '/sysUser/delete',
@@ -218,6 +218,7 @@
 
     function showRole(data) {
         let sysUserId = data.id;
+        let load = layer.load();
         $.get('/sysUser/roles/' + sysUserId, function (result) {
             if (result.code === 0) {
                 for (let i = 0; i < result.data.length; i++) {
@@ -245,7 +246,7 @@
             } else {
                 layer.msg(result.msg);
             }
-
+            layer.close(load);
         });
     }
 

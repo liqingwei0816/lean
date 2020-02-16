@@ -21,4 +21,6 @@ public interface SysUserRoleService {
     void insertNoExists(SysUserRole sysUserRole);
 
     Integer updateById(@NotNull SysUserRole sysUserRole);
+
+    void deleteBySysUserId(Integer sysUserId);
 }

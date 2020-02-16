@@ -32,4 +32,7 @@ public interface SysUserRoleMapper {
     Integer updateById(@NotNull SysUserRole sysUserRole);
 
     Integer insertNoExists(SysUserRole sysUserRole);
+
+    @Delete("delete  from t_sys_user_role where sysUserId = #{sysUserId}")
+    void deleteBySysUserId(Integer sysUserId);
 }

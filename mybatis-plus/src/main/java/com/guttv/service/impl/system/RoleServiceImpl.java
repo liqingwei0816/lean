@@ -2,6 +2,8 @@ package com.guttv.service.impl.system;
 
 import com.guttv.bean.system.Auth;
 import com.guttv.bean.system.Role;
+import com.guttv.bean.system.RoleAuth;
+import com.guttv.controller.system.RoleController;
 import com.guttv.mapper.RoleMapper;
 import com.guttv.service.system.AuthService;
 import com.guttv.service.system.RoleAuthService;
@@ -11,8 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,17 +56,31 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<Auth> auth(Integer roleId) {
+    public Object auth(Integer roleId) {
+        Map<String, Object> data = new HashMap<>(2);
         List<Auth> list = authService.getAll();
+        list.forEach(e -> e.setOpen(true));
+        data.put("data",list);
         //拥有的权限
         List<Integer> authByRole = roleMapper.selectAuthByRole(roleId);
-        Set<Integer> parentNode = list.stream().map(Auth::getParentNode).collect(Collectors.toSet());
-        list.forEach(e ->{
-            e.setAllAuth(list);
-            e.setChecked(authByRole.contains(e.getId())&&!parentNode.contains(e.getId()));
-            e.setSpread(true);
+        authByRole.removeAll(list.stream().map(Auth::getParentNode).collect(Collectors.toList()));
+        data.put("checkedList",authByRole);
+        return data;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void changeAuth(RoleController.RoleVo roleVo) {
+        Integer roleId = roleVo.getRoleId();
+        //删除角色下所有权限
+        roleAuthService.deleteByRoleId(roleId);
+        //添加现有权限
+        roleVo.getAuthIds().forEach(e->{
+            RoleAuth roleAuth = new RoleAuth();
+            roleAuth.setRoleId(roleId);
+            roleAuth.setAuthId(e);
+            roleAuthService.insert(roleAuth);
         });
-        return list.stream().filter(e -> e.getParentNode() == null).collect(Collectors.toList());
     }
 
 }

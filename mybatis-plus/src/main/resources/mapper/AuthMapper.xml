@@ -9,27 +9,18 @@
         <if test='id != null'>
             and id = #{id}
         </if>
-
         <if test='url != null and url != ""'>
             and url = #{url}
         </if>
-
-
         <if test='title != null and title != ""'>
-            and title = #{title}
+            and title LIKE CONCAT('%',#{title},'%')
         </if>
-
-
         <if test='note != null and note != ""'>
             and note = #{note}
         </if>
-
-
-
         <if test='parentNode != null'>
             and parentNode = #{parentNode}
         </if>
-
     </sql>
     <select id="selectList" resultType="com.guttv.bean.system.Auth" parameterType="com.guttv.bean.system.Auth">
         select
@@ -55,12 +46,14 @@
     <insert id="insert" parameterType="com.guttv.bean.system.Auth" useGeneratedKeys="true" keyProperty="id" >
         insert into t_auth
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            
             <if test="id != null">
                  id,
             </if>
             <if test="url != null">
                  url,
+            </if>
+            <if test="authCode != null">
+                authCode,
             </if>
             <if test="title != null">
                 title,
@@ -71,15 +64,16 @@
             <if test="parentNode != null">
                  parentNode,
             </if>
-            
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            
             <if test="id != null">
                 #{id},
             </if>
             <if test="url != null">
                 #{url},
+            </if>
+            <if test="authCode != null">
+                #{authCode},
             </if>
             <if test="title != null">
                 #{title},
@@ -90,7 +84,6 @@
             <if test="parentNode != null">
                 #{parentNode},
             </if>
-            
         </trim>
     </insert>
 
@@ -103,6 +96,9 @@
             </if>
             <if test="url != null">
                 url = #{url},
+            </if>
+            <if test="authCode != null">
+                authCode = #{authCode},
             </if>
             <if test="title != null">
                 name = #{title},

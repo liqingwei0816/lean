@@ -40,8 +40,8 @@ public class Field {
 
     static {
         typeMapping = new HashMap<>();
-        typeMapping.put("BIT", "byte[]"); //todo =1问题
-        typeMapping.put("TINYINT", "Integer");//todo =1问题
+        typeMapping.put("BIT", "byte[]");
+        typeMapping.put("TINYINT", "Integer");
         typeMapping.put("BOOL", "Integer");
         typeMapping.put("BOOLEAN", "Integer");
         typeMapping.put("SMALLINT", "Integer");

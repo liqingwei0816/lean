@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
 <head>
     <meta charset="utf-8">
     <title>Layui</title>
@@ -27,8 +27,8 @@
 </script>
 <!--工具条-->
 <script type="text/html" id="barRights">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a sec:authorize-url="/[(${table.beanName})]/addOrUpdate" class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a sec:authorize-url="/[(${table.beanName})]/delete" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 
 
@@ -49,7 +49,6 @@
         </div>
     </form>
 </script>
-
 
 <script src="/layui/layui.all.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
@@ -84,8 +83,10 @@
 
     //头工具栏事件
     table.on('toolbar(table)', function (obj) {
+        let load;
         switch (obj.event) {
             case 'search':
+                 load = layer.load();
                 let filterData = layui.form.val('search');
                 table.reload('table', {
                     where: filterData
@@ -95,8 +96,10 @@
                 }); //只重载数据
                 //参数回填
                 layui.form.val('search', filterData);
+                layer.close(load);
                 break;
             case 'reset':
+                load = layer.load();
                 document.forms['search'].reset();
                 table.reload('table', {
                     where: layui.form.val('search')
@@ -104,12 +107,17 @@
                         curr: 1 //重新从第 1 页开始
                     }
                 }); //只重载数据
+                layer.close(load);
                 break;
             case 'refresh':
+                load = layer.load();
                 table.reload('table');
+                layer.close(load);
                 break;
             case 'add':
                 add();
+                break;
+            default:
                 break;
         }
     });
@@ -122,7 +130,6 @@
             objDel(obj);
         } else if (obj.event === 'edit') {
             add(data);
-            //layer.alert('编辑行：<br>' + JSON.stringify(data))
         }
     });
 
@@ -130,8 +137,9 @@
      * 单个删除
      * @param obj 工具条事件对象
      */
-function objDel(obj) {
+    function objDel(obj) {
         layer.confirm('真的删除行么', function (index) {
+            let load = layer.load();
             $.ajax({
                 type: "post",
                 url: '/[(${table.beanName})]/delete',
@@ -141,54 +149,58 @@ function objDel(obj) {
                     layer.msg(result.msg);
                     if (result.code === 0) {
                         obj.del();
+                        layer.close(load);
                         layer.close(index);
                     }
                 }
             });
         });
-}
+    }
 
     /**
      *
      * @param data 需要填充的表单属性对象
      */
     function add(data) {
-    layer.open({
-        offset: 't',
-        title: '表单',
-        type:1,
-        content: $('#addOrUpdate').html(),
-        success:function(layero, index){
-            if (data){
-                layui.form.val('formTemplate',data);
-            }
-            //绑定提交事件
-            layui.form.on('submit(formTemplate)', function(data){
-                let formData = layui.form.val('formTemplate');
-                $.ajax({
-                    type: "post",
-                    url: '/[(${table.beanName})]/addOrUpdate',
-                    contentType: "application/json; charset=utf-8",
-                    data: JSON.stringify(formData),
-                    success: function (result) {
-                        if (result.code === 0) {
-                            $table.reload({
-                                page: {
-                                    curr: 1 //重新从第 1 页开始
-                                }
-                            });
-                            layer.close(index);
-                        }else {
-                            layer.msg(result.msg);
+        layer.open({
+            offset: 't',
+            title: '表单',
+            type:1,
+            content: $('#addOrUpdate').html(),
+            success:function(layero, index){
+                if (data){
+                    layui.form.val('formTemplate',data);
+                }
+                //绑定提交事件
+                layui.form.on('submit(formTemplate)', function(data){
+                    let load = layer.load();
+                    let formData = layui.form.val('formTemplate');
+                    $.ajax({
+                        type: "post",
+                        url: '/[(${table.beanName})]/addOrUpdate',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(formData),
+                        success: function (result) {
+                            if (result.code === 0) {
+                                $table.reload({
+                                    page: {
+                                        curr: 1 //重新从第 1 页开始
+                                    }
+                                });
+                                layer.close(index);
+                            }else {
+                                layer.msg(result.msg);
+                            }
+                            layer.close(load)
+                        },
+                        error:function (result) {
+                            layer.alert(result.msg);
+                            layer.close(load)
                         }
-                    },
-                    error:function (result) {
-                        layer.alert(result.msg);
-                    }
+                    });
+                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
                 });
-                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
-            });
-        },
+            },
     });
 }
 </script>

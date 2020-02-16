@@ -1,9 +1,11 @@
 package com.guttv.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guttv.bean.system.Auth;
 import com.guttv.bean.system.SysUser;
 import com.guttv.mapper.AuthMapper;
 import com.guttv.mapper.SysUserMapper;
+import com.guttv.util.ResultUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,6 +18,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +30,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private AuthMapper authMapper;
     @Resource
     private SysUserMapper sysUserMapper;
+    @Resource
+    private ObjectMapper objectMapper;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -48,14 +54,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.headers().frameOptions().sameOrigin().and().formLogin().and().httpBasic();
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry urlRegistry = http.authorizeRequests();
-        urlRegistry.antMatchers("/css/**.css", "/js/**.js", "/layui/**", "layui_ext/**").authenticated();
+        urlRegistry.antMatchers("**.css", "**.js", "/layui/**").authenticated();
         List<Auth> auths = authMapper.selectAll();
         //系统自定义权限
-        auths.stream().filter(a -> !StringUtils.isEmpty(a.getUrl()))
+        auths.stream().filter(a -> !StringUtils.isEmpty(a.getUrl()) && !a.getUrl().trim().isEmpty())
                 .forEach(e -> urlRegistry.antMatchers(e.getUrl().split(";")).hasAuthority(e.getAuthCode()));
         // 权限 角色 绑定关系级联删除
         http.authorizeRequests().antMatchers("/login**").anonymous().anyRequest().authenticated();
-
+        //自定义权限不足是返回信息
+        http.exceptionHandling(exceptionHandlingCustomizer -> exceptionHandlingCustomizer.accessDeniedHandler((httpServletRequest, httpServletResponse, e) -> {
+            httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+            httpServletResponse.setContentType("application/json;charset=UTF-8");
+            try (PrintWriter writer = httpServletResponse.getWriter()) {
+                ResultUtils error = ResultUtils.error(403, "权限不足");
+                writer.write(objectMapper.writeValueAsString(error));
+                writer.flush();
+            }
+        }));
     }
 
     @Bean

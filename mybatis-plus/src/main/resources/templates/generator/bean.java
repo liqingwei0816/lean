@@ -7,11 +7,9 @@ import lombok.Data;
 public class [(${table.entityName})] {
 
 [# th:each="field : ${table.fields}"]
-        [# th:if="${field.comment} != null"]
         /**
          *   [(${field.comment})]
          */
-        [/]
         private [(${field.javaType})] [(${field.name})];
 [/]
         @JsonIgnore
