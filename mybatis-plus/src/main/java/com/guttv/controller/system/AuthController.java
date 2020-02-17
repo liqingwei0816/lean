@@ -38,7 +38,6 @@ public class AuthController {
             //add
             authService.insert(auth);
         } else {
-            //update todo mapper属性对应 角色 权限绑定页面重写
             authService.updateById(auth);
         }
         return ResultUtils.success("完成");

@@ -36,7 +36,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        //todo 权限修改为添加权限代码authCode字段，管理同一功能需要多个接口场景
         auth.userDetailsService(userName -> {
             SysUser sysUser = new SysUser();
             sysUser.setUserName(userName);
