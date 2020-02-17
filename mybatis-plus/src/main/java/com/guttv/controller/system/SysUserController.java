@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("sysUser")
@@ -97,6 +98,22 @@ public class SysUserController {
     @GetMapping("roles/{sysUserId}")
     public ResultUtils roles(@PathVariable Integer sysUserId) {
         return ResultUtils.success(sysUserService.getRoles(sysUserId));
+    }
+
+
+    /**
+     * @param password 密码
+     * @return 当前查询用户拥有的权限，返回所有权限列表，拥有的角色为选中状态
+     */
+    @PostMapping("changePassword")
+    public ResultUtils changePassword(String password, Principal principal) {
+        Assert.hasLength(password,"参数 password 不能为空");
+        String name = principal.getName();
+        SysUser userName = sysUserService.getByUserName(name);
+        Assert.notNull(userName,"用户不存在");
+        userName.setPassword(bCryptPasswordEncoder.encode(password));
+        sysUserService.updateById(userName);
+        return ResultUtils.success();
     }
 
 }

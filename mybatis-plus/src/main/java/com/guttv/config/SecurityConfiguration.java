@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -50,16 +51,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        //允许同域下frame嵌套
+
         http.csrf().disable();
-        http.headers().frameOptions().sameOrigin().and().formLogin().and().httpBasic();
+        //允许同域下frame嵌套
+        http.headers().frameOptions().sameOrigin().and().formLogin().and().logout().logoutSuccessUrl("/login").and().httpBasic();
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry urlRegistry = http.authorizeRequests();
-        urlRegistry.antMatchers("**.css", "**.js", "/layui/**").authenticated();
+
         List<Auth> auths = authMapper.selectAll();
+
         //系统自定义权限
-        auths.stream().filter(a -> !StringUtils.isEmpty(a.getUrl()) && !a.getUrl().trim().isEmpty())
+        auths.stream()
+                .filter(a -> !StringUtils.isEmpty(a.getUrl()) && !a.getUrl().trim().isEmpty())
                 .forEach(e -> urlRegistry.antMatchers(e.getUrl().split(";")).hasAuthority(e.getAuthCode()));
-        // 权限 角色 绑定关系级联删除
+
         http.authorizeRequests().antMatchers("/login**").anonymous().anyRequest().authenticated();
         //自定义权限不足是返回信息
         http.exceptionHandling(exceptionHandlingCustomizer -> exceptionHandlingCustomizer.accessDeniedHandler((httpServletRequest, httpServletResponse, e) -> {
@@ -71,6 +75,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 writer.flush();
             }
         }));
+    }
+
+    @Override
+    public void configure(WebSecurity web) {
+        //解决静态资源拦截问题
+        web.ignoring().antMatchers("/static/**");
     }
 
     @Bean

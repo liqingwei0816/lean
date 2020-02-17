@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Layui树形表格2.x演示</title>
+    <title>权限管理</title>
     <link rel="stylesheet" href="/layui/css/layui.css">
-    <link rel="stylesheet" href="/demo/demo.css">
     <style>
         thead td .layui-icon {
             vertical-align: middle;
@@ -14,7 +13,7 @@
 <body>
 <table id="treeTable"></table>
 
-<script type="text/html" id="addOrUpdate">
+<script type="text/html" id="addOrUpdate" sec:authorize-url="/auth/addOrUpdate">
     <form id="formTemplate" class="layui-form" lay-filter="formTemplate">
         <div class="layui-form-item">
             <label class="layui-form-label" for="title">标题</label>
@@ -50,8 +49,8 @@
 
 <!-- 表格操作列 -->
 <script type="text/html" id="treeTableBar">
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="add">新增</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a sec:authorize-url="/auth/addOrUpdate" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="add">新增</a>
+    <a sec:authorize-url="/auth/delete" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 
 <script src="/layui/layui.js"></script>
@@ -92,6 +91,7 @@
 
         //行内更新
         treeTable.on('edit(treeTable)', function (obj) {
+            // 定义当前对象
             let param={};
             param[obj.field]=obj.value;
             param['id']=obj.data.id;
@@ -108,7 +108,8 @@
                         layer.msg(result.msg);
                     }else {
                         isTrue=false;
-                        layer.tips(result.msg, $(this), {tips: [1, '#FF5722']});
+                        //tips 定位当前元素
+                        layer.tips(result.msg, $(obj.tr.prevObject[0]), {tips: [1, '#FF5722']});
                     }
                 }
             });
