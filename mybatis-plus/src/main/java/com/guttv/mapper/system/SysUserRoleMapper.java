@@ -1,4 +1,4 @@
-package com.guttv.mapper;
+package com.guttv.mapper.system;
 
 import com.github.pagehelper.PageHelper;
 import com.guttv.bean.system.SysUserRole;

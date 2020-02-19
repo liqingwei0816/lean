@@ -1,7 +1,7 @@
 package com.guttv.service.impl.system;
 
 import com.guttv.bean.system.SysUserRole;
-import com.guttv.mapper.SysUserRoleMapper;
+import com.guttv.mapper.system.SysUserRoleMapper;
 import com.guttv.service.system.SysUserRoleService;
 import org.springframework.stereotype.Service;
 

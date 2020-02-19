@@ -1,7 +1,7 @@
 package com.guttv.service.impl.system;
 
 import com.guttv.bean.system.RoleAuth;
-import com.guttv.mapper.RoleAuthMapper;
+import com.guttv.mapper.system.RoleAuthMapper;
 import com.guttv.service.system.RoleAuthService;
 import org.springframework.stereotype.Service;
 

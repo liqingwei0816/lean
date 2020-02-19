@@ -7,8 +7,8 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="mybatis-plus" />
-        <module name="sentinel" />
         <module name="sentinel-dashboard" />
+        <module name="sentinel" />
       </profile>
     </annotationProcessing>
   </component>

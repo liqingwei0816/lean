@@ -4,7 +4,7 @@ import com.guttv.bean.system.Auth;
 import com.guttv.bean.system.Role;
 import com.guttv.bean.system.RoleAuth;
 import com.guttv.controller.system.RoleController;
-import com.guttv.mapper.RoleMapper;
+import com.guttv.mapper.system.RoleMapper;
 import com.guttv.service.system.AuthService;
 import com.guttv.service.system.RoleAuthService;
 import com.guttv.service.system.RoleService;

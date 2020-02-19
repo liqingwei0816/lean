@@ -4,6 +4,8 @@ import com.guttv.generator.GeneratorProperty;
 import com.guttv.generator.entity.Table;
 import com.guttv.util.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
+@ConfigurationPropertiesBinding
 @Service
 @Slf4j
 public class ThymeleafUtil {

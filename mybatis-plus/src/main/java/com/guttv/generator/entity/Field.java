@@ -29,11 +29,13 @@ public class Field {
             return "Boolean";
         }
 
-
         String orDefault = typeMapping.getOrDefault(typeUp, "");
         if (orDefault.equals("")) {
             log.error("未获取到正确的类型映射信息[{}]", typeUp);
         }
+
+
+
         return orDefault;
 
     }

@@ -15,12 +15,8 @@ spring:
     user:
       password: 123456
 mybatis:
-  mapper-locations: classpath:mapper/*.xml
-generator:
-  package: com.guttv
-  table:
-    prefix: t_
-    database: guttv_ums
+  mapper-locations: classpath:mapper/**/*.xml
+
 logging:
   level:
     root: debug
