@@ -149,20 +149,24 @@
                     }
                 });
             }  else if (event === 'del') { //删除节点
-                let load = layer.load();
-                $.ajax({
-                    type: "post",
-                    url: '/auth/delete',
-                    contentType: "application/json; charset=utf-8",
-                    data: JSON.stringify(data),
-                    success: function (result) {
-                        layer.msg(result.msg);
-                        if (result.code === 0) {
-                            obj.del(); // 删除对应行，并更新缓存
+                layer.confirm('删除?', {icon: 3, title:'提示'}, function(index){
+                    let load = layer.load();
+                    $.ajax({
+                        type: "post",
+                        url: '/auth/delete',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(data),
+                        success: function (result) {
+                            layer.msg(result.msg);
+                            if (result.code === 0) {
+                                obj.del(); // 删除对应行，并更新缓存
+                            }
+                            layer.close(load);
                         }
-                        layer.close(load);
-                    }
+                    });
+                    layer.close(index);
                 });
+
             }
         });
 

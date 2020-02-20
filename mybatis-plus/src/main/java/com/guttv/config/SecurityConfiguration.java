@@ -1,6 +1,7 @@
 package com.guttv.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.guttv.aop.OperatorAop;
 import com.guttv.bean.system.Auth;
 import com.guttv.bean.system.SysUser;
 import com.guttv.mapper.system.AuthMapper;
@@ -85,6 +86,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public OperatorAop operatorAop() {
+        return new OperatorAop();
     }
 
 }

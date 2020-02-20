@@ -83,8 +83,11 @@
                         </dd>
                     </dl>
                 </li>
-                <li sec:authorize-url="/table/list" lay-id="table" class="layui-nav-item"><a class="tabSelect"
-                                                                                             href="/table/list">表单管理</a>
+                <li sec:authorize-url="/table/list" lay-id="table" class="layui-nav-item">
+                    <a class="tabSelect" href="/table/list">表单管理</a>
+                </li>
+                <li sec:authorize-url="/table/list" lay-id="coupon" class="layui-nav-item">
+                    <a class="tabSelect" href="/coupon/list">卷管理</a>
                 </li>
             </ul>
         </div>
