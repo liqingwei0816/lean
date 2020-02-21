@@ -11,8 +11,12 @@ spring:
     time-zone: GMT+8
   thymeleaf:
     cache: false
+
+  cache:
+    jcache:
+      config: classpath:ehcache.xml
 mybatis:
-  mapper-locations: classpath:mapdper/**/*.xml
+  mapper-locations: classpath:mapper/**/*.xml
 
 logging:
   level:

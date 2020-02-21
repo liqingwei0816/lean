@@ -4,6 +4,7 @@ import com.guttv.bean.system.Auth;
 import com.guttv.mapper.system.AuthMapper;
 import com.guttv.service.system.AuthService;
 import com.guttv.service.system.RoleAuthService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,11 +22,13 @@ public class AuthServiceImpl implements AuthService {
     private RoleAuthService roleAuthService;
 
     @Override
+    @Cacheable(value = "auth", unless = "#result == null")
     public List<Auth> getList(Auth auth) {
         return authMapper.selectList(auth);
     }
 
     @Override
+    @Cacheable(value = "auth", unless = "#result == null")
     public Auth getOne(Auth auth) {
         return authMapper.selectOne(auth);
     }
