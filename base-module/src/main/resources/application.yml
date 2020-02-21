@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/guttv_ums?zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2b8&allowPublicKeyRetrieval=true
+    username: root
+    #password: Guttv@1234ABCxyz!
+    password: 123456
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    default-property-inclusion: non_null
+    locale: zh_CN
+    time-zone: GMT+8
+  thymeleaf:
+    cache: false
+mybatis:
+  mapper-locations: classpath:mapdper/**/*.xml
+
+logging:
+  level:
+    root: info

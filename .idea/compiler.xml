@@ -6,15 +6,21 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="mybatis-plus" />
-        <module name="sentinel-dashboard" />
-        <module name="sentinel" />
+        <module name="demo" />
+        <module name="base-module" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="authority" target="1.8" />
+      <module name="sentinel" target="1.8" />
+      <module name="sentinel-dashboard" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="mybatis-plus" options="-parameters" />
+      <module name="authority" options="-parameters" />
+      <module name="base-module" options="-parameters" />
+      <module name="demo" options="-parameters" />
       <module name="sentinel" options="-parameters" />
     </option>
   </component>
