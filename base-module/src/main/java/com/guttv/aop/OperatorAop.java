@@ -21,7 +21,7 @@ public class OperatorAop {
     @Around("execution(public * com.guttv.mapper.*.*.insert*(..) )" +
             "||execution(public * com.guttv.mapper.*.insert*(..) )")
     public Object addOperator(ProceedingJoinPoint pjp) throws Throwable {
-        //todo 添加Operator操作人属性添加操作
+        //添加Operator操作人属性添加操作
         Object[] args = pjp.getArgs();
         try {
             //存在security环境时才处理
@@ -53,7 +53,7 @@ public class OperatorAop {
     @Around("execution(public * com.guttv.mapper.*.*.update*(..) )" +
             "||execution(public * com.guttv.mapper.*.update*(..) )")
     public Object addUpdatePerson(ProceedingJoinPoint pjp) throws Throwable {
-        //todo 添加Operator操作人属性添加操作
+        //添加Operator操作人属性添加操作
         Object[] args = pjp.getArgs();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String name = authentication.getName();
