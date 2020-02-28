@@ -6,12 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -174,14 +176,18 @@ public class ThymeleafUtil {
         createService(table);
     }
 
-
+    /**
+     * 获取项目地址
+     */
     private String getObjectPath() {
-        String property = System.getProperty("user.dir");
-        String projectName = generatorProperty.getProjectName();
-        if (!projectName.isEmpty() && !property.endsWith(projectName)) {
-            property = property + File.separator + projectName+ File.separator;
+        try {
+            //D:\IdeaProjects\lean\base-module\target\classes
+            String path = ResourceUtils.getFile("classpath:").getPath();
+            return path.substring(0, path.length() - 14);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
         }
-        return property;
     }
 
     /**
@@ -191,7 +197,7 @@ public class ThymeleafUtil {
         String path = getObjectPath();
         Context context = getContext(table);
         String packageName = context.getVariable("packageName").toString();
-        return path  + "src" + File.separator + "main" + File.separator + "java" + File.separator + packageName.replace(".", File.separator) + File.separator;
+        return path + "src" + File.separator + "main" + File.separator + "java" + File.separator + packageName.replace(".", File.separator) + File.separator;
     }
 
 

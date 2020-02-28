@@ -1,6 +1,6 @@
 package com.guttv.config.security.jwt;
 
-import com.guttv.mapper.system.AuthMapper;
+import com.guttv.service.system.AuthService;
 import com.guttv.util.SpringUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,13 +10,11 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,16 +30,27 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         httpServletRequest.getSession().invalidate();
 
-        String username = httpServletRequest.getHeader(token_header);
+        String token = httpServletRequest.getHeader(token_header);
+        //验证jwt有效性
+
+        //根据token获取用户名
+
+        //根据用户名获取权限信息
+
+        //将权限信息加入本地线程属性 SecurityContextImpl
+
+
+        String username="";
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             //todo 未使用jwt生成token token未验证
             //User user = jwtUtils.getUserFromToken(auth_token);
             //if (jwtUtils.validateToken(auth_token, user)) {
-            List<SimpleGrantedAuthority> authorities = SpringUtil.getBean(AuthMapper.class).authoritiesByUsernameQuery(username).stream().filter(a -> !StringUtils.isEmpty(a.getAuthCode())).map(e -> new SimpleGrantedAuthority(e.getAuthCode())).collect(Collectors.toList());
+            List<SimpleGrantedAuthority> authorities = SpringUtil.getBean(AuthService.class).authoritiesByUsernameQuery(username).stream().filter(a -> !StringUtils.isEmpty(a.getAuthCode())).map(e -> new SimpleGrantedAuthority(e.getAuthCode())).collect(Collectors.toList());
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
             logger.info(String.format("Authenticated user %s, setting security context", username));
+            // SecurityContextHolderStrategy 使用 ThreadLocalSecurityContextHolderStrategy实现，以线程属性传递权限
             SecurityContextHolder.getContext().setAuthentication(authentication);
             // }
         }
@@ -49,4 +58,5 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
+
 }

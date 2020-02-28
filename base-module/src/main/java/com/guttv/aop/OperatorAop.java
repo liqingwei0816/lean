@@ -28,20 +28,13 @@ public class OperatorAop {
             ClassLoader.getSystemClassLoader().loadClass("org.springframework.security.core.context.SecurityContextHolder");
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String name = authentication.getName();
-            if (args.length > 0) {
-                Class<?> aClass = args[0].getClass();
-                try {
-                    //创建人
-                    Method setCreator = aClass.getMethod("setCreator", String.class);
-                    setCreator.invoke(args[0], name);
-                    //创建时间
-                    Method setCreateTime = aClass.getMethod("setCreateTime", LocalDateTime.class);
-                    setCreateTime.invoke(args[0], LocalDateTime.now());
-                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignore) {
-                    log.debug("{}不存在creator属性", aClass.getName());
-                }
+            if (args.length > 0 && args[0] instanceof Operator) {
+                Operator operator = (OperatorAop.Operator) args[0];
+                operator.setCreator(name);
+                operator.setCreateTime(LocalDateTime.now());
             }
         } catch (ClassNotFoundException e) {
+            //不存在security环境
             e.printStackTrace();
         }
         return pjp.proceed(args);
@@ -55,23 +48,33 @@ public class OperatorAop {
     public Object addUpdatePerson(ProceedingJoinPoint pjp) throws Throwable {
         //添加Operator操作人属性添加操作
         Object[] args = pjp.getArgs();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String name = authentication.getName();
-        if (args.length > 0) {
-            Class<?> aClass = args[0].getClass();
-            try {
-                //创建人
-                Method setUpdatePerson = aClass.getMethod("setUpdatePerson", String.class);
-                setUpdatePerson.invoke(args[0], name);
-                //创建时间
-                Method setUpdateTime = aClass.getMethod("setUpdateTime", LocalDateTime.class);
-                setUpdateTime.invoke(args[0], LocalDateTime.now());
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                log.debug("{}不存在updatePerson属性", aClass.getName(), e);
+        try {
+            //存在security环境时才处理
+            ClassLoader.getSystemClassLoader().loadClass("org.springframework.security.core.context.SecurityContextHolder");
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String name = authentication.getName();
+            if (args.length > 0 && args[0] instanceof Operator) {
+                Operator operator = (OperatorAop.Operator) args[0];
+                operator.setUpdatePerson(name);
+                operator.setUpdateTime(LocalDateTime.now());
             }
+        } catch (ClassNotFoundException e) {
+            //不存在security环境
+            e.printStackTrace();
         }
-
         return pjp.proceed(args);
+    }
+
+    public interface Operator {
+
+        void setUpdatePerson(String updatePersonCode);
+
+        void setUpdateTime(LocalDateTime updateTime);
+
+        void setCreator(String creatorCode);
+
+        void setCreateTime(LocalDateTime createTime);
+
     }
 
 

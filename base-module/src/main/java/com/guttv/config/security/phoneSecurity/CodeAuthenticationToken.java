@@ -18,7 +18,7 @@ public class CodeAuthenticationToken extends AbstractAuthenticationToken {
      */
     @Getter
     @Setter
-    private  Object code;
+    private  String code;
 
     public CodeAuthenticationToken(String mobile,String code) {
         super(null);

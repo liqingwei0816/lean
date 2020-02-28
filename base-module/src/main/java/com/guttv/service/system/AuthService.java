@@ -23,5 +23,10 @@ public interface AuthService {
 
     Long count(Auth auth);
 
+    /**
+     * 根据用户名获取用户权限集合
+     * @param userName 用户名
+     */
+    List<Auth> authoritiesByUsernameQuery(@NotNull String userName);
 
 }

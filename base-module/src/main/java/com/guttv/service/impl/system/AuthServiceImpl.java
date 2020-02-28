@@ -55,4 +55,10 @@ public class AuthServiceImpl implements AuthService {
         return authMapper.selectCount(auth);
     }
 
+    @Override
+    @Cacheable(value = "auth",key = "'auth-'+#userName")
+    public List<Auth> authoritiesByUsernameQuery(@NotNull String userName) {
+        return authMapper.authoritiesByUsernameQuery(userName);
+    }
+
 }

@@ -9,6 +9,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 public class CodeAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     private boolean postOnly = true;

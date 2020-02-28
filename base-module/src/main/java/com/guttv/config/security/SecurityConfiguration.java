@@ -7,10 +7,13 @@ import com.guttv.bean.system.SysUser;
 import com.guttv.config.security.jwt.JwtAuthenticationTokenFilter;
 import com.guttv.config.security.phoneSecurity.CodeAuthenticationFilter;
 import com.guttv.config.security.phoneSecurity.CodeAuthenticationProvider;
+import com.guttv.config.security.phoneSecurity.CodeUtil;
+import com.guttv.config.security.phoneSecurity.SimpleCodeUtil;
 import com.guttv.mapper.system.AuthMapper;
 import com.guttv.mapper.system.SysUserMapper;
 import com.guttv.util.ResultUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -88,6 +91,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter() {
         return new JwtAuthenticationTokenFilter();
+    }
+    /**
+     * jwt验证方式过滤器
+     */
+    @Bean
+    @ConditionalOnMissingBean(CodeUtil.class)
+    public CodeUtil codeUtil() {
+        return new SimpleCodeUtil();
     }
 
     /**
