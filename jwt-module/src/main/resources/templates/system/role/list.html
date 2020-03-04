@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Layui</title>
+    <meta name="renderer" content="webkit">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<div>
+    <div style="width: 50%;display: inline-block;float: left">
+        <table class="layui-table" hidden id="table" lay-filter="table"></table>
+    </div>
+    <div style="width: 45%;display: inline-block;float: left">
+        <div id="auth"></div>
+    </div>
+</div>
+
+<!--头工具栏-->
+<script type="text/html" id="toolbar">
+    <!--查询表单-->
+    <form name="search" lay-filter="search" class="layui-form layui-inline">
+        <div class="layui-input-inline">
+            <input type="text" name="roleName" required placeholder="角色名" autocomplete="off" class="layui-input">
+        </div>
+    </form>
+    <button class="layui-btn layui-btn-sm" lay-event="search">查询</button>
+    <button class="layui-btn layui-btn-sm" lay-event="reset">重置</button>
+</script>
+<!--工具条-->
+<script type="text/html" id="barTools">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="auth">权限</a>
+</script>
+
+
+<script type="text/html" id="addOrUpdate">
+    <form id="formTemplate" class="layui-form" lay-filter="formTemplate">
+        <input type="hidden" name="id">
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="roleName">名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="roleName" id="roleName" required lay-verify="required" placeholder="请输入名称"
+                       autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="note">注释</label>
+            <div class="layui-input-block">
+                <input type="text" name="note" id="note" required lay-verify="required" placeholder="请输入注释"
+                       autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+    </form>
+</script>
+
+
+<script src="/layui/layui.all.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="/js/app.js"></script>
+<script type="text/javascript">
+    let table = layui.table, $ = layui.$;
+    let $table = table.render({
+        height: 'full-0',
+        elem: '#table',
+        url: '/role/dataList',
+        page: true,
+        limits: [20, 50, 100],
+        limit: 20,
+        toolbar: '#toolbar',
+        defaultToolbar: [{
+            title: '刷新'
+            , layEvent: 'refresh'
+            , icon: 'layui-icon-refresh'
+        }, {
+            title: '新增'
+            , layEvent: 'add'
+            , icon: 'layui-icon-add-circle'
+        }, 'exports'],
+        request: {pageName: 'pageNum', limitName: 'pageSize'},
+        cols: [
+            [
+                {type: 'checkbox', fixed: 'left'},
+                {field: 'roleName', title: '角色名', width: 110},
+                {field: 'note', title: '注释', width: 110},
+                {fixed: 'right', title: '操作', width: 170, align: 'center', toolbar: '#barTools'}
+            ]
+        ]
+    });
+
+    //头工具栏事件
+    table.on('toolbar(table)', function (obj) {
+        switch (obj.event) {
+            case 'search':
+                let filterData = layui.form.val('search');
+                table.reload('table', {
+                    where: filterData
+                    , page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                }); //只重载数据
+                //参数回填
+                layui.form.val('search', filterData);
+                break;
+            case 'reset':
+                document.forms['search'].reset();
+                table.reload('table', {
+                    where: layui.form.val('search')
+                    , page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                }); //只重载数据
+                break;
+            case 'refresh':
+                table.reload('table');
+                break;
+            case 'add':
+                add();
+                break;
+        }
+    });
+
+
+    //监听工具条
+    table.on('tool(table)', function (obj) {
+        let data = obj.data;
+        if (obj.event === 'auth') {
+            showAuth(obj);
+        } else if (obj.event === 'del') {
+            objDel(obj);
+        } else if (obj.event === 'edit') {
+            add(data);
+        }
+    });
+
+    layui.config({
+        base: '../'
+    }).extend({
+        treeTable: 'treeTable/treeTable'
+    });
+
+    /**
+     * 显示角色的权限信息
+     */
+    function showAuth(obj) {
+        let roleId = obj.data.id;
+        layui.use(['layer', 'util', 'treeTable'], function () {
+            let $ = layui.jquery;
+            let layer = layui.layer;
+            let treeTable = layui.treeTable;
+            // 渲染表格
+            let insTb = treeTable.render({
+                elem: '#auth',
+                tree: {
+                    iconIndex: 1,
+                    pidName: 'parentNode',
+                    isPidData: true
+                },
+                cols: [
+                    {type: 'checkbox'},
+                    {field: 'title',align: 'center',width:220 ,title: '<button style="float: left" class="save layui-btn-xs layui-btn layui-btn-danger">保存</button>标题' },
+                    {field: 'url', title: '路径'},
+                    {field: 'authCode', title: '权限码', edit: 'text'},
+                    {field: 'note', title: '注释'},
+                ],
+                reqData: function (data, callback) {
+                    $.get('/role/auth/' + obj.data.id, function (res) {
+                        callback(res.data.data);
+                        insTb.setChecked(res.data.checkedList);
+                    });
+                },
+                style: 'margin-top:0;'
+            });
+            $('.save').click(function () {
+                let load = layer.load();
+                //获取选中数据
+                let dataList = insTb.checkStatus();
+                let param={};
+                param.authIds=[];
+                param.roleId=roleId;
+                for (let i=0;i<dataList.length;i++){
+                    param.authIds.push(dataList[i].id);
+                }
+                $.ajax({
+                    type: "post",
+                    url: '/role/addAuth',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(param),
+                    success: function (result) {
+                        layer.close(load);
+                        layer.msg(result.msg);
+                    }
+                });
+            });
+        });
+
+    }
+
+    /**
+     * 单个删除
+     * @param obj 工具条事件对象
+     */
+    function objDel(obj) {
+        layer.confirm('真的删除行么', function (index) {
+            $.ajax({
+                type: "post",
+                url: '/role/delete',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(obj.data),
+                success: function (result) {
+                    layer.msg(result.msg);
+                    if (result.code === 0) {
+                        obj.del();
+                        layer.close(index);
+                    }
+                }
+            });
+        });
+    }
+
+    /**
+     * 角色添加更新弹窗
+     * @param data 更新时要填充的表单属性对象
+     */
+    function add(data) {
+        layer.open({
+            offset: 't',
+            content: $('#addOrUpdate').html(),
+            success: function () {
+                if (data) {
+                    layui.form.val('formTemplate', data);
+                }
+            },
+            yes: function (index) {
+                let formData = layui.form.val('formTemplate');
+                $.ajax({
+                    type: "post",
+                    url: '/role/addOrUpdate',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(formData),
+                    success: function (result) {
+                        layer.msg(result.msg);
+                        if (result.code === 0) {
+                            $table.reload({
+                                page: {
+                                    curr: 1 //重新从第 1 页开始
+                                }
+                            });
+                            layer.close(index);
+                        }
+                    }
+                });
+            }
+        });
+
+
+    }
+
+</script>
+
+</body>
+</html>

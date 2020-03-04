@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.github.mapper.system.SysUserMapper">
+    <sql id="Base_Column_List">
+        id,userName,password,available,note
+    </sql>
+
+    <sql id="where_column_list">
+        <if test='id != null'>
+            and id = #{id}
+        </if>
+
+        <if test='userName != null and userName != ""'>
+            and userName  like concat('%',#{userName},'%')
+        </if>
+
+        <if test='password != null and password != ""'>
+            and password = #{password}
+        </if>
+
+        <if test='available != null'>
+            and available = #{available}
+        </if>
+
+        <if test='note != null and note != ""'>
+            and note = #{note}
+        </if>
+    </sql>
+    <select id="selectList" resultType="com.github.bean.system.SysUser" parameterType="com.github.bean.system.SysUser">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_user
+        <where>
+            <include refid="where_column_list"/>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectOne" resultType="com.github.bean.system.SysUser" parameterType="com.github.bean.system.SysUser">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_user
+        <where>
+            <include refid="where_column_list"/>
+        </where>
+        limit 1
+    </select>
+
+
+    <insert id="insert" parameterType="com.github.bean.system.SysUser" useGeneratedKeys="true" keyProperty="id">
+        insert into t_sys_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            
+            <if test="id != null">
+                 id,
+            </if>
+            <if test="userName != null">
+                 userName,
+            </if>
+            <if test="password != null">
+                 password,
+            </if>
+            <if test="available != null">
+                 available,
+            </if>
+            <if test="note != null">
+                 note,
+            </if>
+            
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="userName != null">
+                #{userName},
+            </if>
+            <if test="password != null">
+                #{password},
+            </if>
+            <if test="available != null">
+                #{available},
+            </if>
+            <if test="note != null">
+                #{note},
+            </if>
+            
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.github.bean.system.SysUser">
+        update t_sys_user
+        <set>
+            
+            <if test="id != null">
+                id = #{id},
+            </if>
+            <if test="userName != null">
+                userName = #{userName},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="available != null">
+                available = #{available},
+            </if>
+            <if test="note != null">
+                note = #{note},
+            </if>
+            
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

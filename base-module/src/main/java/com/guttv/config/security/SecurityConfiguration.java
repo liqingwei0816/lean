@@ -4,13 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guttv.aop.OperatorAop;
 import com.guttv.bean.system.Auth;
 import com.guttv.bean.system.SysUser;
-import com.guttv.config.security.jwt.JwtAuthenticationTokenFilter;
 import com.guttv.config.security.phoneSecurity.CodeAuthenticationFilter;
 import com.guttv.config.security.phoneSecurity.CodeAuthenticationProvider;
 import com.guttv.config.security.phoneSecurity.CodeUtil;
 import com.guttv.config.security.phoneSecurity.SimpleCodeUtil;
-import com.guttv.mapper.system.AuthMapper;
 import com.guttv.mapper.system.SysUserMapper;
+import com.guttv.service.system.AuthService;
 import com.guttv.util.ResultUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -43,7 +42,7 @@ import java.util.stream.Collectors;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Resource
-    private AuthMapper authMapper;
+    private AuthService authService;
     @Resource
     private SysUserMapper sysUserMapper;
     @Resource
@@ -59,17 +58,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         //允许同域下frame嵌套
-        http.headers().frameOptions().sameOrigin().and().formLogin().loginPage("/login").successForwardUrl("/").and().logout().logoutSuccessUrl("/login").and().httpBasic();
+        http.headers().frameOptions().sameOrigin()
+                //登录相关
+                .and().formLogin().loginPage("/loginPage").loginProcessingUrl("/login").defaultSuccessUrl("/index")
+                //登出相关
+                .and().logout().logoutSuccessUrl("/login").and().httpBasic();
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry urlRegistry = http.authorizeRequests();
 
-        List<Auth> auths = authMapper.selectAll();
+        List<Auth> auths = authService.getAll();
 
         //系统自定义权限
         auths.stream()
                 .filter(a -> !StringUtils.isEmpty(a.getUrl()) && !a.getUrl().trim().isEmpty())
                 .forEach(e -> urlRegistry.antMatchers(e.getUrl().split(";")).hasAuthority(e.getAuthCode()));
 
-        http.authorizeRequests().antMatchers("/login**", "/codeLogin").permitAll().anyRequest().authenticated();
+        http.authorizeRequests().antMatchers("/login**","/loginPage", "/codeLogin").permitAll().anyRequest().authenticated();
         //自定义权限不足是返回信息
         http.exceptionHandling(exceptionHandlingCustomizer -> exceptionHandlingCustomizer.accessDeniedHandler((httpServletRequest, httpServletResponse, e) -> {
             httpServletResponse.setStatus(HttpServletResponse.SC_OK);
@@ -82,18 +85,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         }));
         //添加自定义拦截器
         http.addFilterAfter(codeAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(jwtAuthenticationTokenFilter(),UsernamePasswordAuthenticationFilter.class);
     }
 
-    /**
-     * jwt验证方式过滤器
-     */
-    @Bean
-    public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter() {
-        return new JwtAuthenticationTokenFilter();
-    }
-    /**
-     * jwt验证方式过滤器
+     /**
+     * 手机登录验证码默认实现
      */
     @Bean
     @ConditionalOnMissingBean(CodeUtil.class)
@@ -141,7 +136,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             if (sysUser == null) {
                 return null;
             }
-            List<SimpleGrantedAuthority> authorities = authMapper.authoritiesByUsernameQuery(userName).stream().filter(a -> !StringUtils.isEmpty(a.getAuthCode())).map(e -> new SimpleGrantedAuthority(e.getAuthCode())).collect(Collectors.toList());
+            List<SimpleGrantedAuthority> authorities = authService.authoritiesByUsernameQuery(userName).stream().filter(a -> !StringUtils.isEmpty(a.getAuthCode())).map(e -> new SimpleGrantedAuthority(e.getAuthCode())).collect(Collectors.toList());
             return new User(userName, sysUser.getPassword(), sysUser.getAvailable(), true, true, true, authorities);
         });
         // 禁止隐藏用户未找到异常
@@ -169,8 +164,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      */
     @Bean
     public CodeAuthenticationProvider codeAuthenticationProvider() {
-        CodeAuthenticationProvider codeAuthenticationProvider = new CodeAuthenticationProvider();
-        codeAuthenticationProvider.setAuthMapper(authMapper);
-        return codeAuthenticationProvider;
+        return new CodeAuthenticationProvider();
     }
 }

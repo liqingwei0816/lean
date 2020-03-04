@@ -11,14 +11,17 @@ spring:
     time-zone: GMT+8
   thymeleaf:
     cache: false
-
+  generator:
+    package-name: com.guttv.ums.crm
+    table-prefix: u_
   cache:
     jcache:
       config: classpath:ehcache.xml
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
 
+
 logging:
   level:
-    root: info
+    root: debug
     com.guttv.mapper: debug

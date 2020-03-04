@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="[(${packageName})].mapper.[(${table.entityName})]Mapper">
+    <sql id="Base_Column_List">
+        [(${table.keyList})]
+    </sql>
+
+    <sql id="where_column_list"> [# th:each="field : ${table.fields}"][# th:if="${field.javaType}=='String'"]
+        <if test='[(${field.name})] != null and [(${field.name})] != ""'>
+            and [(${field.name})] = #{[(${field.name})]}
+        </if> [/] [# th:if="${field.javaType}!='String'"]
+        <if test='[(${field.name})] != null'>
+            and [(${field.name})] = #{[(${field.name})]}
+        </if> [/] [/]
+    </sql>
+
+    <select id="selectList" resultType="[(${packageName})].bean.[(${table.entityName})]" parameterType="[(${packageName})].bean.[(${table.entityName})]">
+        select
+        <include refid="Base_Column_List"/>
+        from [(${table.name})]
+        <where>
+            <include refid="where_column_list"/>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectOne" resultType="[(${packageName})].bean.[(${table.entityName})]" parameterType="[(${packageName})].bean.[(${table.entityName})]">
+        select
+        <include refid="Base_Column_List"/>
+        from [(${table.name})]
+        <where>
+            <include refid="where_column_list"/>
+        </where>
+        limit 1
+    </select>
+
+
+    <insert id="insert" parameterType="[(${packageName})].bean.[(${table.entityName})]"  useGeneratedKeys="true" keyProperty="id">
+        insert into [(${table.name})]
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            [# th:each="field : ${table.fields}"]
+            <if test="[(${field.name})] != null">
+                 [(${field.name})],
+            </if>
+            [/]
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            [# th:each="field : ${table.fields}"]
+            <if test="[(${field.name})] != null">
+                #{[(${field.name})]},
+            </if>
+            [/]
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="[(${packageName})].bean.[(${table.entityName})]">
+        update [(${table.name})]
+        <set>
+            [# th:each="field : ${table.fields}"]
+            <if test="[(${field.name})] != null">
+                [(${field.name})] = #{[(${field.name})]},
+            </if>
+            [/]
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

@@ -2,12 +2,14 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="demo" />
         <module name="base-module" />
+        <module name="jwt-module" />
+        <module name="demo" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -21,6 +23,7 @@
       <module name="authority" options="-parameters" />
       <module name="base-module" options="-parameters" />
       <module name="demo" options="-parameters" />
+      <module name="jwt-module" options="-parameters" />
       <module name="sentinel" options="-parameters" />
     </option>
   </component>

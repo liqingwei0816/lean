@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.github.mapper.system.RoleAuthMapper">
+    <sql id="Base_Column_List">
+        id,roleId,authId
+    </sql>
+
+    <sql id="where_column_list">
+        <if test='id != null'>
+            and id = #{id}
+        </if>
+        <if test='roleId != null'>
+            and roleId = #{roleId}
+        </if>
+
+        <if test='authId != null'>
+            and authId = #{authId}
+        </if>
+
+    </sql>
+    <select id="selectList" resultType="com.github.bean.system.RoleAuth" parameterType="com.github.bean.system.RoleAuth">
+        select
+        <include refid="Base_Column_List"/>
+        from t_role_auth
+        <where>
+            <include refid="where_column_list"/>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectOne" resultType="com.github.bean.system.RoleAuth" parameterType="com.github.bean.system.RoleAuth">
+        select
+        <include refid="Base_Column_List"/>
+        from t_role_auth
+        <where>
+            <include refid="where_column_list"/>
+        </where>
+        limit 1
+    </select>
+
+
+    <insert id="insert" parameterType="com.github.bean.system.RoleAuth" useGeneratedKeys="true" keyProperty="id">
+        insert into t_role_auth
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            
+            <if test="roleId != null">
+                 roleId,
+            </if>
+            <if test="authId != null">
+                 authId,
+            </if>
+            
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            
+            <if test="roleId != null">
+                #{roleId},
+            </if>
+            <if test="authId != null">
+                #{authId},
+            </if>
+            
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.github.bean.system.RoleAuth">
+        update t_role_auth
+        <set>
+            
+            <if test="roleId != null">
+                roleId = #{roleId},
+            </if>
+            <if test="authId != null">
+                authId = #{authId},
+            </if>
+            
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>
