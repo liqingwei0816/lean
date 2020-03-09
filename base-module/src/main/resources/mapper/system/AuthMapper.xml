@@ -22,7 +22,7 @@
             and parentNode = #{parentNode}
         </if>
     </sql>
-    <select id="selectList" resultType="com.guttv.bean.system.Auth" parameterType="com.guttv.bean.system.Auth">
+    <select id="selectList" resultType="com.guttv.bean.system.Auth" >
         select
         <include refid="Base_Column_List"/>
         from t_auth
@@ -32,7 +32,7 @@
         order by id desc
     </select>
 
-    <select id="selectOne" resultType="com.guttv.bean.system.Auth" parameterType="com.guttv.bean.system.Auth">
+    <select id="selectOne" resultType="com.guttv.bean.system.Auth">
         select
         <include refid="Base_Column_List"/>
         from t_auth
@@ -43,7 +43,7 @@
     </select>
 
 
-    <insert id="insert" parameterType="com.guttv.bean.system.Auth" useGeneratedKeys="true" keyProperty="id" >
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
         insert into t_auth
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -87,7 +87,7 @@
         </trim>
     </insert>
 
-    <update id="updateById" parameterType="com.guttv.bean.system.Auth">
+    <update id="updateById">
         update t_auth
         <set>
             

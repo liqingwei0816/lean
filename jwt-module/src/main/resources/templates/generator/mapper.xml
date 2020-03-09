@@ -7,14 +7,14 @@
 
     <sql id="where_column_list"> [# th:each="field : ${table.fields}"][# th:if="${field.javaType}=='String'"]
         <if test='[(${field.name})] != null and [(${field.name})] != ""'>
-            and [(${field.name})] = #{[(${field.name})]}
+            and `[(${field.name})]` = #{[(${field.name})]}
         </if> [/] [# th:if="${field.javaType}!='String'"]
         <if test='[(${field.name})] != null'>
-            and [(${field.name})] = #{[(${field.name})]}
+            and `[(${field.name})]` = #{[(${field.name})]}
         </if> [/] [/]
     </sql>
 
-    <select id="selectList" resultType="[(${packageName})].bean.[(${table.entityName})]" parameterType="[(${packageName})].bean.[(${table.entityName})]">
+    <select id="selectList" resultType="[(${packageName})].bean.[(${table.entityName})]">
         select
         <include refid="Base_Column_List"/>
         from [(${table.name})]
@@ -24,7 +24,7 @@
         order by id desc
     </select>
 
-    <select id="selectOne" resultType="[(${packageName})].bean.[(${table.entityName})]" parameterType="[(${packageName})].bean.[(${table.entityName})]">
+    <select id="selectOne" resultType="[(${packageName})].bean.[(${table.entityName})]">
         select
         <include refid="Base_Column_List"/>
         from [(${table.name})]
@@ -35,12 +35,12 @@
     </select>
 
 
-    <insert id="insert" parameterType="[(${packageName})].bean.[(${table.entityName})]"  useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert"  useGeneratedKeys="true" keyProperty="id">
         insert into [(${table.name})]
         <trim prefix="(" suffix=")" suffixOverrides=",">
             [# th:each="field : ${table.fields}"]
             <if test="[(${field.name})] != null">
-                 [(${field.name})],
+                `[(${field.name})]`,
             </if>
             [/]
         </trim>
@@ -53,16 +53,34 @@
         </trim>
     </insert>
 
-    <update id="updateById" parameterType="[(${packageName})].bean.[(${table.entityName})]">
+    <update id="updateById">
         update [(${table.name})]
         <set>
-            [# th:each="field : ${table.fields}"]
+            [# th:each="field : ${table.fields}"][# th:if="${field.name} != 'id'"]
             <if test="[(${field.name})] != null">
-                [(${field.name})] = #{[(${field.name})]},
+                `[(${field.name})]` = #{[(${field.name})]},
             </if>
-            [/]
+            [/][/]
         </set>
         where id = #{id}
+    </update>
+
+    <update id="updateByParam">
+        update [(${table.name})]
+        <set>
+            [# th:each="field : ${table.fields}"][# th:if="${field.name} != 'id'"]
+            <if test="[(${field.name})] != null">
+                `[(${field.name})]` = #{valueParam.[(${field.name})]},
+            </if>
+            [/][/]
+        </set>
+        <where>
+            [# th:each="field : ${table.fields}"]
+            <if test="[(${field.name})] != null">
+                and  `[(${field.name})]` = #{keyParam.[(${field.name})]},
+            </if>
+            [/]
+        </where>
     </update>
 
 </mapper>

@@ -18,7 +18,7 @@
         </if>
 
     </sql>
-    <select id="selectList" resultType="com.guttv.bean.system.RoleAuth" parameterType="com.guttv.bean.system.RoleAuth">
+    <select id="selectList" resultType="com.guttv.bean.system.RoleAuth">
         select
         <include refid="Base_Column_List"/>
         from t_role_auth
@@ -28,7 +28,7 @@
         order by id desc
     </select>
 
-    <select id="selectOne" resultType="com.guttv.bean.system.RoleAuth" parameterType="com.guttv.bean.system.RoleAuth">
+    <select id="selectOne" resultType="com.guttv.bean.system.RoleAuth">
         select
         <include refid="Base_Column_List"/>
         from t_role_auth
@@ -39,7 +39,7 @@
     </select>
 
 
-    <insert id="insert" parameterType="com.guttv.bean.system.RoleAuth" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         insert into t_role_auth
         <trim prefix="(" suffix=")" suffixOverrides=",">
             
@@ -63,7 +63,7 @@
         </trim>
     </insert>
 
-    <update id="updateById" parameterType="com.guttv.bean.system.RoleAuth">
+    <update id="updateById">
         update t_role_auth
         <set>
             

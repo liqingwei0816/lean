@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import [(${packageName})].bean.[(${table.entityName})];
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -30,4 +31,11 @@ public interface [(${table.entityName})]Mapper {
     Integer insert(@NotNull [(${table.entityName})] [(${table.beanName})]);
 
     Integer updateById(@NotNull [(${table.entityName})] [(${table.beanName})]);
+    /**
+     * 根据参数更新
+     * @param valueParam 要更新的值
+     * @param keyParam 要更新的key 默认为 =
+     * @return 更新的记录数
+     */
+    Integer updateByParam(@Param("valueParam") [(${table.entityName})] valueParam,@Param("keyParam") [(${table.entityName})] keyParam);
 }

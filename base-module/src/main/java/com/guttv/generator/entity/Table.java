@@ -7,10 +7,8 @@ import com.guttv.generator.mapper.TableMapper;
 import com.guttv.util.SpringUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -43,8 +41,9 @@ public class Table implements IPage {
         return entityName.replaceFirst(String.valueOf(entityName.charAt(0)), String.valueOf(entityName.charAt(0)).toLowerCase());
     }
 
+    @SuppressWarnings("unused")
     public String getKeyList() {
-        return getFields().stream().map(Field::getName).collect(Collectors.joining(","));
+        return getFields().stream().map(field->"`"+field.getName()+"`").collect(Collectors.joining(","));
     }
 
     @SuppressWarnings("unused")
@@ -67,12 +66,4 @@ public class Table implements IPage {
         return beanName;
     }
 
-    public static List<Table> parse(List<Map<String, Object>> list) {
-        return list.stream().map(e -> {
-            Table table = new Table();
-            table.setName(e.values().iterator().next().toString());
-            return table;
-        }).collect(Collectors.toList());
-
-    }
 }

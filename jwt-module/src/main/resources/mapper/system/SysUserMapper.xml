@@ -26,7 +26,7 @@
             and note = #{note}
         </if>
     </sql>
-    <select id="selectList" resultType="com.github.bean.system.SysUser" parameterType="com.github.bean.system.SysUser">
+    <select id="selectList" resultType="com.github.bean.system.SysUser">
         select
         <include refid="Base_Column_List"/>
         from t_sys_user
@@ -36,7 +36,7 @@
         order by id desc
     </select>
 
-    <select id="selectOne" resultType="com.github.bean.system.SysUser" parameterType="com.github.bean.system.SysUser">
+    <select id="selectOne" resultType="com.github.bean.system.SysUser">
         select
         <include refid="Base_Column_List"/>
         from t_sys_user
@@ -47,7 +47,7 @@
     </select>
 
 
-    <insert id="insert" parameterType="com.github.bean.system.SysUser" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             
@@ -89,7 +89,7 @@
         </trim>
     </insert>
 
-    <update id="updateById" parameterType="com.github.bean.system.SysUser">
+    <update id="updateById">
         update t_sys_user
         <set>
             

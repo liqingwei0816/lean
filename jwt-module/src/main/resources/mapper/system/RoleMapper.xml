@@ -17,7 +17,7 @@
         </if>
     </sql>
 
-    <select id="selectList" resultType="com.github.bean.system.Role" parameterType="com.github.bean.system.Role">
+    <select id="selectList" resultType="com.github.bean.system.Role">
         select
         <include refid="Base_Column_List"/>
         from t_role
@@ -27,7 +27,7 @@
         order by id desc
     </select>
 
-    <select id="selectOne" resultType="com.github.bean.system.Role" parameterType="com.github.bean.system.Role">
+    <select id="selectOne" resultType="com.github.bean.system.Role">
         select
         <include refid="Base_Column_List"/>
         from t_role
@@ -38,7 +38,7 @@
     </select>
 
 
-    <insert id="insert" parameterType="com.github.bean.system.Role" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         insert into t_role
         <trim prefix="(" suffix=")" suffixOverrides=",">
             
@@ -68,7 +68,7 @@
         </trim>
     </insert>
 
-    <update id="updateById" parameterType="com.github.bean.system.Role">
+    <update id="updateById">
         update t_role
         <set>
             

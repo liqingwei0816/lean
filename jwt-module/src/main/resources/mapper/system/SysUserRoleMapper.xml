@@ -16,7 +16,7 @@
             and sysUserId = #{sysUserId}
         </if>
     </sql>
-    <select id="selectList" resultType="com.github.bean.system.SysUserRole" parameterType="com.github.bean.system.SysUserRole">
+    <select id="selectList" resultType="com.github.bean.system.SysUserRole">
         select
         <include refid="Base_Column_List"/>
         from t_sys_user_role
@@ -26,7 +26,7 @@
         order by id desc
     </select>
 
-    <select id="selectOne" resultType="com.github.bean.system.SysUserRole" parameterType="com.github.bean.system.SysUserRole">
+    <select id="selectOne" resultType="com.github.bean.system.SysUserRole">
         select
         <include refid="Base_Column_List"/>
         from t_sys_user_role
@@ -37,7 +37,7 @@
     </select>
 
 
-    <insert id="insert" parameterType="com.github.bean.system.SysUserRole" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_user_role
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -63,7 +63,7 @@
         </trim>
     </insert>
 
-    <insert id="insertNoExists" parameterType="com.github.bean.system.SysUserRole" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertNoExists" useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_user_role
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="roleId != null">
@@ -86,7 +86,7 @@
         WHERE NOT EXISTS ( SELECT * FROM t_sys_user_role WHERE roleId = #{roleId} and sysUserId=#{sysUserId})
     </insert>
 
-    <update id="updateById" parameterType="com.github.bean.system.SysUserRole">
+    <update id="updateById">
         update t_sys_user_role
         <set>
             <if test="id != null">

@@ -15,7 +15,7 @@ public interface TableMapper {
 
     @Select("select COLUMN_NAME name, DATA_TYPE type, COLUMN_COMMENT comment,IFNULL(CHARACTER_MAXIMUM_LENGTH,0) + IFNULL(NUMERIC_PRECISION,0) length" +
             " FROM INFORMATION_SCHEMA.COLUMNS" +
-            " where table_name = #{tableName}")
+            " where table_name = #{tableName} ORDER BY ORDINAL_POSITION")
     List<Field> getFields(String tableName);
 
 
