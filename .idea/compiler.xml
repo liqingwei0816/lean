@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="base-module" />
         <module name="jwt-module" />
+        <module name="quartz-auto-config" />
         <module name="demo" />
       </profile>
     </annotationProcessing>
@@ -24,6 +25,7 @@
       <module name="base-module" options="-parameters" />
       <module name="demo" options="-parameters" />
       <module name="jwt-module" options="-parameters" />
+      <module name="quartz-auto-config" options="-parameters" />
       <module name="sentinel" options="-parameters" />
     </option>
   </component>

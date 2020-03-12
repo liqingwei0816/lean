@@ -69,9 +69,6 @@
         <div class="layui-side-scroll">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree" lay-filter="test">
-                <li lay-id="user" class="layui-nav-item" sec:authorize-url="/user/list"><a class="tabSelect"
-                                                                                           href="/user/list">用户管理</a>
-                </li>
                 <li class="layui-nav-item">
                     <a class="" href="javascript:">系统管理</a>
                     <dl class="layui-nav-child">
@@ -86,8 +83,14 @@
                 <li sec:authorize-url="/table/list" lay-id="table" class="layui-nav-item">
                     <a class="tabSelect" href="/table/list">表单管理</a>
                 </li>
+                <li sec:authorize-url="/table/list" lay-id="job" class="layui-nav-item">
+                    <a class="tabSelect" th:href="@{/quartz/list}">任务管理</a>
+                </li>
                 <li sec:authorize-url="/table/list" lay-id="coupon" class="layui-nav-item">
-                    <a class="tabSelect" href="/coupon/list">卷管理</a>
+                    <a class="tabSelect" th:href="@{/coupon/list}">卷管理</a>
+                </li>
+                <li sec:authorize-url="/table/list" lay-id="druid" class="layui-nav-item">
+                    <a class="tabSelect" th:href="@{/druid/index.html}">数据库监控</a>
                 </li>
             </ul>
         </div>

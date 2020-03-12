@@ -1,13 +1,10 @@
 package [(${packageName})].controller;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import [(${packageName})].bean.[(${table.entityName})];
 import [(${packageName})].service.[(${table.entityName})]Service;
-import com.guttv.util.ResultUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
+
 import javax.annotation.Resource;
 
 @RestController
