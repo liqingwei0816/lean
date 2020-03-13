@@ -49,6 +49,10 @@ public class JobVo {
      */
     private String misfireInstruction;
     /**
+     * 任务参数 json格式
+     */
+    private String jobData;
+    /**
      * 上次执行时间
      */
     private Date previousFireTime;

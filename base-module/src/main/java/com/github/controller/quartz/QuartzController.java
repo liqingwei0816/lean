@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 import org.quartz.impl.JobDetailImpl;
 import org.quartz.impl.matchers.GroupMatcher;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
+@ConditionalOnClass(value = {Scheduler.class})
 @RequestMapping("quartz")
 public class QuartzController {
 
@@ -29,7 +31,7 @@ public class QuartzController {
 
     @RequestMapping("jobs")
     public Object jobs(String name) throws SchedulerException {
-
+        System.out.println(scheduler.getClass().getName());
         List<JobVo> collect = scheduler.getTriggerKeys(GroupMatcher.anyGroup()).stream()
                 .filter(triggerKey -> triggerKey.getName().toLowerCase().contains(name==null?"":name.toLowerCase()))
                 .map(this::triggerKey2Job).collect(Collectors.toList());
@@ -74,6 +76,10 @@ public class QuartzController {
                 job.setDurability(jobDetailImpl.isDurable());
                 //设置方式为使用DisallowedConcurrentExection注解
                 job.setConcurrentExectionDisallowed(jobDetailImpl.isConcurrentExectionDisallowed());
+                Object data = jobDetailImpl.getJobDataMap().get("data");
+                if (data!=null){
+                    job.setJobData(data.toString());
+                }
 
                 if (trigger instanceof CronTrigger) {
                     job.setCron(((CronTrigger) trigger).getCronExpression());

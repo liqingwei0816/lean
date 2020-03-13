@@ -43,27 +43,27 @@
         <div class="layui-form-item">
             <label class="layui-form-label" for="name">名称</label>
             <div class="layui-input-block">
-                <input type="text" name="name" id="name" placeholder="请输入名称"
-                       autocomplete="off"
-                       class="layui-input">
+                <input type="text" name="name" id="name" {{d.update}}  placeholder="请输入名称"
+                autocomplete="off"
+                class="layui-input">
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label" for="group">组名</label>
             <div class="layui-input-block">
-                <input type="text" name="group" id="group" placeholder="请输入组"
-                       autocomplete="off"
-                       class="layui-input">
+                <input type="text" name="group" id="group" {{d.update}} placeholder="请输入组"
+                autocomplete="off"
+                class="layui-input">
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label" for="jobClass">工作类</label>
             <div class="layui-input-block">
-                <input type="text" name="jobClass" id="jobClass" placeholder="请输入工作类"
-                       autocomplete="off"
-                       class="layui-input">
+                <input type="text" name="jobClass" id="jobClass" {{d.update}} placeholder="请输入工作类"
+                autocomplete="off"
+                class="layui-input">
             </div>
         </div>
 
@@ -88,181 +88,202 @@
             </div>
         </div>
 
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="jobData">jobData</label>
+            <div class="layui-input-block">
+                <input type="text" name="jobData" id="jobData" placeholder="请输入jobData"
+                       autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
         <div class="layui-layer-btn layui-layer-btn-">
             <button type="submit" style="border: 0;background: white"><a class="layui-layer-btn0">确定</a></button>
         </div>
     </form>
 </script>
 
-<script src="/layui/layui.all.js" type="text/javascript" charset="utf-8"></script>
+<script src="/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" th:inline="javascript">
-    let table = layui.table, $ = layui.$;
-    let $table = table.render({
-        height: 'full-0',
-        elem: '#table',
-        url: '/quartz/jobs',
-        page: false,
-        limits: [20, 50, 100],
-        limit: 20,
-        toolbar: '#toolbar',
-        defaultToolbar: [{
-            title: '刷新'
-            , layEvent: 'refresh'
-            , icon: 'layui-icon-refresh'
-        }, {
-            title: '新增'
-            , layEvent: 'add'
-            , icon: 'layui-icon-add-circle'
-        }, 'filter', 'exports', 'print'],
-        request: {pageName: 'pageNum', limitName: 'pageSize'},
-        cols: [
-            [
-               /* {type: 'checkbox', fixed: 'left'},*/
-                {field: 'name', title: '名称', width: 110},
-                {field: 'group', title: '组', width: 110},
-                {field: 'jobClass', title: '工作类'},
-                {field: 'state', title: '状态', width: 110},
-                {field: 'cron', title: 'cron', width: 110},
-                {field: 'previousFireTime', title: '上次执行时间', width: 160},
-                {field: 'nextFireTime', title: '下次执行时间', width: 160},
-                {field: 'misfireInstruction', title: 'Misfire策略', width: 150},
-                {field: 'concurrentExectionDisallowed', title: '不允许并发', width: 110},
-                {field: 'description', title: '备注', width: 110},
-                {field: 'durability', title: '自动删除', width: 110},
-                {fixed: 'right', width: 210, align: 'center', toolbar: '#barRights'}
+    layui.use(['layer', 'form', 'table', 'jquery','laytpl'], function () {
+        let table = layui.table, $ = layui.jquery, laytpl = layui.laytpl,layer = layui.layer, form = layui.form;
+
+        let $table = table.render({
+            height: 'full-0',
+            elem: '#table',
+            url: '/quartz/jobs',
+            page: false,
+            limits: [20, 50, 100],
+            limit: 20,
+            toolbar: '#toolbar',
+            defaultToolbar: [{
+                title: '刷新'
+                , layEvent: 'refresh'
+                , icon: 'layui-icon-refresh'
+            }, {
+                title: '新增'
+                , layEvent: 'add'
+                , icon: 'layui-icon-add-circle'
+            }, 'filter', 'exports', 'print'],
+            request: {pageName: 'pageNum', limitName: 'pageSize'},
+            cols: [
+                [
+                    /* {type: 'checkbox', fixed: 'left'},*/
+                    {field: 'name', title: '名称', width: 110},
+                    {field: 'group', title: '组', width: 110},
+                    {field: 'jobClass', title: '工作类'},
+                    {field: 'state', title: '状态', width: 60},
+                    {field: 'cron', title: 'cron'},
+                    {field: 'previousFireTime', title: '上次执行时间', width: 160},
+                    {field: 'nextFireTime', title: '下次执行时间', width: 160},
+                    {field: 'misfireInstruction', title: 'Misfire策略', width: 150},
+                    {field: 'concurrentExectionDisallowed', title: '不允许并发', width: 110},
+                    {field: 'jobData', title: 'jobData', width: 110},
+                    {field: 'description', title: '备注'},
+                    {field: 'durability', title: '自动删除', width: 110},
+                    {fixed: 'right', width: 210, align: 'center', toolbar: '#barRights'}
+                ]
             ]
-        ]
-    });
-
-    //头工具栏事件
-    table.on('toolbar(table)', function (obj) {
-        let load;
-        switch (obj.event) {
-            case 'search':
-                load = layer.load();
-                let filterData = layui.form.val('search');
-                table.reload('table', {
-                    where: filterData
-                    , page: {
-                        curr: 1 //重新从第 1 页开始
-                    }
-                }); //只重载数据
-                //参数回填
-                layui.form.val('search', filterData);
-                layer.close(load);
-                break;
-            case 'reset':
-                load = layer.load();
-                document.forms['search'].reset();
-                table.reload('table', {
-                    where: layui.form.val('search')
-                    , page: {
-                        curr: 1 //重新从第 1 页开始
-                    }
-                }); //只重载数据
-                layer.close(load);
-                break;
-            case 'refresh':
-                load = layer.load();
-                table.reload('table');
-                layer.close(load);
-                break;
-            case 'add':
-                add();
-                break;
-            default:
-                break;
-        }
-    });
-
-
-    //监听工具条
-    table.on('tool(table)', function (obj) {
-        let data = obj.data;
-        if (obj.event === 'del') {
-            objOperation(data, "delete", "删除");
-        } else if (obj.event === 'edit') {
-            add(data);
-        } else if (obj.event === 'pause') {
-            objOperation(data, "pause", "暂停");
-        } else if (obj.event === 'reboot') {
-            objOperation(data, "reboot", "重启");
-        }
-    });
-
-    /**
-     * 单个操作
-     * @param data 工具条事件对象
-     * @param url url
-     * @param operation 操作类型
-     */
-    function objOperation(data, url, operation) {
-        layer.confirm('真的' + operation + '么', function (index) {
-            let load = layer.load();
-            $.ajax({
-                type: "post",
-                url: '/quartz/' + url,
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(data),
-                success: function (result) {
-                    layer.msg(result.msg);
-                    if (result.code === 0) {
-                        layer.close(load);
-                        layer.close(index);
-                        $table.reload();
-                    }
-                }
-            });
         });
-    }
 
-    /**
-     *
-     * @param data 需要填充的表单属性对象 可用作更新
-     */
-    function add(data) {
-        layer.open({
-            offset: 't',
-            title: '表单',
-            type: 1,
-            content: $('#addOrUpdate').html(),
-            success: function (layero, index) {
-                if (data) {
-                    layui.form.val('formTemplate', data);
-                }
-                layui.form.render('select');
-                //绑定提交事件
-                layui.form.on('submit(formTemplate)', function () {
-                    let load = layer.load();
-                    let formData = layui.form.val('formTemplate');
-                    $.ajax({
-                        type: "post",
-                        url: '/quartz/addOrUpdate',
-                        contentType: "application/json; charset=utf-8",
-                        data: JSON.stringify(formData),
-                        success: function (result) {
-                            if (result.code === 0) {
-                                $table.reload({
-                                    page: {
-                                        curr: 1 //重新从第 1 页开始
-                                    }
-                                });
-                                layer.close(index);
-                            } else {
-                                layer.msg(result.msg);
-                            }
-                            layer.close(load)
-                        },
-                        error: function (result) {
-                            layer.alert(result.msg);
-                            layer.close(load)
+        //头工具栏事件
+        table.on('toolbar(table)', function (obj) {
+            let load;
+            switch (obj.event) {
+                case 'search':
+                    load = layer.load();
+                    let filterData = form.val('search');
+                    table.reload('table', {
+                        where: filterData
+                        , page: {
+                            curr: 1 //重新从第 1 页开始
                         }
-                    });
-                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
-                });
-            },
+                    }); //只重载数据
+                    //参数回填
+                    form.val('search', filterData);
+                    layer.close(load);
+                    break;
+                case 'reset':
+                    load = layer.load();
+                    document.forms['search'].reset();
+                    table.reload('table', {
+                        where: form.val('search')
+                        , page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                    }); //只重载数据
+                    layer.close(load);
+                    break;
+                case 'refresh':
+                    load = layer.load();
+                    table.reload('table');
+                    layer.close(load);
+                    break;
+                case 'add':
+                    add();
+                    break;
+                default:
+                    break;
+            }
         });
-    }
+
+
+        //监听工具条
+        table.on('tool(table)', function (obj) {
+            let data = obj.data;
+            if (obj.event === 'del') {
+                objOperation(data, "delete", "删除");
+            } else if (obj.event === 'edit') {
+                add(data);
+            } else if (obj.event === 'pause') {
+                objOperation(data, "pause", "暂停");
+            } else if (obj.event === 'reboot') {
+                objOperation(data, "reboot", "重启");
+            }
+        });
+
+        /**
+         * 单个操作
+         * @param data 工具条事件对象
+         * @param url url
+         * @param operation 操作类型
+         */
+        function objOperation(data, url, operation) {
+            layer.confirm('真的' + operation + '么', function (index) {
+                let load = layer.load();
+                $.ajax({
+                    type: "post",
+                    url: '/quartz/' + url,
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(data),
+                    success: function (result) {
+                        layer.msg(result.msg);
+                        if (result.code === 0) {
+                            layer.close(load);
+                            layer.close(index);
+                            $table.reload();
+                        }
+                    }
+                });
+            });
+        }
+
+        /**
+         *
+         * @param data 需要填充的表单属性对象 可用作更新
+         */
+        function add(data) {
+            let tplData;
+            if (data) {
+                tplData = {update: 'readonly'};
+            } else {
+                tplData = {};
+            }
+            let render = laytpl($('#addOrUpdate').html()).render(tplData);
+            console.log(render);
+            layer.open({
+                offset: 't',
+                title: '表单',
+                type: 1,
+                content: laytpl($('#addOrUpdate').html()).render(tplData),
+                success: function (layero, index) {
+                    if (data) {
+                        form.val('formTemplate', data);
+                    }
+                    form.render('select');
+                    //绑定提交事件
+                    form.on('submit(formTemplate)', function () {
+                        let load = layer.load();
+                        let formData = form.val('formTemplate');
+                        $.ajax({
+                            type: "post",
+                            url: '/quartz/addOrUpdate',
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify(formData),
+                            success: function (result) {
+                                if (result.code === 0) {
+                                    $table.reload({
+                                        page: {
+                                            curr: 1 //重新从第 1 页开始
+                                        }
+                                    });
+                                    layer.close(index);
+                                } else {
+                                    layer.msg(result.msg);
+                                }
+                                layer.close(load)
+                            },
+                            error: function (result) {
+                                layer.alert(result.msg);
+                                layer.close(load)
+                            }
+                        });
+                        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                    });
+                },
+            });
+        }
+    });
 </script>
 
 </body>

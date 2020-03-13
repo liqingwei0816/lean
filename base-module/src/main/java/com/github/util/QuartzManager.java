@@ -1,14 +1,13 @@
 package com.github.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.controller.quartz.JobVo;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.Date;
 
 /**
  * MisFire策略常量的定义在类CronTrigger中，列举如下：
@@ -26,22 +25,23 @@ import java.util.Date;
 
 @Component
 @Slf4j
+//依赖中存在quartz时加载
+@ConditionalOnClass(Scheduler.class)
 public class QuartzManager {
 
     //注入调度器
     @Resource
     private Scheduler scheduler;
 
-
-    public void addOrUpdate(JobVo jobVo){
+    public void addOrUpdate(JobVo jobVo) {
         try {
             addJob(jobVo);
         } catch (Exception e) {
-            if (e.getMessage().equals("对应调度器已存在")){
+            if (e.getMessage().equals("对应调度器已存在")) {
                 modifyJob(jobVo);
                 return;
             }
-            log.error("job操作失败",e);
+            log.error("job操作失败", e);
         }
     }
 
@@ -70,6 +70,7 @@ public class QuartzManager {
         if (null != cronTrigger) {
             throw new Exception("对应调度器已存在");
         }
+
         //构建jobDetail
         JobDetail jobDetail = JobBuilder.newJob(job.getClass()).withIdentity(jobName, jobGroup)
                 .withDescription(jobVo.getDescription()).storeDurably(jobVo.getDurability())
@@ -78,8 +79,11 @@ public class QuartzManager {
         CronScheduleBuilder cronScheduleBuilder = getCronScheduleBuilder(jobVo);
 
         //构建cronTrigger
-        cronTrigger = TriggerBuilder.newTrigger().withIdentity(jobName, jobGroup).startNow()
-                .withSchedule(cronScheduleBuilder).withDescription(jobVo.getDescription()).build();
+        cronTrigger = TriggerBuilder.newTrigger().withIdentity(jobName, jobGroup)
+                .startNow()
+                .withSchedule(cronScheduleBuilder)
+                .usingJobData("data", jobVo.getJobData())
+                .withDescription(jobVo.getDescription()).build();
 
         scheduler.scheduleJob(jobDetail, cronTrigger);
     }
@@ -118,7 +122,7 @@ public class QuartzManager {
 
 
     /**
-     * 修改一个任务的触发时间
+     * 修改一个任务
      */
 
     public void modifyJob(JobVo jobVo) {
@@ -129,11 +133,12 @@ public class QuartzManager {
             String jobGroup = jobVo.getGroup();
             TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
             CronTrigger cronTrigger = (CronTrigger) scheduler.getTrigger(triggerKey);
-            Date previousFireTime = cronTrigger.getPreviousFireTime();
-            if (previousFireTime==null){
-                previousFireTime=new Date();
-            }
-            cronTrigger = cronTrigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(getCronScheduleBuilder(jobVo)).startAt(previousFireTime)
+            cronTrigger = cronTrigger.getTriggerBuilder()
+                    .withIdentity(triggerKey)
+                    .withSchedule(getCronScheduleBuilder(jobVo))
+                    .usingJobData("data", jobVo.getJobData())
+                    //设置Trigger的生效时间,防止立即执行
+                    .startNow()
                     .build();
             scheduler.rescheduleJob(triggerKey, cronTrigger);
         } catch (Exception e) {
@@ -161,7 +166,7 @@ public class QuartzManager {
                     break;
                 case "FireAndProceed":
                     //FireAndProceed
-                   // cronScheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
+                    // cronScheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
                 default:
                     //SMART_POLICY 默认值 无需设定
                     cronScheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
@@ -193,88 +198,5 @@ public class QuartzManager {
         scheduler.deleteJob(jobKey);// 删除任务
         log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>method:removeJob  end");
     }
-
-
-/**
- *
- * 方法表述  获得执行器状态
- * @return
- * String
- *//*
-
-    public  String getStatus(SysJob myJob){
-        String state = "NONE";
-        try {
-            // 唯一主键
-            String jobName = myJob.getJobName();
-            String jobGroup = myJob.getJobGroup();
-            TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
-            //trigger state
-            TriggerState triggerState = scheduler.getTriggerState(triggerKey);
-            state = triggerState.toString();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return state;
-    }
-
-    */
-/**
- * 是否存在任务
- * 方法表述
- * @param myJob
- * @return
- * boolean
- *//*
-
-    public  boolean hasTrigger(SysJob myJob){
-        boolean isHas = true;
-        try {
-            // 唯一主键
-            String jobName = myJob.getJobName();
-            String jobGroup = myJob.getJobGroup();
-            TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
-            Trigger trigger = scheduler.getTrigger(triggerKey);
-            if(null==trigger){
-                log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>method:removeJob trigger is NULL ");
-                isHas = false;
-            }
-        } catch (SchedulerException e) {
-            isHas = false;
-            e.printStackTrace();
-        }
-        return isHas;
-    }
-
-    */
-/**
- * 启动所有定时任务
- *
- *//*
-
-    public  void startJobs() {
-        try {
-            scheduler.start();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    */
-/**
- * 关闭所有定时任务
- *
- *//*
-
-    public  void shutdownJobs() {
-        try {
-            if (!scheduler.isShutdown()) {
-                scheduler.shutdown();
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-*/
 }
 

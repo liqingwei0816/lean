@@ -5,5 +5,6 @@
     异常同一处理 MyControllerAdvice
     代码生成模块
     ehcache
+    quartz  任务调度模块,待添加jobData操作
 ## 待添加
     日志管理模块 logback

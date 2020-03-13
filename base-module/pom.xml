@@ -29,12 +29,6 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.github</groupId>
-            <artifactId>quartz-auto-config</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-
         <!--配置缓存-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -51,23 +45,17 @@
             <artifactId>ehcache</artifactId>
         </dependency>
 
-        <!--<dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-quartz</artifactId>
-            <scope>provided</scope>
-        </dependency>-->
+            <optional>true</optional>
+        </dependency>
 
         <!--安全配置-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-            <version>0.9.1</version>
         </dependency>
 
         <dependency>

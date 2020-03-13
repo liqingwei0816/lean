@@ -7,14 +7,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="base-module" />
         <module name="jwt-module" />
-        <module name="quartz-auto-config" />
+        <module name="base-module" />
         <module name="demo" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="authority" target="1.8" />
+      <module name="quartz-auto-config" target="1.8" />
       <module name="sentinel" target="1.8" />
       <module name="sentinel-dashboard" target="1.8" />
     </bytecodeTargetLevel>
