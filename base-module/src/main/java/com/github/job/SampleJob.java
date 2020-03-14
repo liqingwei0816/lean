@@ -34,6 +34,6 @@ public class SampleJob extends QuartzJobBean {
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         Long count = authService.count(new Auth());
-        log.error("{} job1 {}",count,context.getScheduledFireTime());
+        log.error("{} job {}",count,context.getScheduledFireTime());
     }
 }
