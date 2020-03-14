@@ -3,6 +3,7 @@ package com.github.config;
 import com.github.controller.quartz.JobVo;
 import com.github.util.CompilerUtil;
 import com.github.util.QuartzManager;
+import org.quartz.Scheduler;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.cache.CacheManager;
@@ -16,6 +17,8 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
     private CacheManager cacheManager;
     @Resource
     private QuartzManager quartzManager;
+    @Resource
+    private Scheduler scheduler;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -50,16 +53,16 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
                 "        log.error(\"{} job1 {}\", count, context.getScheduledFireTime());\n" +
                 "    }\n" +
                 "}\n";
+        CompilerUtil compilerUtil = new CompilerUtil();
+        String jobClassName = compilerUtil.getClassObjectByJavaFile(fileName, classContent);
 
-        Class<?> classObject = CompilerUtil.getClassObjectByJavaFile(fileName, classContent);
-
-       /* JobVo jobVo = new JobVo();
+        JobVo jobVo = new JobVo();
         jobVo.setCron("0/5 * * * * ?");
-        jobVo.setJobClass(classObject.getName());
+        jobVo.setJobClass(jobClassName);
         jobVo.setName("SampleJob1");
         jobVo.setGroup("SampleJob1");
         quartzManager.addJob(jobVo);
-        System.out.println(cacheManager.getClass().getName());*/
+        System.out.println(cacheManager.getClass().getName());
 
     }
 }

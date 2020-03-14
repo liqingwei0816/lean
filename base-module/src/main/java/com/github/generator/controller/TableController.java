@@ -29,7 +29,6 @@ public class TableController {
     public ResultUtils dataList(Table table, HttpServletRequest request) {
         PageInfo<Object> pageInfo = PageHelper.startPage(table).doSelectPageInfo(() -> tableService.getTables());
         String realPath = request.getServletContext().getRealPath("/");
-        System.out.println(realPath);
         return ResultUtils.success(pageInfo);
     }
 

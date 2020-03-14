@@ -31,7 +31,6 @@ public class QuartzController {
 
     @RequestMapping("jobs")
     public Object jobs(String name) throws SchedulerException {
-        System.out.println(scheduler.getClass().getName());
         List<JobVo> collect = scheduler.getTriggerKeys(GroupMatcher.anyGroup()).stream()
                 .filter(triggerKey -> triggerKey.getName().toLowerCase().contains(name==null?"":name.toLowerCase()))
                 .map(this::triggerKey2Job).collect(Collectors.toList());

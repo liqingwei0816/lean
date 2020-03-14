@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Paths;
 
 /**
  * MisFire策略常量的定义在类CronTrigger中，列举如下：
@@ -28,6 +31,8 @@ import javax.annotation.Resource;
 //依赖中存在quartz时加载
 @ConditionalOnClass(Scheduler.class)
 public class QuartzManager {
+
+    private URLClassLoader classLoader;
 
     //注入调度器
     @Resource
@@ -57,7 +62,18 @@ public class QuartzManager {
 
         String jobClass = jobVo.getJobClass();
         //校验工作类
-        Job job = (Job) Class.forName(jobClass).newInstance();
+        Class  jobClassObj;
+        try {
+            jobClassObj= Class.forName(jobClass);
+        }catch (Exception e){
+            URL url = Paths.get(System.getProperty("user.dir")).toUri().toURL();
+            if (classLoader!=null){
+                classLoader.close();
+            }
+            classLoader = new URLClassLoader(new URL[]{url});
+            jobClassObj= classLoader.loadClass(jobVo.getJobClass());
+        }
+
 
         // 唯一主键
         String jobName = jobVo.getName();
@@ -72,7 +88,7 @@ public class QuartzManager {
         }
 
         //构建jobDetail
-        JobDetail jobDetail = JobBuilder.newJob(job.getClass()).withIdentity(jobName, jobGroup)
+        JobDetail jobDetail = JobBuilder.newJob(jobClassObj).withIdentity(jobName, jobGroup)
                 .withDescription(jobVo.getDescription()).storeDurably(jobVo.getDurability())
                 .build();
         // 配置cron和misfire策略
