@@ -73,8 +73,8 @@ public class QuartzController {
                 job.setDescription(jobDetailImpl.getDescription());
                 job.setJobClass(jobDetailImpl.getJobClass().getName());
                 job.setDurability(jobDetailImpl.isDurable());
-                //设置方式为使用DisallowedConcurrentExection注解
-                job.setConcurrentExectionDisallowed(jobDetailImpl.isConcurrentExectionDisallowed());
+                //设置方式为使用DisallowConcurrentExecution注解
+                job.setConcurrentExecutionDisallowed(jobDetailImpl.isConcurrentExectionDisallowed());
                 Object data = jobDetailImpl.getJobDataMap().get("data");
                 if (data!=null){
                     job.setJobData(data.toString());

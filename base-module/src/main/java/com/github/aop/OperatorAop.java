@@ -9,6 +9,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
 
+/**
+ * 用于为数据添加操作人修改人的切面 需要添加的bean需要实现Operator接口
+ */
 @Aspect
 @Slf4j
 public class OperatorAop {
@@ -39,7 +42,7 @@ public class OperatorAop {
     }
 
     /**
-     * 修改人人添加切面
+     * 修改人添加切面
      */
     @Around("execution(public * com.github.mapper.*.*.update*(..) )" +
             "||execution(public * com.github.mapper.*.update*(..) )")
@@ -63,6 +66,10 @@ public class OperatorAop {
         return pjp.proceed(args);
     }
 
+
+    /**
+     *
+     */
     public interface Operator {
 
         void setUpdatePerson(String updatePersonCode);

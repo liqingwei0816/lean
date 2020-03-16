@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <!--<meta http-equiv="refresh" content="10">-->
-    <title>模板</title>
+    <title>定时任务管理</title>
     <meta name="renderer" content="webkit">
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -43,9 +43,9 @@
         <div class="layui-form-item">
             <label class="layui-form-label" for="name">名称</label>
             <div class="layui-input-block">
-                <input type="text" name="name" id="name" {{d.update}}  placeholder="请输入名称"
-                autocomplete="off"
-                class="layui-input">
+                <input type="text" name="name" id="name" {{d.update}} placeholder="请输入名称"
+                       autocomplete="off"
+                       class="layui-input">
             </div>
         </div>
 
@@ -53,8 +53,8 @@
             <label class="layui-form-label" for="group">组名</label>
             <div class="layui-input-block">
                 <input type="text" name="group" id="group" {{d.update}} placeholder="请输入组"
-                autocomplete="off"
-                class="layui-input">
+                       autocomplete="off"
+                       class="layui-input">
             </div>
         </div>
 
@@ -62,8 +62,15 @@
             <label class="layui-form-label" for="jobClass">工作类</label>
             <div class="layui-input-block">
                 <input type="text" name="jobClass" id="jobClass" {{d.update}} placeholder="请输入工作类"
-                autocomplete="off"
-                class="layui-input">
+                       autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="jobClassContent">工作类内容</label>
+            <div class="layui-input-block">
+                <textarea name="jobClassContent" id="jobClassContent" {{d.update}} placeholder="请输入工作类编码,有内容时使用动态编译加载job类,使用数据库保证集群"
+                          class="layui-textarea"></textarea>
             </div>
         </div>
 
@@ -105,8 +112,8 @@
 
 <script src="/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" th:inline="javascript">
-    layui.use(['layer', 'form', 'table', 'jquery','laytpl'], function () {
-        let table = layui.table, $ = layui.jquery, laytpl = layui.laytpl,layer = layui.layer, form = layui.form;
+    layui.use(['layer', 'form', 'table', 'jquery', 'laytpl'], function () {
+        let table = layui.table, $ = layui.jquery, laytpl = layui.laytpl, layer = layui.layer, form = layui.form;
 
         let $table = table.render({
             height: 'full-0',
@@ -129,15 +136,15 @@
             cols: [
                 [
                     /* {type: 'checkbox', fixed: 'left'},*/
-                    {field: 'name', title: '名称', width: 110},
-                    {field: 'group', title: '组', width: 110},
-                    {field: 'jobClass', title: '工作类'},
+                    {field: 'name', title: '名称', width: 130},
+                    {field: 'group', title: '组', width: 130},
+                    {field: 'jobClass', title: '工作类', minWidth: 220},
                     {field: 'state', title: '状态', width: 60},
-                    {field: 'cron', title: 'cron'},
-                    {field: 'previousFireTime', title: '上次执行时间', width: 160},
-                    {field: 'nextFireTime', title: '下次执行时间', width: 160},
+                    {field: 'cron', title: 'cron', minWidth: 150},
+                    {field: 'previousFireTime', title: '上次执行时间', width: 180},
+                    {field: 'nextFireTime', title: '下次执行时间', width: 180},
                     {field: 'misfireInstruction', title: 'Misfire策略', width: 150},
-                    {field: 'concurrentExectionDisallowed', title: '不允许并发', width: 110},
+                    {field: 'concurrentExecutionDisallowed', title: '不允许并发', width: 110},
                     {field: 'jobData', title: 'jobData', width: 110},
                     {field: 'description', title: '备注'},
                     {field: 'durability', title: '自动删除', width: 110},
@@ -239,8 +246,6 @@
             } else {
                 tplData = {};
             }
-            let render = laytpl($('#addOrUpdate').html()).render(tplData);
-            console.log(render);
             layer.open({
                 offset: 't',
                 title: '表单',

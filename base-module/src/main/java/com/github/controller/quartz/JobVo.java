@@ -29,6 +29,10 @@ public class JobVo {
      */
     private String jobClass;
     /**
+     * 工作类编码 用于动态添加编译job工作类
+     */
+    private String jobClassContent;
+    /**
      * 耐久性 为false时 当job未关联到trigger时会自动删除
      */
     private Boolean durability = false;
@@ -39,7 +43,7 @@ public class JobVo {
      * 如果concurrent为true，则0秒的时候启动一次A，10秒的时候再启动一次A，20秒的时候再启动一次A，不管前面启动的A有没有执行完；
      * 如果concurrent为false，则0秒的时候启动一次A，15秒的时候A执行完毕，再第二次启动A。
      */
-    private Boolean concurrentExectionDisallowed;
+    private Boolean concurrentExecutionDisallowed;
     /**
      * cron
      */

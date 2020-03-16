@@ -1,6 +1,7 @@
 package com.github.util;
 
 import com.github.controller.quartz.JobVo;
+import com.github.mapper.quartz.DynamicJobMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -8,9 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 
 /**
  * MisFire策略常量的定义在类CronTrigger中，列举如下：
@@ -32,11 +31,12 @@ import java.nio.file.Paths;
 @ConditionalOnClass(Scheduler.class)
 public class QuartzManager {
 
-    private URLClassLoader classLoader;
-
     //注入调度器
     @Resource
     private Scheduler scheduler;
+    //注入动态编译的job类操作接口
+    @Resource
+    private DynamicJobMapper dynamicJobMapper;
 
     public void addOrUpdate(JobVo jobVo) {
         try {
@@ -56,24 +56,23 @@ public class QuartzManager {
      *
      * @param jobVo 自定义的job展示参数集合
      */
-
+    @SuppressWarnings("unchecked")
     public void addJob(JobVo jobVo) throws Exception {
         log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>method:addJob  start");
-
         String jobClass = jobVo.getJobClass();
         //校验工作类
-        Class  jobClassObj;
-        try {
-            jobClassObj= Class.forName(jobClass);
-        }catch (Exception e){
-            URL url = Paths.get(System.getProperty("user.dir")).toUri().toURL();
-            if (classLoader!=null){
-                classLoader.close();
-            }
-            classLoader = new URLClassLoader(new URL[]{url});
-            jobClassObj= classLoader.loadClass(jobVo.getJobClass());
+        Class<? extends Job> jobClassObj;
+        //添加动态编译操作
+        if (!StringUtils.isEmpty(jobVo.getJobClassContent())) {
+            //动态编译
+            Path javaFile = CompilerUtil.createJavaFile(jobClass, jobVo.getJobClassContent());
+            CompilerUtil.compiler(javaFile);
+            jobClassObj = (Class<? extends Job>) CompilerUtil.getClass1(jobClass);
+            //动态job入库
+            dynamicJobMapper.insert(jobVo);
+        } else {
+            jobClassObj = (Class<? extends Job>) Class.forName(jobClass);
         }
-
 
         // 唯一主键
         String jobName = jobVo.getName();
