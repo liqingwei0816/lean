@@ -11,8 +11,8 @@ public interface DynamicJobMapper {
     @Insert("INSERT INTO `qrtz_dynamic_job`(`jobClass`, `jobClassContent`) VALUES (#{jobClass}, #{jobClassContent})")
     Integer insert(JobVo jobVo);
 
-    @Select("select `classContent`  from `qrtz_dynamic_job` where jobClassName= #{jobClassName}")
-    String selectByClassName(String jobClassName);
+    @Select("select `jobClassContent`  from `qrtz_dynamic_job` where jobClass= #{jobClass}")
+    String selectByClassName(String jobClass);
 
 
 }

@@ -74,8 +74,6 @@ public class CompilerUtil {
     public static Class<?> getClass1(String className) throws ClassNotFoundException {
         Class<?> aClass;
         try {
-
-
             //查看是否存在已编译的class
             aClass= Class.forName(className, true, urlClassLoader);
         } catch (ClassNotFoundException e) {
@@ -96,6 +94,7 @@ public class CompilerUtil {
                     createJavaFile(className, classString);
                 } catch (IOException ex) {
                     System.out.println("创建文件失败");
+                    ex.printStackTrace();
                     throw e;
                 }
             }

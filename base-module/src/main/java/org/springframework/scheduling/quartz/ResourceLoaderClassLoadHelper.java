@@ -88,14 +88,15 @@ public class ResourceLoaderClassLoadHelper implements ClassLoadHelper {
     @SuppressWarnings("unchecked")
     @Override
     public <T> Class<? extends T> loadClass(String name, Class<T> clazz) throws ClassNotFoundException {
-        Class<? extends T> aClass;
-        try {
+
+        Class<? extends T>  aClass= (Class<? extends T>) CompilerUtil.getClass1(name);
+      /*  try {
             //使用默认环境获取class
             aClass= (Class<? extends T>) loadClass(name);
         } catch (ClassNotFoundException e) {
             //默认环境中不存在对应class
-            aClass= (Class<? extends T>) CompilerUtil.getClass1(name);
-        }
+
+        }*/
         return aClass;
     }
 

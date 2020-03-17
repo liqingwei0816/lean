@@ -17,6 +17,8 @@
     <properties>
         <java.version>1.8</java.version>
         <pageHelp.version>1.2.13</pageHelp.version>
+        <druid.version>1.1.17</druid.version>
+        <javac.compiler.version>0.11</javac.compiler.version>
     </properties>
     <dependencies>
         <dependency>
@@ -50,12 +52,14 @@
             <artifactId>spring-boot-starter-quartz</artifactId>
             <optional>true</optional>
         </dependency>
-       <!-- <dependency>
-            <groupId>com.sun.tools</groupId>
-            <artifactId>tools</artifactId>
-            <version>1.0</version>
-            <systemPath>${project.basedir}/src/main/resources/lib/tools.jar</systemPath>
-        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.kohsuke.sorcerer/sorcerer-javac -->
+
+        <!--动态编译-->
+        <dependency>
+            <groupId>org.kohsuke.sorcerer</groupId>
+            <artifactId>sorcerer-javac</artifactId>
+            <version>${javac.compiler.version}</version>
+        </dependency>
 
         <!--安全配置-->
         <dependency>
@@ -76,7 +80,7 @@
         </dependency>
 
 
-<!--数据库-->
+        <!--数据库-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -87,7 +91,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
-            <version>1.1.17</version>
+            <version>${druid.version}</version>
         </dependency>
 
         <dependency>
@@ -103,13 +107,13 @@
             <!--可选依赖-->
             <optional>true</optional>
         </dependency>
-    <!--工具-->
+        <!--工具-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-        
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
