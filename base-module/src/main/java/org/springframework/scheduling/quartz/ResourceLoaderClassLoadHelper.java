@@ -41,7 +41,7 @@ import org.springframework.util.ClassUtils;
  * @since 2.5.5
  * @see SchedulerFactoryBean#setApplicationContext
  * 覆盖原来的ResourceLoaderClassLoadHelper
- * 实现运行时动态编译添加job类后无法获取类NFC异常
+ * 实现运行时动态编译添加job类后无法获取工作类NFC异常
  */
 @SuppressWarnings("unused")
 public class ResourceLoaderClassLoadHelper implements ClassLoadHelper {
@@ -88,16 +88,7 @@ public class ResourceLoaderClassLoadHelper implements ClassLoadHelper {
     @SuppressWarnings("unchecked")
     @Override
     public <T> Class<? extends T> loadClass(String name, Class<T> clazz) throws ClassNotFoundException {
-
-        Class<? extends T>  aClass= (Class<? extends T>) CompilerUtil.getClass1(name);
-      /*  try {
-            //使用默认环境获取class
-            aClass= (Class<? extends T>) loadClass(name);
-        } catch (ClassNotFoundException e) {
-            //默认环境中不存在对应class
-
-        }*/
-        return aClass;
+        return (Class<? extends T>) CompilerUtil.getClass(name);
     }
 
     @Override

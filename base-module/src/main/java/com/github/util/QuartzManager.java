@@ -67,7 +67,7 @@ public class QuartzManager {
             //动态编译
             Path javaFile = CompilerUtil.createJavaFile(jobClass, jobVo.getJobClassContent());
             CompilerUtil.compiler(javaFile);
-            jobClassObj = (Class<? extends Job>) CompilerUtil.getClass1(jobClass);
+            jobClassObj = (Class<? extends Job>) CompilerUtil.getClass(jobClass);
             //动态job入库
             dynamicJobMapper.insert(jobVo);
         } else {

@@ -71,7 +71,7 @@ public class CompilerUtil {
 
 
 
-    public static Class<?> getClass1(String className) throws ClassNotFoundException {
+    public static Class<?> getClass(String className) throws ClassNotFoundException {
         Class<?> aClass;
         try {
             //查看是否存在已编译的class
