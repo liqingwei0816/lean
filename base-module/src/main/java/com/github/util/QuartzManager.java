@@ -38,19 +38,6 @@ public class QuartzManager {
     @Resource
     private DynamicJobMapper dynamicJobMapper;
 
-    public void addOrUpdate(JobVo jobVo) {
-        try {
-            addJob(jobVo);
-        } catch (Exception e) {
-            if (e.getMessage().equals("对应调度器已存在")) {
-                modifyJob(jobVo);
-                return;
-            }
-            log.error("job操作失败", e);
-        }
-    }
-
-
     /**
      * 添加一个定时任务，使用默认的任务组名，触发器名，触发器组名
      *
@@ -59,24 +46,12 @@ public class QuartzManager {
     @SuppressWarnings("unchecked")
     public void addJob(JobVo jobVo) throws Exception {
         log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>method:addJob  start");
-        String jobClass = jobVo.getJobClass();
-        //校验工作类
-        Class<? extends Job> jobClassObj;
-        //添加动态编译操作
-        if (!StringUtils.isEmpty(jobVo.getJobClassContent())) {
-            //动态编译
-            Path javaFile = CompilerUtil.createJavaFile(jobClass, jobVo.getJobClassContent());
-            CompilerUtil.compiler(javaFile);
-            jobClassObj = (Class<? extends Job>) CompilerUtil.getClass(jobClass);
-            //动态job入库
-            dynamicJobMapper.insert(jobVo);
-        } else {
-            jobClassObj = (Class<? extends Job>) Class.forName(jobClass);
-        }
+
 
         // 唯一主键
         String jobName = jobVo.getName();
         String jobGroup = jobVo.getGroup();
+        //1 校验 triggerKey是否已存在
         TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
         if (scheduler == null) {
             log.info("scheduler is null");
@@ -85,8 +60,26 @@ public class QuartzManager {
         if (null != cronTrigger) {
             throw new Exception("对应调度器已存在");
         }
+        //2 校验工作类是否存在
+        String jobClass = jobVo.getJobClass();
 
-        //构建jobDetail
+        Class<? extends Job> jobClassObj;
+        //添加动态编译操作
+        if (!StringUtils.isEmpty(jobVo.getJobClassContent())) {
+            try {
+                Class.forName(jobClass,false,CompilerUtil.urlClassLoader);
+                throw new Exception("对应类已存在："+jobClass);
+            }catch (ClassNotFoundException ignore){}
+
+            //动态编译
+            Path javaFile = CompilerUtil.createJavaFile(jobClass, jobVo.getJobClassContent());
+            CompilerUtil.compiler(javaFile);
+            //动态job入库
+            dynamicJobMapper.insert(jobVo);
+        }
+        jobClassObj = (Class<? extends Job>) CompilerUtil.getClass(jobClass);
+
+        // 构建jobDetail
         JobDetail jobDetail = JobBuilder.newJob(jobClassObj).withIdentity(jobName, jobGroup)
                 .withDescription(jobVo.getDescription()).storeDurably(jobVo.getDurability())
                 .build();
@@ -111,13 +104,26 @@ public class QuartzManager {
      */
 
     public void pauseJob(JobVo jobVo) throws SchedulerException {
-        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>method:pasueOneJob  start");
+        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>method:pauseOneJob  start");
         // 唯一主键
         TriggerKey triggerKey = TriggerKey.triggerKey(jobVo.getName(), jobVo.getGroup());
         Trigger trigger = scheduler.getTrigger(triggerKey);
         JobKey jobKey = trigger.getJobKey();
         scheduler.pauseJob(jobKey);
-        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>method:pasueOneJob  end");
+        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>method:pauseOneJob  end");
+    }
+
+    /**
+     * 暂停一个任务
+     *
+     * @param jobVo 必须参数为 name group
+     */
+    public void runJob(JobVo jobVo) throws SchedulerException {
+        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>method:runOneJob  start");
+        // 唯一主键
+        JobKey jobKey = JobKey.jobKey(jobVo.getName(), jobVo.getGroup());
+        scheduler.triggerJob(jobKey);
+        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>method:runOneJob  end");
     }
 
 
@@ -130,8 +136,14 @@ public class QuartzManager {
         log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>method:resOneJob  start");
         // 唯一主键
         TriggerKey triggerKey = TriggerKey.triggerKey(jobVo.getName(), jobVo.getGroup());
-        Trigger trigger = scheduler.getTrigger(triggerKey);
-        scheduler.rescheduleJob(triggerKey, trigger);
+        CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
+        JobDetail jobDetail = scheduler.getJobDetail(trigger.getJobKey());
+        //设定生效时间,防止立即执行
+        trigger = trigger.getTriggerBuilder().startNow().build();
+        //删除job
+        scheduler.deleteJob(trigger.getJobKey());
+        //添加job
+        scheduler.scheduleJob(jobDetail, trigger);
         log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>method:resOneJob  end");
     }
 

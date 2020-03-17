@@ -51,13 +51,14 @@ public class QuartzController {
                 case "delete":quartzManager.removeJob(jobVo);break;
                 case "pause":quartzManager.pauseJob(jobVo);break;
                 case "reboot":quartzManager.rebootJob(jobVo);break;
-                case "addOrUpdate":quartzManager.addOrUpdate(jobVo);break;
+                case "add":quartzManager.addJob(jobVo);break;
+                case "update":quartzManager.modifyJob(jobVo);break;
+                case "run":quartzManager.runJob(jobVo);break;
                 default: throw new Exception("不支持的操作");
             }
             return ResultUtils.success();
         } catch (Exception e) {
-            log.error("job操作失败",e);
-            return ResultUtils.error("job删除操作,请联系管理员\n"+e.getMessage());
+            return ResultUtils.error("job删除操作失败\n"+e.getMessage());
         }
     }
 

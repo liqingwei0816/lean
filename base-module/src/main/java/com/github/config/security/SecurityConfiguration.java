@@ -62,7 +62,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 //登录相关
                 .and().formLogin().loginPage("/loginPage").loginProcessingUrl("/login").defaultSuccessUrl("/index")
                 //登出相关
-                .and().logout().logoutSuccessUrl("/login").and().httpBasic();
+                .and().logout().logoutSuccessUrl("/loginPage").and().httpBasic();
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry urlRegistry = http.authorizeRequests();
 
         List<Auth> auths = authService.getAll();

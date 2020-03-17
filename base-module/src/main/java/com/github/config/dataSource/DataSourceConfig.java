@@ -1,9 +1,12 @@
 package com.github.config.dataSource;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import org.quartz.Scheduler;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.quartz.QuartzDataSource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 import javax.sql.DataSource;
@@ -11,9 +14,9 @@ import javax.sql.DataSource;
 /**
  * quartz独立数据源配置 springboot 多数据源
  */
-//@Configuration
-//@ConditionalOnClass({Scheduler.class, DruidDataSource.class})
-public class dataSourceConfig {
+@Configuration
+@ConditionalOnClass({Scheduler.class, DruidDataSource.class})
+public class DataSourceConfig {
 
     @Primary
     @Bean

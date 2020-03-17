@@ -17,7 +17,7 @@ public class MyControllerAdvice {
     @ResponseBody
     @ExceptionHandler(value = IllegalArgumentException.class)
     public ResultUtils errorHandler(IllegalArgumentException ex) {
-        return ResultUtils.error(ex.getMessage());
+        return ResultUtils.error("参数验证失败");
     }
     /**
      * 全局异常捕捉处理

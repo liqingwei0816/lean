@@ -9,6 +9,12 @@ public interface CodeUtil {
      */
     String getCode(String key);
     /**
+     * 创建验证码接口
+     * @param key 验证码标识
+     * @return 验证码
+     */
+    String createCode(String key);
+    /**
      * 获取验证码接口
      * @param key 验证码标识
      */

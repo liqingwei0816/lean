@@ -30,10 +30,11 @@
 </script>
 <!--工具条-->
 <script type="text/html" id="barRights">
+    <a sec:authorize-url="/quartz/addOrUpdate" class="layui-btn layui-btn-xs" lay-event="run">运行</a>
     <a sec:authorize-url="/quartz/addOrUpdate" class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a sec:authorize-url="/quartz/delete" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     <a sec:authorize-url="/quartz/pause" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="pause">暂停</a>
-    <a sec:authorize-url="/quartz/reboot" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="reboot">重启</a>
+    <a sec:authorize-url="/quartz/reboot" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="reboot">恢复</a>
 </script>
 
 
@@ -148,7 +149,7 @@
                     {field: 'jobData', title: 'jobData', width: 110},
                     {field: 'description', title: '备注'},
                     {field: 'durability', title: '自动删除', width: 110},
-                    {fixed: 'right', width: 210, align: 'center', toolbar: '#barRights'}
+                    {fixed: 'right', width: 280, align: 'center', toolbar: '#barRights'}
                 ]
             ]
         });
@@ -205,7 +206,9 @@
             } else if (obj.event === 'pause') {
                 objOperation(data, "pause", "暂停");
             } else if (obj.event === 'reboot') {
-                objOperation(data, "reboot", "重启");
+                objOperation(data, "reboot", "恢复");
+            } else if (obj.event === 'run') {
+                objOperation(data, "run", "运行");
             }
         });
 
@@ -240,18 +243,22 @@
          * @param data 需要填充的表单属性对象 可用作更新
          */
         function add(data) {
-            let tplData;
+            let tplData,url;
             if (data) {
                 tplData = {update: 'readonly'};
+                //更新
+                url='/quartz/update';
             } else {
                 tplData = {};
+                //添加
+                url='/quartz/add';
             }
             layer.open({
                 offset: 't',
                 title: '表单',
                 type: 1,
                 content: laytpl($('#addOrUpdate').html()).render(tplData),
-                success: function (layero, index) {
+                success: function (layerO, index) {
                     if (data) {
                         form.val('formTemplate', data);
                     }
@@ -262,7 +269,7 @@
                         let formData = form.val('formTemplate');
                         $.ajax({
                             type: "post",
-                            url: '/quartz/addOrUpdate',
+                            url: url,
                             contentType: "application/json; charset=utf-8",
                             data: JSON.stringify(formData),
                             success: function (result) {

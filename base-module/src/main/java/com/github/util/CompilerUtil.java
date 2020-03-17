@@ -1,6 +1,7 @@
 package com.github.util;
 
 import com.github.mapper.quartz.DynamicJobMapper;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
@@ -21,7 +22,7 @@ public class CompilerUtil {
 
     private static String baseDir = "/";
 
-    private static URLClassLoader urlClassLoader;
+    public static URLClassLoader urlClassLoader;
     static {
         try {
             URL url = Paths.get(baseDir).toAbsolutePath().toUri().toURL();

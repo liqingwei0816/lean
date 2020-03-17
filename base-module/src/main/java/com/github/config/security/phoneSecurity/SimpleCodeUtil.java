@@ -27,6 +27,13 @@ public class SimpleCodeUtil implements CodeUtil {
     }
 
     @Override
+    public String createCode(String key) {
+        String code="123456";
+        addCode(key,code);
+        return code;
+    }
+
+    @Override
     public void addCode(String key, String code) {
         codeMap.put(key,new CodeEntity(code, LocalDateTime.now()));
     }

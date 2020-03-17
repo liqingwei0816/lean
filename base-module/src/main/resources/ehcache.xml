@@ -9,7 +9,7 @@
         <!--有效期5分钟-->
         <expiry>
             <!--unit="minutes"-->
-            <ttl>10</ttl>
+            <ttl>5</ttl>
         </expiry>
         <resources>
             <heap>500</heap>

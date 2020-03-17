@@ -1,8 +1,7 @@
 package com.github.generator;
 
-import com.github.util.SpringUtil;
 import lombok.Data;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -10,23 +9,24 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @ConfigurationProperties(prefix = "spring.generator")
+@Slf4j
 public class GeneratorProperty {
-
     /**
      * 项目基础包名
      */
-    private String packageName ="com.guttv";
+    private String packageName ="com.github";
 
     /**
-     * 表名前缀
+     * 表名前缀 todo 统一为第一个_前的为前缀
      */
     private String tablePrefix ="t_";
 
-    public String getDatabaseName() {
-        DataSourceProperties dataSourceProperties = SpringUtil.getBean(DataSourceProperties.class);
-        String databaseName=dataSourceProperties.getUrl();
-        return  databaseName.substring(databaseName.lastIndexOf("/")+1,databaseName.indexOf("?"));
-    }
+    /**
+     * 数据库名称
+     */
+    private String databaseName;
+
+
 
 
 
