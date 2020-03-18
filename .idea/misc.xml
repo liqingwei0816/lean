@@ -11,12 +11,9 @@
         <option value="$PROJECT_DIR$/base-module/pom.xml" />
         <option value="$PROJECT_DIR$/demo/pom.xml" />
         <option value="$PROJECT_DIR$/jwt-module/pom.xml" />
+        <option value="$PROJECT_DIR$/base-generator/pom.xml" />
+        <option value="$PROJECT_DIR$/base-quartz/pom.xml" />
       </list>
-    </option>
-    <option name="ignoredFiles">
-      <set>
-        <option value="$PROJECT_DIR$/sentinel-dashboard/pom.xml" />
-      </set>
     </option>
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">

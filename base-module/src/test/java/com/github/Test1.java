@@ -22,8 +22,9 @@ public class Test1 {
         if (run == 0) { // 0为编译成功，1为报错
             test1.loadProxy();
         }
+        test1.loadProxy();
     }
-    static Path path = Paths.get("SampleJob1.java");
+    static Path path = Paths.get("/SampleJob1.java");
 
     /**
      * 反射调用方法
@@ -69,7 +70,7 @@ public class Test1 {
                 "        log.error(\"{} job1 {}\", var2, var1.getScheduledFireTime());\n" +
                 "    }\n" +
                 "}" ;
-        String absolutePath = path.toFile().getAbsolutePath();
+
         //Files.createDirectories(path.getParent());
         Files.write(path,src.getBytes(),StandardOpenOption.CREATE) ;
     }

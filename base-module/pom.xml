@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.github</groupId>
         <artifactId>learn</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
     <groupId>com.guttv</groupId>
     <artifactId>base-module</artifactId>
@@ -23,7 +23,20 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
+        <!--代码生成模块-->
+        <dependency>
+            <groupId>com.github</groupId>
+            <artifactId>base-generator</artifactId>
+            <version>${generator.version}</version>
+        </dependency>
 
+        <!--任务管理模块-->
+        <!--<dependency>
+            <groupId>com.github</groupId>
+            <artifactId>base-quartz</artifactId>
+            <version>${base.quartz.version}</version>
+        </dependency>
+-->
         <!--配置缓存-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -39,20 +52,13 @@
             <groupId>org.ehcache</groupId>
             <artifactId>ehcache</artifactId>
         </dependency>
+
         <!--任务调度-->
-        <dependency>
+        <!--<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-quartz</artifactId>
             <optional>true</optional>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.kohsuke.sorcerer/sorcerer-javac -->
-
-        <!--动态编译-->
-        <dependency>
-            <groupId>org.kohsuke.sorcerer</groupId>
-            <artifactId>sorcerer-javac</artifactId>
-            <version>${javac.compiler.version}</version>
-        </dependency>
+        </dependency>-->
 
         <!--安全配置-->
         <dependency>

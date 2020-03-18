@@ -7,26 +7,29 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="base-module" />
-        <module name="jwt-module" />
         <module name="demo" />
+        <module name="base-base" />
+        <module name="base-quartz" />
+        <module name="jwt-module" />
+        <module name="base-generator" />
+        <module name="base" />
+        <module name="base-module" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="authority" target="1.8" />
-      <module name="quartz-auto-config" target="1.8" />
-      <module name="sentinel" target="1.8" />
-      <module name="sentinel-dashboard" target="1.8" />
+      <module name="base" target="1.8" />
+      <module name="base-base" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="authority" options="-parameters" />
+      <module name="base" options="-parameters" />
+      <module name="base-base" options="-parameters" />
+      <module name="base-generator" options="-parameters" />
       <module name="base-module" options="-parameters" />
+      <module name="base-quartz" options="-parameters" />
       <module name="demo" options="-parameters" />
       <module name="jwt-module" options="-parameters" />
-      <module name="quartz-auto-config" options="-parameters" />
-      <module name="sentinel" options="-parameters" />
     </option>
   </component>
 </project>
