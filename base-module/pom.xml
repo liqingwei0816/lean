@@ -3,23 +3,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.4.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>com.github</groupId>
+        <artifactId>learn</artifactId>
+        <version>1.0-SNAPSHOT</version>
     </parent>
     <groupId>com.guttv</groupId>
     <artifactId>base-module</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>base-module</name>
     <description>spring boot 项目脚手架，包含mybatis security 代码生成</description>
 
-    <properties>
-        <java.version>1.8</java.version>
-        <pageHelp.version>1.2.13</pageHelp.version>
-        <druid.version>1.1.17</druid.version>
-        <javac.compiler.version>0.11</javac.compiler.version>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -48,16 +48,14 @@ public class Table implements IPage {
 
     @SuppressWarnings("unused")
     public String getNamePrefix() {
-        GeneratorProperty generatorProperty = SpringUtil.getBean(GeneratorProperty.class);
-        return generatorProperty.getTablePrefix();
+        return  name.split("_",2)[0]+"_";
     }
 
     @SuppressWarnings("unused")
     public String getEntityName() {
         //beanName
         //去除表名前缀
-        GeneratorProperty generatorProperty = SpringUtil.getBean(GeneratorProperty.class);
-        String beanName = name.replaceFirst(generatorProperty.getTablePrefix(), "");
+        String beanName = name.replaceFirst(getNamePrefix(), "");
         //转驼峰
         beanName = Stream.of(beanName.split("_")).map(e -> {
             String s = String.valueOf(e.charAt(0));

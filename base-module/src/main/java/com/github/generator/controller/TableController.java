@@ -1,17 +1,16 @@
 package com.github.generator.controller;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.github.generator.entity.Table;
 import com.github.generator.service.TableService;
 import com.github.generator.util.ThymeleafUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.github.util.ResultUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -26,9 +25,8 @@ public class TableController {
     private ThymeleafUtil thymeleafUtil;
 
     @RequestMapping("dataList")
-    public ResultUtils dataList(Table table, HttpServletRequest request) {
+    public ResultUtils dataList(Table table) {
         PageInfo<Object> pageInfo = PageHelper.startPage(table).doSelectPageInfo(() -> tableService.getTables());
-        String realPath = request.getServletContext().getRealPath("/");
         return ResultUtils.success(pageInfo);
     }
 

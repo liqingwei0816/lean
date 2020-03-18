@@ -27,7 +27,6 @@ spring:
     cache: false
   generator:
     package-name: com.guttv.ums.crm
-    table-prefix: u_
     database-name: lean
   quartz:
     job-store-type: jdbc
@@ -58,4 +57,6 @@ mybatis:
 logging:
   level:
     root: info
-    com.guttv.mapper: debug
+    com.github.generator.mapper: debug
+    com.github.mapper: debug
+

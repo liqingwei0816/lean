@@ -3,7 +3,10 @@ package com.github.generator;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 
 @Data
@@ -17,15 +20,20 @@ public class GeneratorProperty {
     private String packageName ="com.github";
 
     /**
-     * 表名前缀 todo 统一为第一个_前的为前缀
-     */
-    private String tablePrefix ="t_";
-
-    /**
      * 数据库名称
      */
     private String databaseName;
 
+    @Resource
+    private Environment environment;
+
+    public String getDatabaseName(){
+        String property = environment.getProperty("spring.datasource.primary.url");
+        if (property==null){
+            throw new RuntimeException("spring.datasource.primary.url 配置不存在");
+        }
+        return property.substring(property.lastIndexOf("/")+1,property.indexOf("?"));
+    }
 
 
 
