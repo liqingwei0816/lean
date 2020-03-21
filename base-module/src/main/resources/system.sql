@@ -5,7 +5,7 @@
  Source Server Type    : MySQL
  Source Server Version : 80019
  Source Host           : localhost:3306
- Source Schema         : guttv_ums
+ Source Schema         : system
 
  Target Server Type    : MySQL
  Target Server Version : 80019
@@ -133,21 +133,5 @@ CREATE TABLE `t_sys_user_role`  (
 -- Records of t_sys_user_role
 -- ----------------------------
 INSERT INTO `t_sys_user_role` VALUES (1, 1, 1);
-
--- ----------------------------
--- Table structure for t_user
--- ----------------------------
-DROP TABLE IF EXISTS `t_user`;
-CREATE TABLE `t_user`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of t_user
--- ----------------------------
-INSERT INTO `t_user` VALUES (1, 'liqingwei');
-INSERT INTO `t_user` VALUES (2, 'liwenjing');
 
 SET FOREIGN_KEY_CHECKS = 1;
