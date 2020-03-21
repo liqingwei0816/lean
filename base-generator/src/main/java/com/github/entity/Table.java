@@ -1,7 +1,7 @@
 package com.github.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.github.mapper.TableMapper;
+import com.github.quartz.mapper.TableMapper;
 import com.github.pagehelper.IPage;
 import com.github.util.SpringUtil;
 import lombok.Data;

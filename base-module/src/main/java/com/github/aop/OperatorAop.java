@@ -19,8 +19,8 @@ public class OperatorAop {
     /**
      * 添加人添加切面
      */
-    @Around("execution(public * com.github.mapper.*.*.insert*(..) )" +
-            "||execution(public * com.github.mapper.*.insert*(..) )")
+    @Around("execution(public * com.github.quartz.mapper.*.*.insert*(..) )" +
+            "||execution(public * com.github.quartz.mapper.*.insert*(..) )")
     public Object addOperator(ProceedingJoinPoint pjp) throws Throwable {
         //添加Operator操作人属性添加操作
         Object[] args = pjp.getArgs();
@@ -44,8 +44,8 @@ public class OperatorAop {
     /**
      * 修改人添加切面
      */
-    @Around("execution(public * com.github.mapper.*.*.update*(..) )" +
-            "||execution(public * com.github.mapper.*.update*(..) )")
+    @Around("execution(public * com.github.quartz.mapper.*.*.update*(..) )" +
+            "||execution(public * com.github.quartz.mapper.*.update*(..) )")
     public Object addUpdatePerson(ProceedingJoinPoint pjp) throws Throwable {
         //添加Operator操作人属性添加操作
         Object[] args = pjp.getArgs();

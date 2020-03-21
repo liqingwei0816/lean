@@ -34,7 +34,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-quartz</artifactId>
-            <optional>true</optional>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.kohsuke.sorcerer/sorcerer-javac -->
 
@@ -65,6 +64,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>

@@ -8,7 +8,7 @@ import com.github.config.security.phoneSecurity.CodeAuthenticationFilter;
 import com.github.config.security.phoneSecurity.CodeAuthenticationProvider;
 import com.github.config.security.phoneSecurity.CodeUtil;
 import com.github.config.security.phoneSecurity.SimpleCodeUtil;
-import com.github.mapper.system.SysUserMapper;
+import com.github.quartz.mapper.system.SysUserMapper;
 import com.github.service.system.AuthService;
 import com.github.util.ResultUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;

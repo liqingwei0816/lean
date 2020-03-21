@@ -31,12 +31,12 @@
         </dependency>
 
         <!--任务管理模块-->
-        <!--<dependency>
+        <dependency>
             <groupId>com.github</groupId>
             <artifactId>base-quartz</artifactId>
             <version>${base.quartz.version}</version>
         </dependency>
--->
+
         <!--配置缓存-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

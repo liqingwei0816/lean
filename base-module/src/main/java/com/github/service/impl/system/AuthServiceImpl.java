@@ -1,7 +1,7 @@
 package com.github.service.impl.system;
 
 import com.github.bean.system.Auth;
-import com.github.mapper.system.AuthMapper;
+import com.github.quartz.mapper.system.AuthMapper;
 import com.github.service.system.AuthService;
 import com.github.service.system.RoleAuthService;
 import org.springframework.cache.annotation.Cacheable;

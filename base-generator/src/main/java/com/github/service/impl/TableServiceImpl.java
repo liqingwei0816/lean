@@ -2,7 +2,7 @@ package com.github.service.impl;
 
 import com.github.GeneratorProperty;
 import com.github.entity.Table;
-import com.github.mapper.TableMapper;
+import com.github.quartz.mapper.TableMapper;
 import com.github.service.TableService;
 import org.springframework.stereotype.Service;
 

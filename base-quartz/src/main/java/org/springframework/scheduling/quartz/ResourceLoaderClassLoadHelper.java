@@ -16,7 +16,7 @@
 
 package org.springframework.scheduling.quartz;
 
-import com.github.util.CompilerUtil;
+import com.github.quartz.QuartzManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.spi.ClassLoadHelper;
@@ -87,7 +87,7 @@ public class ResourceLoaderClassLoadHelper implements ClassLoadHelper {
     @SuppressWarnings("unchecked")
     @Override
     public <T> Class<? extends T> loadClass(String name, Class<T> clazz) throws ClassNotFoundException {
-        return (Class<? extends T>) CompilerUtil.getClass(name);
+        return (Class<? extends T>) QuartzManager.getJobClassLoader().loadClass(name);
     }
 
     @Override

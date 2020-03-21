@@ -1,7 +1,7 @@
 package com.github.service.impl.system;
 
 import com.github.bean.system.SysUserRole;
-import com.github.mapper.system.SysUserRoleMapper;
+import com.github.quartz.mapper.system.SysUserRoleMapper;
 import com.github.service.system.SysUserRoleService;
 import org.springframework.stereotype.Service;
 
