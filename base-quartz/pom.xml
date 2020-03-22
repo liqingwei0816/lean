@@ -15,6 +15,7 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <codemirror.version>5.50.0</codemirror.version>
     </properties>
 
     <dependencies>
@@ -67,19 +68,23 @@
             <scope>provided</scope>
         </dependency>
 
+        <!--webjars-->
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>layui</artifactId>
             <version>${layui.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>codemirror</artifactId>
+            <version>${codemirror.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>webjars-locator-core</artifactId>
         </dependency>
-
-
 
     </dependencies>
 

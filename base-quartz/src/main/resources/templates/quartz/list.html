@@ -9,6 +9,40 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" th:href="@{/webjars/layui/css/layui.css}">
+    <!--代码编辑器-->
+    <!--基础模块-->
+    <link rel="stylesheet" th:href="@{/webjars/codemirror/lib/codemirror.css}">
+    <script type="text/javascript" th:src="@{/webjars/codemirror/lib/codemirror.js}"></script>
+
+    <!-- 选中行高亮 -->
+    <script type="text/javascript" th:src="@{/webjars/codemirror/addon/selection/active-line.js}"></script>
+    <!-- 代码折叠 -->
+    <link rel="stylesheet" th:href="@{/webjars/codemirror/addon/fold/foldgutter.css}"/>
+    <script type="text/javascript" th:src="@{/webjars/codemirror/addon/fold/foldgutter.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/codemirror/addon/fold/foldcode.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/codemirror/addon/fold/brace-fold.js}"></script>
+
+    <link rel="stylesheet" th:href="@{/webjars/codemirror/theme/idea.css}"/>
+
+    <!-- c类语言 -->
+    <script type="text/javascript" th:src="@{/webjars/codemirror/mode/clike/clike.js}"></script>
+
+    <!-- 搜索 -->
+    <link rel="stylesheet" th:href="@{/webjars/codemirror/addon/search/matchesonscrollbar.css}">
+    <script type="text/javascript" th:src="@{/webjars/codemirror/addon/search/searchcursor.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/codemirror/addon/search/search.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/codemirror/addon/search/matchesonscrollbar.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/codemirror/addon/search/jump-to-line.js}"></script>
+    <!--跳转-->
+    <script type="text/javascript" th:src="@{/webjars/codemirror/addon/scroll/annotatescrollbar.js}"></script>
+
+    <!--全屏-->
+    <link rel="stylesheet" th:href="@{/webjars/codemirror/addon/display/fullscreen.css}">
+    <script type="text/javascript" th:src="@{/webjars/codemirror/addon/display/fullscreen.js}"></script>
+
+    <!--代码编辑器 end-->
+
+
 </head>
 <body>
 
@@ -41,73 +75,73 @@
     <form id="formTemplate" class="layui-form" style="padding-top: 10px;padding-right: 15px" lay-filter="formTemplate">
 
         <div class="layui-form-item">
-            <label class="layui-form-label" for="name">名称</label>
-            <div class="layui-input-block">
-                <input type="text" name="name" id="name" {{d.update}} placeholder="请输入名称"
-                       autocomplete="off"
-                       class="layui-input">
+            <div class="layui-inline">
+                <label class="layui-form-label" for="name">名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="name" id="name" {{d.update}} placeholder="请输入名称"
+                           autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" for="group">组名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="group" id="group" {{d.update}} placeholder="请输入组"
+                           autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" for="jobClass">工作类</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="jobClass" id="jobClass" {{d.update}} placeholder="请输入工作类"
+                           autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" for="cron">cron</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="cron" id="cron" placeholder="请输入cron"
+                           autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" for="misfireInstruction">misfire策略</label>
+                <div class="layui-input-inline">
+                    <select name="misfireInstruction" id="misfireInstruction">
+                        <!--/*@thymesVar id="enum" type="com.github.quartz.controller.JobVo.MisfireInstructionEnum"*/-->
+                        <option th:each="enum:${T(com.github.quartz.controller.JobVo.MisfireInstructionEnum).values()}"
+                                th:value="${enum.name()}" th:text="${enum.name()}">SMART_POLICY
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" for="jobData">jobData</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="jobData" id="jobData" placeholder="请输入jobData"
+                           autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-layer-btn layui-layer-btn-">
+                    <button type="submit" style="border: 0;background: white"><a class="layui-layer-btn0">确定</a>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <button type="button" class="layui-btn layui-hide" hidden id="jobClassContentEditBtn">编辑工作类内容</button>
+            <div id="jobClassContentDiv" hidden>
+                <label for="jobClassContent">工作类内容 F11全屏 ESC取消全屏 CTRL+F搜索 CTRL+G下一个</label><br>
+                <!--有内容时使用动态编译加载job类,使用数据库保证集群-->
+                <textarea name="jobClassContent" id="jobClassContent"></textarea>
             </div>
         </div>
 
-        <div class="layui-form-item">
-            <label class="layui-form-label" for="group">组名</label>
-            <div class="layui-input-block">
-                <input type="text" name="group" id="group" {{d.update}} placeholder="请输入组"
-                       autocomplete="off"
-                       class="layui-input">
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label" for="jobClass">工作类</label>
-            <div class="layui-input-block">
-                <input type="text" name="jobClass" id="jobClass" {{d.update}} placeholder="请输入工作类"
-                       autocomplete="off"
-                       class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label" for="jobClassContent">工作类内容</label>
-            <div class="layui-input-block">
-                <textarea name="jobClassContent" id="jobClassContent" placeholder="请输入工作类编码,有内容时使用动态编译加载job类,使用数据库保证集群"
-                          class="layui-textarea"></textarea>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label" for="cron">cron</label>
-            <div class="layui-input-block">
-                <input type="text" name="cron" id="cron" placeholder="请输入cron"
-                       autocomplete="off"
-                       class="layui-input">
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label" for="misfireInstruction">misfire策略</label>
-            <div class="layui-input-block">
-                <select name="misfireInstruction" id="misfireInstruction">
-                    <!--/*@thymesVar id="enum" type="com.github.quartz.controller.JobVo.MisfireInstructionEnum"*/-->
-                    <option th:each="enum:${T(com.github.quartz.controller.JobVo.MisfireInstructionEnum).values()}"
-                            th:value="${enum.name()}" th:text="${enum.name()}">SMART_POLICY
-                    </option>
-                </select>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label" for="jobData">jobData</label>
-            <!--todo 添加富文本编辑器 代码-->
-            <div class="layui-input-block">
-                <input type="text" name="jobData" id="jobData" placeholder="请输入jobData"
-                       autocomplete="off"
-                       class="layui-input">
-            </div>
-        </div>
-
-        <div class="layui-layer-btn layui-layer-btn-">
-            <button type="submit" style="border: 0;background: white"><a class="layui-layer-btn0">确定</a></button>
-        </div>
     </form>
 </script>
 
@@ -133,7 +167,6 @@
             request: {pageName: 'pageNum', limitName: 'pageSize'},
             cols: [
                 [
-                    /* {type: 'checkbox', fixed: 'left'},*/
                     {field: 'name', title: '名称', width: 130},
                     {field: 'group', title: '组', width: 130},
                     {field: 'jobClass', title: '工作类', minWidth: 220},
@@ -235,29 +268,77 @@
             });
         }
 
+        /*job类的模板*/
+       let jobBase=`package com.github.job;
+
+        import org.quartz.DisallowConcurrentExecution;
+        import org.quartz.JobExecutionContext;
+        import org.quartz.JobExecutionException;
+        import org.springframework.scheduling.quartz.QuartzJobBean;
+
+        import java.util.Date;
+
+        @DisallowConcurrentExecution
+        public class 类名 extends QuartzJobBean {
+            @Override
+            protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+            try{
+               //触发时间
+               Date fireTime = context.getFireTime();
+               //参数
+               Object data = context.getTrigger().getJobDataMap().get("data");
+               System.out.println(fireTime+"-修改之后--"+data);
+               //do yours job
+            }catch (Exception e){
+            e.printStackTrace();
+            throw new JobExecutionException(e.getMessage());
+        }
+        }`;
+
+
         /**
          *
          * @param data 需要填充的表单属性对象 可用作更新
          */
         function add(data) {
-            let tplData,url;
+            let tplData, url;
             if (data) {
                 tplData = {update: 'readonly'};
                 //更新
-                url='/quartz/update';
+                url = '/quartz/update';
             } else {
                 tplData = {};
                 //添加
-                url='/quartz/add';
+                url = '/quartz/add';
             }
             layer.open({
                 offset: 't',
                 title: '表单',
                 type: 1,
+                area: ['800px', '600px'],
                 content: laytpl($('#addOrUpdate').html()).render(tplData),
                 success: function (layerO, index) {
                     if (data) {
+                        //编辑
                         form.val('formTemplate', data);
+                        if (data.jobClassContent) {
+                            //代码编辑器
+                            $('#jobClassContentDiv').show();
+                            codeMirror("jobClassContent").setValue(data.jobClassContent);
+                        }
+                    } else {
+                        //新增
+                        //1 显示编辑按钮
+                        let $jobClassContentEditBtn = $('#jobClassContentEditBtn');
+                        $jobClassContentEditBtn.removeClass('layui-hide');
+                        //2 附加点击事件
+                        $jobClassContentEditBtn.click(function () {
+                            $jobClassContentEditBtn.remove();
+                            $('#jobClassContentDiv').show();
+                            codeMirror("jobClassContent").setValue(jobBase);
+                            //移除编辑按钮
+                        });
+
                     }
                     form.render('select');
                     //绑定提交事件
@@ -289,9 +370,37 @@
                         });
                         return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
                     });
+
                 },
             });
+
+
         }
+
+        /*代码编辑器*/
+        function codeMirror(textArea) {
+            return CodeMirror.fromTextArea(document.getElementById(textArea), {
+                lineNumbers: true,
+                matchBrackets: true,
+                mode: "text/x-java",
+                extraKeys: {
+                    "Ctrl": "autocomplete",
+                    "Alt-F": "findPersistent",
+                    "F11": function (cm) { //全屏
+                        cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                    },
+                    "Esc": function (cm) { //取消全屏
+                        if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+                    }
+                },//自动补全
+                styleActiveLine: true, //选中高亮
+                foldGutter: true,
+                gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"], //代码折叠
+                theme: 'idea',//idea主题
+            });
+        }
+
+
     });
 </script>
 

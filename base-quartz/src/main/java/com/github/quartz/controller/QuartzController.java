@@ -1,7 +1,7 @@
 package com.github.quartz.controller;
 
-import com.github.quartz.mapper.DynamicJobService;
 import com.github.quartz.QuartzManager;
+import com.github.quartz.mapper.DynamicJobService;
 import com.github.util.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
@@ -34,7 +34,7 @@ public class QuartzController {
     @RequestMapping("jobs")
     public Object jobs(String name) throws SchedulerException {
         List<JobVo> collect = scheduler.getTriggerKeys(GroupMatcher.anyGroup()).stream()
-                .filter(triggerKey -> triggerKey.getName().toLowerCase().contains(name==null?"":name.toLowerCase()))
+                .filter(triggerKey -> triggerKey.getName().toLowerCase().contains(name == null ? "" : name.toLowerCase()))
                 .map(this::triggerKey2Job).collect(Collectors.toList());
         return ResultUtils.success(collect);
     }
@@ -49,18 +49,31 @@ public class QuartzController {
     public ResultUtils deleteJob(@RequestBody JobVo jobVo, @PathVariable String operation) {
 
         try {
-            switch (operation){
-                case "delete":quartzManager.removeJob(jobVo);break;
-                case "pause":quartzManager.pauseJob(jobVo);break;
-                case "reboot":quartzManager.rebootJob(jobVo);break;
-                case "add":quartzManager.addJob(jobVo);break;
-                case "update":quartzManager.modifyJob(jobVo);break;
-                case "run":quartzManager.runJob(jobVo);break;
-                default: throw new Exception("不支持的操作");
+            switch (operation) {
+                case "delete":
+                    quartzManager.removeJob(jobVo);
+                    break;
+                case "pause":
+                    quartzManager.pauseJob(jobVo);
+                    break;
+                case "reboot":
+                    quartzManager.rebootJob(jobVo);
+                    break;
+                case "add":
+                    quartzManager.addJob(jobVo);
+                    break;
+                case "update":
+                    quartzManager.modifyJob(jobVo);
+                    break;
+                case "run":
+                    quartzManager.runJob(jobVo);
+                    break;
+                default:
+                    throw new Exception("不支持的操作");
             }
             return ResultUtils.success();
         } catch (Exception e) {
-            return ResultUtils.error("job删除操作失败\n"+e.getMessage());
+            return ResultUtils.error("job删除操作失败\n" + e.getMessage());
         }
     }
 
@@ -68,7 +81,6 @@ public class QuartzController {
     private DynamicJobService dynamicJobService;
 
     /**
-     *
      * @param triggerKey 由triggerKey 获取jobVo
      * @return JobVo
      */
@@ -89,8 +101,8 @@ public class QuartzController {
                 job.setJobClassContent(jobClassContent);
                 //设置方式为使用DisallowConcurrentExecution注解
                 job.setConcurrentExecutionDisallowed(jobDetailImpl.isConcurrentExectionDisallowed());
-                Object data=trigger.getJobDataMap().get("data");
-                if (data!=null){
+                Object data = trigger.getJobDataMap().get("data");
+                if (data != null) {
                     job.setJobData(data.toString());
                 }
 

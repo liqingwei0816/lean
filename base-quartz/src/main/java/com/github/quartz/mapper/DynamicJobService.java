@@ -23,6 +23,7 @@ public class DynamicJobService {
 
     /**
      * 新增数据
+     *
      * @param jobVo jobClassContent  jobClassByteCode  jobClass
      * @return 更新的数量
      */
@@ -45,18 +46,17 @@ public class DynamicJobService {
             log.debug("==>  Parameters: {}(String),{}(String)", jobVo.getJobClass(), jobVo.getJobClassContent());
             log.debug("<==       Total: {}", count);
             return count;
-        } catch (SQLException e) {
-            throw e;
         }
     }
 
     /**
      * 更新数据
+     *
      * @param jobVo jobClassContent  jobClassByteCode  jobClass
      * @return 更新的数量
      */
     public Integer update(JobVo jobVo) throws SQLException {
-        String update = "UPDATE `qrtz_dynamic_job` SET `jobClassContent`= ?,` `=? where `jobClass` =?";
+        String update = "UPDATE `qrtz_dynamic_job` SET `jobClassContent`= ?,`jobClassByteCode`=? where `jobClass` =?";
         try (Connection connection = quartzDataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(update)) {
             preparedStatement.setString(1, jobVo.getJobClassContent());
@@ -68,13 +68,12 @@ public class DynamicJobService {
             log.debug("==>  Parameters: {}(String),{}(String)", jobVo.getJobClassContent(), jobVo.getJobClass());
             log.debug("<==       Total: {}", count);
             return count;
-        } catch (SQLException e) {
-            throw e;
         }
     }
 
     /**
      * 获取源代码数据
+     *
      * @param jobClass 类名
      * @return 源代码
      */
@@ -98,6 +97,7 @@ public class DynamicJobService {
 
     /**
      * 获取字节码数据
+     *
      * @param jobClass 类名
      */
     public byte[] selectByteCodeByClassName(String jobClass) {
