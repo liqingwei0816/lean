@@ -7,7 +7,7 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+    <link rel="stylesheet" th:href="@{/webjars/layui/css/layui.css}">
     <link rel="stylesheet" href="/css/app.css">
 </head>
 <body>
@@ -63,97 +63,97 @@
 </script>
 
 
-<script src="/layui/layui.all.js" type="text/javascript" charset="utf-8"></script>
+<script th:src="@{/webjars/layui/layui.js}" type="text/javascript"></script>
 <script type="text/javascript">
-    let table = layui.table, $ = layui.$;
-    let $table = table.render({
-        height: 'full-0',
-        elem: '#table',
-        url: '/role/dataList',
-        page: true,
-        limits: [20, 50, 100],
-        limit: 20,
-        toolbar: '#toolbar',
-        defaultToolbar: [{
-            title: '刷新'
-            , layEvent: 'refresh'
-            , icon: 'layui-icon-refresh'
-        }, {
-            title: '新增'
-            , layEvent: 'add'
-            , icon: 'layui-icon-add-circle'
-        }, 'exports'],
-        request: {pageName: 'pageNum', limitName: 'pageSize'},
-        cols: [
-            [
-                {type: 'checkbox', fixed: 'left'},
-                {field: 'roleName', title: '角色名', width: 110},
-                {field: 'note', title: '注释', width: 110},
-                {fixed: 'right', title: '操作', width: 170, align: 'center', toolbar: '#barTools'}
-            ]
-        ]
-    });
-
-    //头工具栏事件
-    table.on('toolbar(table)', function (obj) {
-        switch (obj.event) {
-            case 'search':
-                let filterData = layui.form.val('search');
-                table.reload('table', {
-                    where: filterData
-                    , page: {
-                        curr: 1 //重新从第 1 页开始
-                    }
-                }); //只重载数据
-                //参数回填
-                layui.form.val('search', filterData);
-                break;
-            case 'reset':
-                document.forms['search'].reset();
-                table.reload('table', {
-                    where: layui.form.val('search')
-                    , page: {
-                        curr: 1 //重新从第 1 页开始
-                    }
-                }); //只重载数据
-                break;
-            case 'refresh':
-                table.reload('table');
-                break;
-            case 'add':
-                add();
-                break;
-        }
-    });
-
-
-    //监听工具条
-    table.on('tool(table)', function (obj) {
-        let data = obj.data;
-        if (obj.event === 'auth') {
-            showAuth(obj);
-        } else if (obj.event === 'del') {
-            objDel(obj);
-        } else if (obj.event === 'edit') {
-            add(data);
-        }
-    });
-
     layui.config({
         base: '../'
     }).extend({
         treeTable: 'treeTable/treeTable'
-    });
+    }).use(['table', 'jquery', 'treeTable', 'form'], function () {
+        let table = layui.table,
+            $ = layui.jquery,
+            form = layui.form,
+            treeTable = layui.treeTable;
 
-    /**
-     * 显示角色的权限信息
-     */
-    function showAuth(obj) {
-        let roleId = obj.data.id;
-        layui.use(['layer', 'util', 'treeTable'], function () {
-            let $ = layui.jquery;
-            let layer = layui.layer;
-            let treeTable = layui.treeTable;
+        let $table = table.render({
+            height: 'full-0',
+            elem: '#table',
+            url: '/role/dataList',
+            page: true,
+            limits: [20, 50, 100],
+            limit: 20,
+            toolbar: '#toolbar',
+            defaultToolbar: [{
+                title: '刷新'
+                , layEvent: 'refresh'
+                , icon: 'layui-icon-refresh'
+            }, {
+                title: '新增'
+                , layEvent: 'add'
+                , icon: 'layui-icon-add-circle'
+            }, 'exports'],
+            request: {pageName: 'pageNum', limitName: 'pageSize'},
+            cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'},
+                    {field: 'roleName', title: '角色名', width: 110},
+                    {field: 'note', title: '注释', width: 110},
+                    {fixed: 'right', title: '操作', width: 170, align: 'center', toolbar: '#barTools'}
+                ]
+            ]
+        });
+
+        //头工具栏事件
+        table.on('toolbar(table)', function (obj) {
+            switch (obj.event) {
+                case 'search':
+                    let filterData = form.val('search');
+                    table.reload('table', {
+                        where: filterData
+                        , page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                    }); //只重载数据
+                    //参数回填
+                    form.val('search', filterData);
+                    break;
+                case 'reset':
+                    document.forms['search'].reset();
+                    table.reload('table', {
+                        where: form.val('search')
+                        , page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                    }); //只重载数据
+                    break;
+                case 'refresh':
+                    table.reload('table');
+                    break;
+                case 'add':
+                    add();
+                    break;
+            }
+        });
+
+
+        //监听工具条
+        table.on('tool(table)', function (obj) {
+            let data = obj.data;
+            if (obj.event === 'auth') {
+                showAuth(obj);
+            } else if (obj.event === 'del') {
+                objDel(obj);
+            } else if (obj.event === 'edit') {
+                add(data);
+            }
+        });
+
+
+        /**
+         * 显示角色的权限信息
+         */
+        function showAuth(obj) {
+            let roleId = obj.data.id;
             // 渲染表格
             let insTb = treeTable.render({
                 elem: '#auth',
@@ -164,7 +164,12 @@
                 },
                 cols: [
                     {type: 'checkbox'},
-                    {field: 'title',align: 'center',width:220 ,title: '<button style="float: left" class="save layui-btn-xs layui-btn layui-btn-danger">保存</button>标题' },
+                    {
+                        field: 'title',
+                        align: 'center',
+                        width: 220,
+                        title: '<button style="float: left" class="save layui-btn-xs layui-btn layui-btn-danger">保存</button>标题'
+                    },
                     {field: 'url', title: '路径'},
                     {field: 'authCode', title: '权限码', edit: 'text'},
                     {field: 'note', title: '注释'},
@@ -181,10 +186,10 @@
                 let load = layer.load();
                 //获取选中数据
                 let dataList = insTb.checkStatus();
-                let param={};
-                param.authIds=[];
-                param.roleId=roleId;
-                for (let i=0;i<dataList.length;i++){
+                let param = {};
+                param.authIds = [];
+                param.roleId = roleId;
+                for (let i = 0; i < dataList.length; i++) {
                     param.authIds.push(dataList[i].id);
                 }
                 $.ajax({
@@ -198,70 +203,71 @@
                     }
                 });
             });
-        });
 
-    }
+        }
 
-    /**
-     * 单个删除
-     * @param obj 工具条事件对象
-     */
-    function objDel(obj) {
-        layer.confirm('真的删除行么', function (index) {
-            $.ajax({
-                type: "post",
-                url: '/role/delete',
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(obj.data),
-                success: function (result) {
-                    layer.msg(result.msg);
-                    if (result.code === 0) {
-                        obj.del();
-                        layer.close(index);
-                    }
-                }
-            });
-        });
-    }
-
-    /**
-     * 角色添加更新弹窗
-     * @param data 更新时要填充的表单属性对象
-     */
-    function add(data) {
-        layer.open({
-            offset: 't',
-            content: $('#addOrUpdate').html(),
-            success: function () {
-                if (data) {
-                    layui.form.val('formTemplate', data);
-                }
-            },
-            yes: function (index) {
-                let formData = layui.form.val('formTemplate');
+        /**
+         * 单个删除
+         * @param obj 工具条事件对象
+         */
+        function objDel(obj) {
+            layer.confirm('真的删除行么', function (index) {
                 $.ajax({
                     type: "post",
-                    url: '/role/addOrUpdate',
+                    url: '/role/delete',
                     contentType: "application/json; charset=utf-8",
-                    data: JSON.stringify(formData),
+                    data: JSON.stringify(obj.data),
                     success: function (result) {
                         layer.msg(result.msg);
                         if (result.code === 0) {
-                            $table.reload({
-                                page: {
-                                    curr: 1 //重新从第 1 页开始
-                                }
-                            });
+                            obj.del();
                             layer.close(index);
                         }
                     }
                 });
-            }
-        });
+            });
+        }
+
+        /**
+         * 角色添加更新弹窗
+         * @param data 更新时要填充的表单属性对象
+         */
+        function add(data) {
+            layer.open({
+                offset: 't',
+                content: $('#addOrUpdate').html(),
+                success: function () {
+                    if (data) {
+                        form.val('formTemplate', data);
+                    }
+                },
+                yes: function (index) {
+                    let formData = form.val('formTemplate');
+                    $.ajax({
+                        type: "post",
+                        url: '/role/addOrUpdate',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(formData),
+                        success: function (result) {
+                            layer.msg(result.msg);
+                            if (result.code === 0) {
+                                $table.reload({
+                                    page: {
+                                        curr: 1 //重新从第 1 页开始
+                                    }
+                                });
+                                layer.close(index);
+                            }
+                        }
+                    });
+                }
+            });
 
 
-    }
+        }
 
+
+    });
 </script>
 
 </body>

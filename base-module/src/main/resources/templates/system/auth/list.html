@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>权限管理</title>
-    <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" th:href="@{/webjars/layui/css/layui.css}">
     <style>
         thead td .layui-icon {
             vertical-align: middle;
@@ -53,7 +54,7 @@
     <a sec:authorize-url="/auth/delete" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 
-<script src="/layui/layui.js"></script>
+<script type="text/javascript" th:src="@{/webjars/layui/layui.js}"></script>
 <script>
     layui.config({
         base: '../'
@@ -75,7 +76,7 @@
             },
             cols: [
                 {field: 'id', title: 'ID',width:50},
-                {field: 'title', title: 'title', edit: 'text'},
+                {field: 'title',width:300, title: 'title', edit: 'text'},
                 {field: 'url', title: 'url', edit: 'text'},
                 {field: 'authCode', title: 'authCode', edit: 'text'},
                 {field: 'note', title: 'note', edit: 'text'},

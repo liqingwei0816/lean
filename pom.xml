@@ -19,6 +19,8 @@
         <pageHelp.version>1.2.13</pageHelp.version>
         <druid.version>1.1.17</druid.version>
         <generator.version>1.0.0</generator.version>
+        <generator.version>1.0.0</generator.version>
+        <layui.version>2.5.6</layui.version>
         <base.quartz.version>1.0.0</base.quartz.version>
         <javac.compiler.version>0.11</javac.compiler.version>
     </properties>

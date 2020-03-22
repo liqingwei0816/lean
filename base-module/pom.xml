@@ -53,13 +53,6 @@
             <artifactId>ehcache</artifactId>
         </dependency>
 
-        <!--任务调度-->
-        <!--<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-quartz</artifactId>
-            <optional>true</optional>
-        </dependency>-->
-
         <!--安全配置-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -72,12 +65,12 @@
             <artifactId>thymeleaf-extras-springsecurity5</artifactId>
             <scope>provided</scope>
         </dependency>
+
         <!--模板-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-
 
         <!--数据库-->
         <dependency>
@@ -124,6 +117,19 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!--webjars-->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>layui</artifactId>
+            <version>${layui.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>webjars-locator-core</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

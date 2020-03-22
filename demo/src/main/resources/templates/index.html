@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>后台布局</title>
-    <link rel="stylesheet" href="/layui/css/layui.css">
+    <title>管理平台</title>
+    <link rel="stylesheet" th:href="@{/webjars/layui/css/layui.css}">
     <style>
         iframe {
             padding: 0;
@@ -36,20 +36,7 @@
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
         <div class="layui-logo">管理平台</div>
-        <!-- 头部区域（可配合layui已有的水平导航） -->
-        <!--<ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item"><a href="">控制台</a></li>
-            <li class="layui-nav-item"><a href="">商品管理</a></li>
-            <li class="layui-nav-item"><a href="">用户</a></li>
-            <li class="layui-nav-item">
-                <a href="javascript:">其它系统</a>
-                <dl class="layui-nav-child">
-                    <dd><a href="">邮件管理</a></dd>
-                    <dd><a href="">消息管理</a></dd>
-                    <dd><a href="">授权管理</a></dd>
-                </dl>
-            </li>
-        </ul>-->
+
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
                 <a href="javascript:">
@@ -58,10 +45,10 @@
                 </a>
                 <dl class="layui-nav-child">
                     <!--<dd><a href="">基本资料</a></dd>-->
-                    <dd><a href="" class="changePassword">安全设置</a></dd>
+                    <dd><a href="" class="changePassword">修改密码</a></dd>
+                    <dd><a th:href="@{/logout}">注销</a></dd>
                 </dl>
             </li>
-            <li class="layui-nav-item"><a th:href="@{/logout}">退了</a></li>
         </ul>
     </div>
 
@@ -69,28 +56,28 @@
         <div class="layui-side-scroll">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree" lay-filter="test">
-                <li lay-id="user" class="layui-nav-item" sec:authorize-url="/user/list"><a class="tabSelect"
-                                                                                           href="/user/list">用户管理</a>
-                </li>
                 <li class="layui-nav-item">
                     <a class="" href="javascript:">系统管理</a>
                     <dl class="layui-nav-child">
                         <dd lay-id="sysUser" sec:authorize-url="/sysUser/list"><a class="tabSelect"
-                                                                                  href="/sysUser/list">管理员</a></dd>
-                        <dd lay-id="auth" sec:authorize-url="/auth/list"><a class="tabSelect" href="/auth/list">权限管理</a>
+                                                                                  th:href="@{/sysUser/list}">管理员</a></dd>
+                        <dd lay-id="auth" sec:authorize-url="/auth/list"><a class="tabSelect" th:href="@{/auth/list}">权限管理</a>
                         </dd>
-                        <dd lay-id="role" sec:authorize-url="/role/list"><a class="tabSelect" href="/role/list">角色管理</a>
+                        <dd lay-id="role" sec:authorize-url="/role/list"><a class="tabSelect" th:href="@{/role/list}">角色管理</a>
                         </dd>
                     </dl>
                 </li>
                 <li sec:authorize-url="/table/list" lay-id="table" class="layui-nav-item">
-                    <a class="tabSelect" href="/table/list">表单管理</a>
+                    <a class="tabSelect" th:href="@{/table/list}">表单管理</a>
                 </li>
                 <li sec:authorize-url="/table/list" lay-id="job" class="layui-nav-item">
                     <a class="tabSelect" th:href="@{/quartz/list}">任务管理</a>
                 </li>
                 <li sec:authorize-url="/table/list" lay-id="coupon" class="layui-nav-item">
                     <a class="tabSelect" th:href="@{/coupon/list}">卷管理</a>
+                </li>
+                <li sec:authorize-url="/table/list" lay-id="druid" class="layui-nav-item">
+                    <a class="tabSelect" th:href="@{/druid/index.html}">数据库监控</a>
                 </li>
             </ul>
         </div>
@@ -114,67 +101,65 @@
         底部固定区域
     </div>
 </div>
-<script src="/layui/layui.all.js"></script>
+<script th:src="@{/webjars/layui/layui.js}"></script>
 <script type="text/javascript">
-    let $ = layui.$;
-    let sideH = $('.layui-side').css('height').replace('px', '') - 90;
-    $(window).resize(function () {
-        sideH = $('.layui-side').css('height').replace('px', '') - 90;
-    });
-
-    $('.tabSelect').click(function () {
-        let layId = $(this).parent().attr('lay-id');
-        let length = $('ul.layui-tab-title > [lay-id="' + layId + '"]').length;
-        if (length === 0) {
-            let title = $(this).text();
-            layui.element.tabAdd('tab', {
-                title: title
-                , content: '<iframe height="' + sideH + '" src="' + $(this).attr('href') + '"></iframe>'
-                , id: layId
-            });
-            //切换tab
-            layui.element.tabChange('tab', layId);
-            // });
-        } else {
-            //切换tab
-            layui.element.tabChange('tab', layId);
-        }
-        return false;
-    });
-
-    $('.changePassword').click(function () {
-        let index = layer.open({
-            type: 1,
-            title: '密码修改',
-            content: '<form class="layui-form" action="">' +
-                '                <div class="layui-form-item">' +
-                '                    <label class="layui-form-label">密码框</label>' +
-                '                    <div class="layui-input-inline">' +
-                '                       <input type="password" name="password" id="passwordInput" required lay-verify="required" placeholder="请输入密码" autocomplete="new-password" class="layui-input">' +
-                '                    </div>' +
-                '                </div>' +
-                '                <div class="layui-form-item">' +
-                '                    <div class="layui-input-block">' +
-                '                    <button class="layui-btn" lay-submit lay-filter="changePassword">立即提交</button>' +
-                '                    </div>' +
-                '                </div>' +
-                '               </form>',
+    layui.use(['jquery','layer','element','form'],function () {
+        let $ = layui.jquery,element=layui.element,form=layui.form;
+        /*高度设置*/
+        let sideH = $('.layui-side').css('height').replace('px', '') - 90;
+        $(window).resize(function () {
+            sideH = $('.layui-side').css('height').replace('px', '') - 90;
         });
-        //监听提交 可触发form 表单验证
-        layui.form.on('submit(changePassword)', function (data) {
-            let param = {};
-            param.password = data.field.password;
-            $.post('/sysUser/changePassword', param, function (result) {
-                if (result.code === 0) {
-                    layer.close(index);
-                } else {
-                    layer.tips(result.msg, '#passwordInput', {tips: [1, '#FF5722']});
-                }
+
+        $('.tabSelect').click(function () {
+            let layId = $(this).parent().attr('lay-id');
+            let length = $('ul.layui-tab-title > [lay-id="' + layId + '"]').length;
+            if (length === 0) {
+                let title = $(this).text();
+                element.tabAdd('tab', {
+                    title: title
+                    , content: '<iframe height="' + sideH + '" src="' + $(this).attr('href') + '"></iframe>'
+                    , id: layId
+                });
+                //切换tab
+                element.tabChange('tab', layId);
+                // });
+            } else {
+                //切换tab
+                element.tabChange('tab', layId);
+            }
+            return false;
+        });
+
+        $('.changePassword').click(function () {
+            let index = layer.open({
+                type: 1,
+                title: '密码修改',
+                content: `<form class="layui-form" action="">                <div class="layui-form-item">                    <label class="layui-form-label">密码框</label>                    <div class="layui-input-inline">                       <input type="password" name="password" id="passwordInput" required lay-verify="required" placeholder="请输入密码" autocomplete="new-password" class="layui-input">                    </div>                </div>                <div class="layui-form-item">                    <div class="layui-input-block">                    <button class="layui-btn" lay-submit lay-filter="changePassword">立即提交</button>                    </div>                </div>               </form>`,
+            });
+            //监听提交 可触发form 表单验证
+            form.on('submit(changePassword)', function (data) {
+                let param = {};
+                param.password = data.field.password;
+                $.post('/sysUser/changePassword', param, function (result) {
+                    if (result.code === 0) {
+                        layer.close(index);
+                    } else {
+                        layer.tips(result.msg, '#passwordInput', {tips: [1, '#FF5722']});
+                    }
+                });
+                return false;
             });
             return false;
         });
-        return false;
+
     });
+
+
+
+
+
+
 
 
 </script>
