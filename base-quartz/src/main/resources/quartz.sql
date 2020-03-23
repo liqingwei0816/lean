@@ -68,7 +68,6 @@ CREATE TABLE `QRTZ_CRON_TRIGGERS`  (
 -- Records of QRTZ_CRON_TRIGGERS
 -- ----------------------------
 INSERT INTO `QRTZ_CRON_TRIGGERS` VALUES ('quartzScheduler', 'HelloInImpl', 'HelloInImpl', '0/5 * * * * ? ', 'Asia/Shanghai');
-INSERT INTO `QRTZ_CRON_TRIGGERS` VALUES ('quartzScheduler', 'TestJob', 'TestJob', '0/5 * * * * ?', 'Asia/Shanghai');
 
 -- ----------------------------
 -- Table structure for QRTZ_FIRED_TRIGGERS
@@ -126,7 +125,6 @@ CREATE TABLE `QRTZ_JOB_DETAILS`  (
 -- Records of QRTZ_JOB_DETAILS
 -- ----------------------------
 INSERT INTO `QRTZ_JOB_DETAILS` VALUES ('quartzScheduler', 'HelloInImpl', 'HelloInImpl', '', 'com.github.classload.HelloInImpl', '0', '0', '0', '0', 0x230D0A23536174204D61722032312032313A31333A30322043535420323032300D0A);
-INSERT INTO `QRTZ_JOB_DETAILS` VALUES ('quartzScheduler', 'TestJob', 'TestJob', '', 'com.github.job.TestJob', '0', '1', '0', '0', 0x230D0A23536174204D61722032312032333A30323A35322043535420323032300D0A);
 
 -- ----------------------------
 -- Table structure for QRTZ_LOCKS
@@ -262,7 +260,6 @@ CREATE TABLE `QRTZ_TRIGGERS`  (
 -- Records of QRTZ_TRIGGERS
 -- ----------------------------
 INSERT INTO `QRTZ_TRIGGERS` VALUES ('quartzScheduler', 'HelloInImpl', 'HelloInImpl', 'HelloInImpl', 'HelloInImpl', '', 1584807075000, 1584807070000, 5, 'ACQUIRED', 'CRON', 1584803927000, 0, NULL, 1, 0x230D0A23536174204D61722032312032333A31383A34382043535420323032300D0A646174613D32320D0A);
-INSERT INTO `QRTZ_TRIGGERS` VALUES ('quartzScheduler', 'TestJob', 'TestJob', 'TestJob', 'TestJob', '', 1584807075000, 1584807070000, 5, 'WAITING', 'CRON', 1584802965000, 0, NULL, 1, 0x230D0A23536174204D61722032312032333A30323A35322043535420323032300D0A646174613D3232330D0A);
 
 -- ----------------------------
 -- Table structure for qrtz_dynamic_job
