@@ -2,7 +2,7 @@ package com.github.quartz;
 
 import com.github.compiler.CompilerUtil;
 import com.github.quartz.classload.JobClassLoader;
-import com.github.quartz.controller.JobVo;
+import com.github.controller.JobVo;
 import com.github.quartz.mapper.DynamicJobService;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;

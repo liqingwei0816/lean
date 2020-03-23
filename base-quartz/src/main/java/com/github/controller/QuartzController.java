@@ -1,4 +1,4 @@
-package com.github.quartz.controller;
+package com.github.controller;
 
 import com.github.quartz.QuartzManager;
 import com.github.quartz.mapper.DynamicJobService;

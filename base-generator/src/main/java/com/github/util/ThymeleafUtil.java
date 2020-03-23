@@ -6,15 +6,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,9 +48,15 @@ public class ThymeleafUtil {
             return null;
         } else {
 
-            byte[] bytes = Files.readAllBytes(resource.getFile().toPath());
-            String templateString = new String(bytes, StandardCharsets.UTF_8);
-            return springTemplateEngine.process(templateString, data);
+            try (InputStream inputStream = resource.getInputStream();
+                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+                StringBuilder stringBuilder=new StringBuilder();
+                String string;
+                while ((string=bufferedReader.readLine())!=null){
+                    stringBuilder.append(string).append('\n');
+                }
+                return springTemplateEngine.process(stringBuilder.toString(), data);
+            }
         }
 
     }

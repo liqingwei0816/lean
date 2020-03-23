@@ -1,6 +1,6 @@
 package com.github.quartz.mapper;
 
-import com.github.quartz.controller.JobVo;
+import com.github.controller.JobVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

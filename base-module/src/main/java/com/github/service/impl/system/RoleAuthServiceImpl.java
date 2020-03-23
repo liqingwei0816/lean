@@ -1,7 +1,7 @@
 package com.github.service.impl.system;
 
 import com.github.bean.system.RoleAuth;
-import com.github.quartz.mapper.system.RoleAuthMapper;
+import com.github.mapper.system.RoleAuthMapper;
 import com.github.service.system.RoleAuthService;
 import org.springframework.stereotype.Service;
 

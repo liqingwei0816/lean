@@ -7,9 +7,9 @@
         <artifactId>learn</artifactId>
         <version>1.0</version>
     </parent>
-    <groupId>com.guttv</groupId>
+    <groupId>com.github</groupId>
     <artifactId>base-module</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>base-module</name>
     <description>spring boot 项目脚手架，包含mybatis security 代码生成</description>
 
@@ -57,13 +57,13 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
-            <scope>provided</scope>
+            <!--<scope>provided</scope>-->
         </dependency>
 
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
             <artifactId>thymeleaf-extras-springsecurity5</artifactId>
-            <scope>provided</scope>
+            <!--<scope>provided</scope>-->
         </dependency>
 
         <!--模板-->
@@ -131,14 +131,24 @@
         </dependency>
 
     </dependencies>
-
-    <build>
+    <!--私有仓库-->
+    <distributionManagement>
+        <repository>
+            <id>rdc-releases</id>
+            <url>https://repo.rdc.aliyun.com/repository/126671-release-jy16hR/</url>
+        </repository>
+        <snapshotRepository>
+            <id>rdc-snapshots</id>
+            <url>https://repo.rdc.aliyun.com/repository/126671-snapshot-USMClV/</url>
+        </snapshotRepository>
+    </distributionManagement>
+<!--    <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-    </build>
+    </build>-->
 
 </project>

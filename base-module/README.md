@@ -17,7 +17,7 @@
 
     spring.generator.packageName 项目基础包名 默认为com.github
         代码生成的路径为    
-            com.github.quartz.controller,  api接口
+            com.github.controller,  api接口
             com.github.service,     service
             com.github.service.impl,    serviceImpl
             com.github.bean,    pojo

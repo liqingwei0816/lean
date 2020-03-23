@@ -1,4 +1,4 @@
-package com.github.quartz.controller;
+package com.github.controller;
 
 import com.github.config.security.phoneSecurity.CodeUtil;
 import com.github.util.SpringUtil;

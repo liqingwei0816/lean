@@ -1,4 +1,4 @@
-package com.github.quartz.controller.system;
+package com.github.controller.system;
 
 import com.github.bean.system.Auth;
 import com.github.service.system.AuthService;

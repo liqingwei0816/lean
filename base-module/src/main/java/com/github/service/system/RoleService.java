@@ -1,7 +1,7 @@
 package com.github.service.system;
 
 import com.github.bean.system.Role;
-import com.github.quartz.controller.system.RoleController;
+import com.github.controller.system.RoleController;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;

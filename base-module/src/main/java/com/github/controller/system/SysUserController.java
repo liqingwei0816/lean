@@ -1,4 +1,4 @@
-package com.github.quartz.controller.system;
+package com.github.controller.system;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;

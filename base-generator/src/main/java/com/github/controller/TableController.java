@@ -1,4 +1,4 @@
-package com.github.quartz.controller;
+package com.github.controller;
 
 import com.github.entity.Table;
 import com.github.service.TableService;

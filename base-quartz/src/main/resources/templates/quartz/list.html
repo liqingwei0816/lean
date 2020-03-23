@@ -111,8 +111,8 @@
                 <label class="layui-form-label" for="misfireInstruction">misfire策略</label>
                 <div class="layui-input-inline">
                     <select name="misfireInstruction" id="misfireInstruction">
-                        <!--/*@thymesVar id="enum" type="com.github.quartz.controller.JobVo.MisfireInstructionEnum"*/-->
-                        <option th:each="enum:${T(com.github.quartz.controller.JobVo.MisfireInstructionEnum).values()}"
+                        <!--/*@thymesVar id="enum" type="com.github.controller.JobVo.MisfireInstructionEnum"*/-->
+                        <option th:each="enum:${T(com.github.controller.JobVo.MisfireInstructionEnum).values()}"
                                 th:value="${enum.name()}" th:text="${enum.name()}">SMART_POLICY
                         </option>
                     </select>

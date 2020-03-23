@@ -88,4 +88,18 @@
 
     </dependencies>
 
+    <!--私有仓库-->
+    <distributionManagement>
+        <repository>
+            <id>rdc-releases</id>
+            <url>https://repo.rdc.aliyun.com/repository/126671-release-jy16hR/</url>
+        </repository>
+        <snapshotRepository>
+            <id>rdc-snapshots</id>
+            <url>https://repo.rdc.aliyun.com/repository/126671-snapshot-USMClV/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+
+
 </project>

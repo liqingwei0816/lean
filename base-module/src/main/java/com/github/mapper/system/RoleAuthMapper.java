@@ -1,4 +1,4 @@
-package com.github.quartz.mapper.system;
+package com.github.mapper.system;
 
 import com.github.pagehelper.PageHelper;
 import com.github.bean.system.RoleAuth;
