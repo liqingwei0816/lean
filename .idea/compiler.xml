@@ -13,6 +13,7 @@
         <module name="base-generator" />
         <module name="base" />
         <module name="base-module" />
+        <module name="util" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -30,6 +31,7 @@
       <module name="base-quartz" options="-parameters" />
       <module name="demo" options="-parameters" />
       <module name="jwt-module" options="-parameters" />
+      <module name="util" options="-parameters" />
     </option>
   </component>
 </project>
