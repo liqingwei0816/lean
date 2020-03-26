@@ -4,18 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.aop.OperatorAop;
 import com.github.bean.system.Auth;
 import com.github.bean.system.SysUser;
-import com.github.config.security.phoneSecurity.CodeAuthenticationFilter;
-import com.github.config.security.phoneSecurity.CodeAuthenticationProvider;
-import com.github.config.security.phoneSecurity.CodeUtil;
-import com.github.config.security.phoneSecurity.SimpleCodeUtil;
 import com.github.mapper.system.SysUserMapper;
 import com.github.service.system.AuthService;
 import com.github.util.ResultUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -26,9 +20,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -49,11 +40,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private ObjectMapper objectMapper;
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(daoAuthenticationProvider());
-        auth.authenticationProvider(codeAuthenticationProvider());
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userName -> {
+            SysUser sysUser = new SysUser();
+            sysUser.setUserName(userName);
+            sysUser = sysUserMapper.selectOne(sysUser);
+            if (sysUser == null) {
+                return null;
+            }
+            List<SimpleGrantedAuthority> authorities = authService.authoritiesByUsernameQuery(userName).stream().filter(a -> !StringUtils.isEmpty(a.getAuthCode())).map(e -> new SimpleGrantedAuthority(e.getAuthCode())).collect(Collectors.toList());
+            return new User(userName, sysUser.getPassword(), sysUser.getAvailable(), true, true, true, authorities);
+        }).passwordEncoder(bCryptPasswordEncoder());
     }
-
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
@@ -83,18 +81,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 writer.flush();
             }
         }));
-        //添加自定义拦截器
-        http.addFilterAfter(codeAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
-     /**
-     * 手机登录验证码默认实现
-     */
-    @Bean
-    @ConditionalOnMissingBean(CodeUtil.class)
-    public CodeUtil codeUtil() {
-        return new SimpleCodeUtil();
-    }
 
     /**
      *  取消静态资源保护
@@ -122,48 +110,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new OperatorAop();
     }
 
-    /**
-     * 默认的 DaoAuthenticationProvider bean
-     */
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        // 设置userDetailsService
-        daoAuthenticationProvider.setUserDetailsService(userName -> {
-            SysUser sysUser = new SysUser();
-            sysUser.setUserName(userName);
-            sysUser = sysUserMapper.selectOne(sysUser);
-            if (sysUser == null) {
-                return null;
-            }
-            List<SimpleGrantedAuthority> authorities = authService.authoritiesByUsernameQuery(userName).stream().filter(a -> !StringUtils.isEmpty(a.getAuthCode())).map(e -> new SimpleGrantedAuthority(e.getAuthCode())).collect(Collectors.toList());
-            return new User(userName, sysUser.getPassword(), sysUser.getAvailable(), true, true, true, authorities);
-        });
-        // 禁止隐藏用户未找到异常
-        daoAuthenticationProvider.setHideUserNotFoundExceptions(false);
-        // 使用BCrypt进行密码的hash
-        daoAuthenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
-        return daoAuthenticationProvider;
-    }
-
-    /**
-     * 自定义的手机号登录 CodeAuthenticationFilter bean 过滤器
-     */
-    @Bean
-    public CodeAuthenticationFilter codeAuthenticationFilter() throws Exception {
-        CodeAuthenticationFilter codeAuthenticationFilter = new CodeAuthenticationFilter();
-        codeAuthenticationFilter.setAuthenticationManager(this.authenticationManager());
-        codeAuthenticationFilter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/"));
-        codeAuthenticationFilter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error"));
-
-        return codeAuthenticationFilter;
-    }
-
-    /**
-     * 自定义的手机号登录 CodeAuthenticationProvider bean 处理器
-     */
-    @Bean
-    public CodeAuthenticationProvider codeAuthenticationProvider() {
-        return new CodeAuthenticationProvider();
-    }
 }

@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-//@SpringBootApplication
+@SpringBootApplication
 public class BaseModuleApplication {
 
     public static void main(String[] args) {

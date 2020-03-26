@@ -269,7 +269,7 @@
         }
 
         /*job类的模板*/
-       let jobBase=`package com.github.job;
+       let jobBase=`package 包名;
 
         import org.quartz.DisallowConcurrentExecution;
         import org.quartz.JobExecutionContext;
@@ -280,6 +280,9 @@
 
         @DisallowConcurrentExecution
         public class 类名 extends QuartzJobBean {
+
+        private static final Logger log = LoggerFactory.getLogger(类名.class);
+
             @Override
             protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
             try{
@@ -335,7 +338,16 @@
                         $jobClassContentEditBtn.click(function () {
                             $jobClassContentEditBtn.remove();
                             $('#jobClassContentDiv').show();
-                            codeMirror("jobClassContent").setValue(jobBase);
+                            //获取类名和包名
+                            let jobClass = $('#jobClass').val();
+                            if (jobClass){
+                                let split = jobClass.split('.');
+                                if (split.length>1){
+                                    jobBase= jobBase.replace(new RegExp('类名','g'),split[split.length-1]).replace("包名",split.slice(0,split.length-1).join("."));
+                                }
+                            }
+
+                            codeMirror( "jobClassContent").setValue(jobBase);
                             //移除编辑按钮
                         });
 

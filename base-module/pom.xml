@@ -7,7 +7,6 @@
         <artifactId>learn</artifactId>
         <version>1.0</version>
     </parent>
-    <groupId>com.github</groupId>
     <artifactId>base-module</artifactId>
     <version>1.0.0</version>
     <name>base-module</name>
@@ -142,13 +141,13 @@
             <url>https://repo.rdc.aliyun.com/repository/126671-snapshot-USMClV/</url>
         </snapshotRepository>
     </distributionManagement>
-<!--    <build>
+    <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-    </build>-->
+    </build>
 
 </project>

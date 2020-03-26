@@ -4,18 +4,10 @@
 
     <property name="logPath" value="d:/log"/>
 
-    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-
-    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
-    <conversionRule conversionWord="wex"
-                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
-    <conversionRule conversionWord="wEx"
-                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
-
     <property name="CONSOLE_LOG_PATTERN"
-              value="%d{HH:mm:ss.SSS} %highlight(%-5p) %green([%thread]) [%t] %-40.40logger{39} - %msg%n"/>
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %green([%-20.20thread]) %-40.40logger{39} : %m%n"/>
     <property name="FILE_LOG_PATTERN"
-              value="${FILE_LOG_PATTERN:-%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%-20.20thread] %-40.40logger{39} : %m%n"/>
 
     <logger name="org.apache" level="ERROR"/>
     <logger name="SQL_CACHE" level="WARN"/>
@@ -56,11 +48,11 @@
             <level>ERROR</level>
         </filter>
     </appender>
-<!--
+
     <appender name="JOB" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${logPath}/job.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            &lt;!&ndash; 按天轮转 &ndash;&gt;
+
             <fileNamePattern>${logPath}/job/job-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
             <totalSizeCap>5GB</totalSizeCap>
@@ -68,13 +60,10 @@
         <encoder>
             <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
-        &lt;!&ndash; 收集高于debug级别的日志 &ndash;&gt;
-        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
-            <evaluator>return threadName.startsWith("jobThread")</evaluator>
+        <filter class="com.github.quartz.log.JobLogFilter">
         </filter>
-    </appender>-->
 
-
+    </appender>
 
 
     <!--控制台-->
@@ -89,6 +78,6 @@
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="DEBUG"/>
         <appender-ref ref="ERROR"/>
-       <!-- <appender-ref ref="JOB"/>-->
+        <appender-ref ref="JOB"/>
     </root>
 </configuration>
