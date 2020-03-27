@@ -50,9 +50,11 @@
 
 <!-- 表格操作列 -->
 <script type="text/html" id="treeTableBar">
-    <a sec:authorize-url="/auth/addOrUpdate" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="add">新增</a>
-    <a sec:authorize-url="/auth/delete" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-</script>
+    <div class="layui-btn-group">
+        <button sec:authorize-url="/auth/addOrUpdate" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="add">新增</button>
+        <button sec:authorize-url="/auth/delete" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="del">删除</button>
+    </div>
+  </script>
 
 <script type="text/javascript" th:src="@{/webjars/layui/layui.js}"></script>
 <script>
@@ -80,7 +82,7 @@
                 {field: 'url', title: 'url', edit: 'text'},
                 {field: 'authCode', title: 'authCode', edit: 'text'},
                 {field: 'note', title: 'note', edit: 'text'},
-                {align: 'center', toolbar: '#treeTableBar', title: '操作'}
+                {align: 'center',width:120, toolbar: '#treeTableBar', title: '操作'}
             ],
             reqData: function (data, callback) {
                 $.get('/auth/dataList', function (res) {

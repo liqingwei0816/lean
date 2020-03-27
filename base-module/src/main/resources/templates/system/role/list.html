@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8">
     <title>Layui</title>
@@ -28,14 +29,18 @@
             <input type="text" name="roleName" required placeholder="角色名" autocomplete="off" class="layui-input">
         </div>
     </form>
+
     <button class="layui-btn layui-btn-sm" lay-event="search">查询</button>
     <button class="layui-btn layui-btn-sm" lay-event="reset">重置</button>
 </script>
 <!--工具条-->
 <script type="text/html" id="barTools">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="auth">权限</a>
+    <div class="layui-btn-group">
+        <button sec:authorize-url="/role/addOrUpdate" class="layui-btn layui-btn-sm" lay-event="edit">编辑</button>
+        <button sec:authorize-url="/role/delete" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="del">删除</button>
+        <button sec:authorize-url="/role/auth/*" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="auth">权限</button>
+    </div>
+
 </script>
 
 
@@ -168,7 +173,7 @@
                         field: 'title',
                         align: 'center',
                         width: 220,
-                        title: '<button style="float: left" class="save layui-btn-xs layui-btn layui-btn-danger">保存</button>标题'
+                        title: '<button style="float: left" class="save layui-btn-sm layui-btn layui-btn-danger">保存</button>标题'
                     },
                     {field: 'url', title: '路径'},
                     {field: 'authCode', title: '权限码', edit: 'text'},

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8">
     <title>Layui</title>
@@ -31,9 +32,11 @@
 </script>
 <!--工具条-->
 <script type="text/html" id="barRights">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">禁用</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="role">权限</a>
+    <div class="layui-btn-group">
+    <button sec:authorize-url="/sysUser/addOrUpdate" class="layui-btn layui-btn-sm" lay-event="edit">编辑</button>
+    <button sec:authorize-url="/sysUser/delete" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="del">禁用</button>
+    <button sec:authorize-url="/sysUser/roles/*" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="role">权限</button>
+    </div>
 </script>
 
 
@@ -64,7 +67,7 @@
                        class="layui-input">
             </div>
         </div>
-        <div class="layui-layer-btn layui-layer-btn-">
+        <div class="layui-layer-btn layui-layer-btn0">
             <button type="submit" style="border: 0;background: white"><a class="layui-layer-btn0">确定</a></button>
         </div>
 
@@ -104,7 +107,7 @@
                     /* {field: 'password', title: '', width: 170},*/
                     {field: 'available', title: '是否可用', width: 170},
                     {field: 'note', title: '注释', width: 170},
-                    {fixed: 'right', width: 210, align: 'center', toolbar: '#barRights'}
+                    {fixed: 'right', width: 180, align: 'center', toolbar: '#barRights'}
                 ]
             ]
         });

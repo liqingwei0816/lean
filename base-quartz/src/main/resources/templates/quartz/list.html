@@ -63,11 +63,13 @@
 </script>
 <!--工具条-->
 <script type="text/html" id="barRights">
-    <a sec:authorize-url="/quartz/addOrUpdate" class="layui-btn layui-btn-xs" lay-event="run">运行</a>
-    <a sec:authorize-url="/quartz/addOrUpdate" class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a sec:authorize-url="/quartz/delete" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    <a sec:authorize-url="/quartz/pause" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="pause">暂停</a>
-    <a sec:authorize-url="/quartz/reboot" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="reboot">恢复</a>
+    <div class="layui-btn-group">
+    <button sec:authorize-url="/quartz/addOrUpdate" class="layui-btn layui-btn-sm" lay-event="run">运行</button>
+    <button sec:authorize-url="/quartz/addOrUpdate" class="layui-btn layui-btn-sm" lay-event="edit">编辑</button>
+    <button sec:authorize-url="/quartz/delete" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="del">删除</button>
+    <button sec:authorize-url="/quartz/pause" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="pause">暂停</button>
+    <button sec:authorize-url="/quartz/reboot" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="reboot">恢复</button>
+    </div>
 </script>
 
 
