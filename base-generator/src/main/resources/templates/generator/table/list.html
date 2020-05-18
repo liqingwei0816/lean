@@ -10,7 +10,7 @@
 </head>
 <body>
 <table class="layui-table"
-       lay-data="{ height:'full-0',url:'/table/dataList', page:true,limits:[20,50,100],limit:20, id:'table'}"
+       lay-data="{ height:'full-0',url:'./dataList', page:true,limits:[20,50,100],limit:20, id:'table'}"
        lay-filter="table">
     <thead>
     <tr>
@@ -68,7 +68,7 @@
                         param.name = data.name;
                         $.ajax({
                             type: "GET",
-                            url: '/table/createCode',
+                            url: './createCode',
                             data: param,
                             success: function (result) {
                                 layer.close(index);

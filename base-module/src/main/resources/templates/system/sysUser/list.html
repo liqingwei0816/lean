@@ -84,7 +84,7 @@
             height: 'full-0',
             width: 780,
             elem: '#table',
-            url: '/sysUser/dataList',
+            url: './dataList',
             page: true,
             limits: [20, 50, 100],
             limit: 20,
@@ -166,7 +166,7 @@
             layer.confirm('真的删除么', function (index) {
                 $.ajax({
                     type: "post",
-                    url: '/sysUser/delete',
+                    url: './delete',
                     contentType: "application/json; charset=utf-8",
                     data: JSON.stringify(obj.data),
                     success: function (result) {
@@ -199,7 +199,7 @@
                         let formData = form.val('formTemplate');
                         $.ajax({
                             type: "post",
-                            url: '/sysUser/addOrUpdate',
+                            url: './addOrUpdate',
                             contentType: "application/json; charset=utf-8",
                             data: JSON.stringify(formData),
                             success: function (result) {
@@ -224,7 +224,7 @@
         function showRole(data) {
             let sysUserId = data.id;
             let load = layer.load();
-            $.get('/sysUser/roles/' + sysUserId, function (result) {
+            $.get('./roles/' + sysUserId, function (result) {
                 if (result.code === 0) {
                     for (let i = 0; i < result.data.length; i++) {
                         result.data[i].title = result.data[i].roleName + '(' + result.data[i].note + ')';
@@ -237,7 +237,7 @@
                         oncheck: function (obj) {
                             if (obj.data.checked !== obj.checked) {
                                 let param = {checked: obj.checked, sysUserId: sysUserId, roleId: obj.data.id};
-                                $.post('/sysUser/addRole', param, function (result) {
+                                $.post('./addRole', param, function (result) {
                                     if (result.code === 0) {
                                         obj.data.checked = obj.checked;
                                     } else {

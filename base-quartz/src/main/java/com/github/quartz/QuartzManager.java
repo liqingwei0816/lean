@@ -45,7 +45,7 @@ public class QuartzManager {
 
     private static LocalDateTime jobClassLoaderExpireTime;
 
-    public static JobClassLoader getJobClassLoader() {
+    public static synchronized JobClassLoader getJobClassLoader() {
         if (jobClassLoader == null || jobClassLoaderExpireTime.isBefore(LocalDateTime.now())) {
             //todo 待添加更新间隔可配置方式
             jobClassLoaderExpireTime = LocalDateTime.now().plusSeconds(60);

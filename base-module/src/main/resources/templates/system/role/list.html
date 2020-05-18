@@ -83,7 +83,7 @@
         let $table = table.render({
             height: 'full-0',
             elem: '#table',
-            url: '/role/dataList',
+            url: './dataList',
             page: true,
             limits: [20, 50, 100],
             limit: 20,
@@ -180,7 +180,7 @@
                     {field: 'note', title: '注释'},
                 ],
                 reqData: function (data, callback) {
-                    $.get('/role/auth/' + obj.data.id, function (res) {
+                    $.get('./auth/' + obj.data.id, function (res) {
                         callback(res.data.data);
                         insTb.setChecked(res.data.checkedList);
                     });
@@ -199,7 +199,7 @@
                 }
                 $.ajax({
                     type: "post",
-                    url: '/role/addAuth',
+                    url: './addAuth',
                     contentType: "application/json; charset=utf-8",
                     data: JSON.stringify(param),
                     success: function (result) {
@@ -219,7 +219,7 @@
             layer.confirm('真的删除行么', function (index) {
                 $.ajax({
                     type: "post",
-                    url: '/role/delete',
+                    url: './delete',
                     contentType: "application/json; charset=utf-8",
                     data: JSON.stringify(obj.data),
                     success: function (result) {
@@ -250,7 +250,7 @@
                     let formData = form.val('formTemplate');
                     $.ajax({
                         type: "post",
-                        url: '/role/addOrUpdate',
+                        url: './addOrUpdate',
                         contentType: "application/json; charset=utf-8",
                         data: JSON.stringify(formData),
                         success: function (result) {
