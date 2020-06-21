@@ -78,6 +78,13 @@
             <url>https://repo.rdc.aliyun.com/repository/126671-snapshot-USMClV/</url>
         </snapshotRepository>
     </distributionManagement>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

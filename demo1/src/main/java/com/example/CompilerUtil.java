@@ -1,4 +1,4 @@
-package com.github.compiler;
+package com.example;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -6,24 +6,24 @@ import javax.tools.*;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.net.URI;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 动态编译工具类
  * 由内存到内存的动态编译,
- * todo jar方式部署会出现依赖问题
  */
 @Slf4j
 public class CompilerUtil {
 
-    public static Map<String, JavaSourceObject> compile(List<JavaSourceObject> javaSourceObjects) {
+    public  Map<String, JavaSourceObject> compile(List<JavaSourceObject> javaSourceObjects) {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         ClassFileManager fileManager = new ClassFileManager(compiler.getStandardFileManager(null, null, null));
-        //todo 添加options参数
-        JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, null, null, null, javaSourceObjects);
+
+        List<String> options = new ArrayList<>();
+        options.add("-classpath");
+        options.add("./BOOT-INF/classes/");
+        JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, null, options, null, javaSourceObjects);
+
         if (task.call()) {
             //反馈字节码
             return fileManager.getClassMap();
@@ -32,7 +32,8 @@ public class CompilerUtil {
         }
     }
 
-    public static byte[] compileOne(String className, String source) {
+    public  byte[] compileOne(String className, String source) {
+
         Map<String, JavaSourceObject> compile = compile(Collections.singletonList(new JavaSourceObject(className, source)));
         JavaSourceObject javaClassObject = compile.get(className);
         return javaClassObject.getBytes();
@@ -80,7 +81,7 @@ public class CompilerUtil {
     /**
      * 编译时class输出至JavaClassObject的ByteArrayOutputStream
      */
-    private static class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
+    public static class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
 
         public ClassFileManager(StandardJavaFileManager standardManager) {
             super(standardManager);

@@ -13,6 +13,7 @@
         <module name="base-generator" />
         <module name="base" />
         <module name="base-module" />
+        <module name="demo1" />
         <module name="util" />
       </profile>
     </annotationProcessing>
@@ -30,6 +31,7 @@
       <module name="base-module" options="-parameters" />
       <module name="base-quartz" options="-parameters" />
       <module name="demo" options="-parameters" />
+      <module name="demo1" options="-parameters" />
       <module name="jwt-module" options="-parameters" />
       <module name="util" options="-parameters" />
     </option>

@@ -13,6 +13,7 @@
         <option value="$PROJECT_DIR$/base-generator/pom.xml" />
         <option value="$PROJECT_DIR$/base-quartz/pom.xml" />
         <option value="$PROJECT_DIR$/util/pom.xml" />
+        <option value="$PROJECT_DIR$/demo1/pom.xml" />
       </list>
     </option>
   </component>
