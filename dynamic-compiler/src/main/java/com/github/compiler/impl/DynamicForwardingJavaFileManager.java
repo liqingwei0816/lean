@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.github.compiler.impl;
 
 import com.github.compiler.DynamicCompiler;
@@ -20,14 +17,14 @@ import java.util.Set;
  */
 public class DynamicForwardingJavaFileManager extends ForwardingJavaFileManager<JavaFileManager> {
 	private final DynamicClassLoader classLoader;
-	private final Map<URI, JavaFileObject> fileObjects = new HashMap<>();
-	private final Map<String, JavaFileObject> fileOutObjects = new HashMap<>();
+	private final Map<URI, JavaSourceObject> fileObjects = new HashMap<>();
+	private final Map<String, JavaSourceObject> fileOutObjects = new HashMap<>();
 	public DynamicForwardingJavaFileManager(JavaFileManager fileManager, DynamicClassLoader classLoader) {
 		super(fileManager);
 		this.classLoader = classLoader;
 	}
 
-	public Map<String, JavaFileObject> getFileOutObjects() {
+	public Map<String, JavaSourceObject> getFileOutObjects() {
 		return fileOutObjects;
 	}
 
@@ -41,9 +38,8 @@ public class DynamicForwardingJavaFileManager extends ForwardingJavaFileManager<
 
 	@Override
 	public JavaFileObject getJavaFileForOutput(Location location, String qualifiedName, Kind kind,
-			FileObject outputFile) throws IOException {
-		JavaFileObject file = new DynamicSimpleFileObject(qualifiedName, kind);
-
+			FileObject outputFile) {
+		JavaSourceObject file = new JavaSourceObject(qualifiedName, kind);
 		classLoader.add(qualifiedName, file);
 		fileOutObjects.put(qualifiedName,file);
 		return file;
@@ -58,7 +54,7 @@ public class DynamicForwardingJavaFileManager extends ForwardingJavaFileManager<
 	public Iterable<JavaFileObject> list(Location location, String packageName, Set<Kind> kinds, boolean recurse)
 			throws IOException {
 		Iterable<JavaFileObject> result = super.list(location, packageName, kinds, recurse);
-		ArrayList<JavaFileObject> files = new ArrayList<JavaFileObject>();
+		ArrayList<JavaFileObject> files = new ArrayList<>();
 		if (location == StandardLocation.CLASS_PATH && kinds.contains(Kind.CLASS)) {
 			for (JavaFileObject file : fileObjects.values()) {
 				if (file.getKind() == Kind.CLASS && file.getName().startsWith(packageName))
@@ -80,7 +76,7 @@ public class DynamicForwardingJavaFileManager extends ForwardingJavaFileManager<
 	@Override
 	public String inferBinaryName(Location location, JavaFileObject file) {
 		String result;
-		if (file instanceof DynamicSimpleFileObject)
+		if (file instanceof JavaSourceObject)
 			result = file.getName();
 		else
 			result = super.inferBinaryName(location, file);
@@ -88,12 +84,8 @@ public class DynamicForwardingJavaFileManager extends ForwardingJavaFileManager<
 	}
 
 	public void putFileForInput(StandardLocation sourcePath, String packageName, String relativeName,
-			JavaFileObject source) {
+			JavaSourceObject source) {
 		fileObjects.put(uri(sourcePath, packageName, relativeName), source);
-	}
-
-	public ClassLoader getClassLoader() {
-		return classLoader;
 	}
 
 	private URI uri(Location location, String packageName, String relativeName) {

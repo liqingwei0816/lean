@@ -28,7 +28,7 @@ public class DynamicClassLoader extends ClassLoader {
 	protected Class<?> findClass(String name) throws ClassNotFoundException {
 		JavaFileObject file = classes.get(name);
 		if (file != null) {
-			byte[] bytes = ((DynamicSimpleFileObject) file).getByteCode();
+			byte[] bytes = ((JavaSourceObject) file).getBytes();
 			return defineClass(name, bytes, 0, bytes.length);
 		}
 		try {
@@ -42,9 +42,9 @@ public class DynamicClassLoader extends ClassLoader {
 	public InputStream getResourceAsStream(String name) {
 		if (name.endsWith(".class")) {
 			String qualifiedClassName = name.substring(0, name.length() - ".class".length()).replace('/', '.');
-			DynamicSimpleFileObject file = (DynamicSimpleFileObject) classes.get(qualifiedClassName);
+			JavaSourceObject file = (JavaSourceObject) classes.get(qualifiedClassName);
 			if (file != null) {
-				return new ByteArrayInputStream(file.getByteCode());
+				return new ByteArrayInputStream(file.getBytes());
 			}
 		}
 		return super.getResourceAsStream(name);
