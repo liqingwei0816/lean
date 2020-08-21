@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.github.compiler.impl;
 
 
@@ -13,10 +10,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
-/**
- * @author deniz.toktay
- *
- */
 public class DynamicJavaFileManager implements JavaFileManager {
     private final ClassLoader classLoader;
     private final StandardJavaFileManager standardJavaFileManager;

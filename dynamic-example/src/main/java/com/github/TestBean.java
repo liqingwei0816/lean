@@ -1,14 +1,10 @@
 package com.github;
 
 import com.github.compiler.DynamicCompiler;
-import com.github.compiler.exceptions.DynamicCompilerException;
-import com.github.compiler.impl.DynamicForwardingJavaFileManager;
 import com.github.compiler.impl.JavaSourceObject;
 import org.springframework.stereotype.Component;
 
-import javax.tools.DiagnosticCollector;
-import javax.tools.JavaFileObject;
-import java.util.Locale;
+import java.util.Collections;
 import java.util.Map;
 
 @Component
@@ -31,27 +27,14 @@ public class TestBean {
                 "        this.bbb = bbb;\n" +
                 "    }\n" +
                 "}\n";
-        try {
-            Boolean compile = compiler.compile("com.github.Pojo1", source);
-            DynamicForwardingJavaFileManager javaFileManager = compiler.getJavaFileManager();
-            DiagnosticCollector<JavaFileObject> diagnostic = compiler.getDiagnostic();
-            diagnostic.getDiagnostics().forEach(s -> {
-                String message = s.getMessage(Locale.getDefault());
-                System.out.println(message);
+        Boolean compile = compiler.compile(Collections.singletonList(new JavaSourceObject("com.github.Pojo1", source)));
+        if (compile){
+            Map<String, JavaSourceObject> fileOutObjects = compiler.getJavaFileManager().getFileOutObjects();
+            fileOutObjects.forEach((key,fileOutObject)->{
+                byte[] byteCode = fileOutObject.getBytes();
+                System.out.println(key+""   +byteCode.length);
             });
-            Map<String, JavaSourceObject> fileOutObjects1 = javaFileManager.getFileOutObjects();
-            for (String s : fileOutObjects1.keySet()) {
-                JavaSourceObject javaFileObject = fileOutObjects1.get(s);
-                byte[] byteCode = javaFileObject.getBytes();
-                System.out.println(byteCode.length);
-            }
-
-        } catch (DynamicCompilerException e) {
-            e.printStackTrace();
         }
-
-
     }
-
 
 }

@@ -23,6 +23,9 @@
             <artifactId>sorcerer-javac</artifactId>
             <version>${javac.compiler.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
     </dependencies>
-
 </project>
