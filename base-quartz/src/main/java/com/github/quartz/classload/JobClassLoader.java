@@ -4,6 +4,9 @@ import com.github.quartz.mapper.DynamicJobService;
 import com.github.util.SpringUtil;
 
 public class JobClassLoader extends ClassLoader {
+    public JobClassLoader(){
+        super(JobClassLoader.class.getClassLoader());
+    }
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
@@ -13,7 +16,8 @@ public class JobClassLoader extends ClassLoader {
         if (bytes!=null){
             return this.defineClass(name,bytes,0,bytes.length);
         }else {
-            throw new ClassNotFoundException("数据库中不存在["+name+"]的记录");
+           return super.findClass(name);
+            //throw new ClassNotFoundException("数据库中不存在["+name+"]的记录");
         }
     }
 }

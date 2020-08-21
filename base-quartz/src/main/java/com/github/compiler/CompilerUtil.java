@@ -1,15 +1,15 @@
 package com.github.compiler;
 
 import lombok.extern.slf4j.Slf4j;
+import org.edtoktay.dynamic.compiler.DynamicCompiler;
+import org.edtoktay.dynamic.compiler.exceptions.DynamicCompilerException;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import javax.tools.*;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.net.URI;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 动态编译工具类
@@ -30,7 +30,15 @@ public class CompilerUtil {
         }
     }
 
-    public static byte[] compileOne(String className, String source) {
+    public static byte[] compileOne(String className, String source) throws DynamicCompilerException, IllegalAccessException, InstantiationException {
+
+        DiagnosticCollector<JavaFileObject> errs = new DiagnosticCollector<>();
+        DynamicCompiler<QuartzJobBean> compiler = new DynamicCompiler<>(CompilerUtil.class.getClassLoader(), Arrays.asList("-target", "1.8"));
+
+            Class<QuartzJobBean> clazz = compiler.compile(className, source, errs, QuartzJobBean.class);
+        QuartzJobBean quartzJobBean = clazz.newInstance();
+        System.out.println("新编译处理完成:"+quartzJobBean.getClass().getName());
+
         Map<String, JavaSourceObject> compile = compile(Collections.singletonList(new JavaSourceObject(className, source)));
         JavaSourceObject javaClassObject = compile.get(className);
         return javaClassObject.getBytes();
@@ -84,7 +92,7 @@ public class CompilerUtil {
             super(standardManager);
         }
 
-        private Map<String, JavaSourceObject> classMap = new HashMap<>();
+        private final Map<String, JavaSourceObject> classMap = new HashMap<>();
 
         public Map<String, JavaSourceObject> getClassMap() {
             return classMap;

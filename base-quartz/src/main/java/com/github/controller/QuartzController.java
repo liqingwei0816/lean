@@ -73,7 +73,7 @@ public class QuartzController {
             }
             return ResultUtils.success();
         } catch (Exception e) {
-            return ResultUtils.error("job删除操作失败\n" + e.getMessage());
+            return ResultUtils.error("job ["+operation+"] 操作失败\n" + e.getMessage());
         }
     }
 
