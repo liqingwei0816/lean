@@ -3,15 +3,13 @@
  */
 package com.github.compiler.exceptions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 /**
  * @author deniz.toktay
  *
  */
 public class DynamicCompilerException extends Exception {
-	private static final Logger log = LoggerFactory.getLogger(DynamicCompilerException.class);
 	/**
 	 * 
 	 */
@@ -21,7 +19,7 @@ public class DynamicCompilerException extends Exception {
 	 * 
 	 */
 	public DynamicCompilerException() {
-		log.error("Dynamic Compiler Exception Occured");
+
 	}
 
 	/**
@@ -29,7 +27,6 @@ public class DynamicCompilerException extends Exception {
 	 */
 	public DynamicCompilerException(String message) {
 		super(message);
-		log.error(message);
 	}
 
 	/**
@@ -37,7 +34,6 @@ public class DynamicCompilerException extends Exception {
 	 */
 	public DynamicCompilerException(Throwable cause) {
 		super(cause);
-		log.error("", cause);
 	}
 
 	/**
@@ -46,7 +42,6 @@ public class DynamicCompilerException extends Exception {
 	 */
 	public DynamicCompilerException(String message, Throwable cause) {
 		super(message, cause);
-		log.error(message, cause);
 	}
 
 	/**
@@ -58,7 +53,6 @@ public class DynamicCompilerException extends Exception {
 	public DynamicCompilerException(String message, Throwable cause, boolean enableSuppression,
 			boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
-		log.error(message, cause);
 	}
 
 }

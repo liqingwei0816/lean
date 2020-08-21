@@ -3,7 +3,8 @@
  */
 package com.github.compiler.impl;
 
-import org.edtoktay.dynamic.compiler.utils.InternalClassFinder;
+
+import com.github.compiler.InternalClassFinder;
 
 import javax.tools.*;
 import javax.tools.JavaFileObject.Kind;

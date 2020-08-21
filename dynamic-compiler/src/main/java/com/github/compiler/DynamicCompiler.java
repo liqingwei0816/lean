@@ -9,8 +9,6 @@ import com.github.compiler.impl.DynamicClassLoader;
 import com.github.compiler.impl.DynamicForwardingJavaFileManager;
 import com.github.compiler.impl.DynamicJavaFileManager;
 import com.github.compiler.impl.DynamicSimpleFileObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.tools.*;
 import javax.tools.JavaCompiler.CompilationTask;
@@ -21,13 +19,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 /**
  * @author deniz.toktay
  *
  */
 public class DynamicCompiler<T> {
-	private final Logger logger = LoggerFactory.getLogger(DynamicCompiler.class);
+	private static final Logger logger = Logger.getLogger(DynamicCompiler.class.getName());
 	public static final String JAVA_EXTENSION = ".java";
 	private final DynamicClassLoader classLoader;
 	private final JavaCompiler javaCompiler;
@@ -45,7 +44,7 @@ public class DynamicCompiler<T> {
 		this.classLoader = new DynamicClassLoader(parentClassLoader);
 		diags = new DiagnosticCollector<>();
 		StandardJavaFileManager standardJavaFileManager = javaCompiler.getStandardFileManager(diags, null, null);
-		final JavaFileManager fileManager = new DynamicJavaFileManager(classLoader, standardJavaFileManager);
+		final JavaFileManager fileManager = new DynamicJavaFileManager(getClass().getClassLoader(), standardJavaFileManager);
 		javaFileManager = new DynamicForwardingJavaFileManager(fileManager, classLoader);
 		this.options = new ArrayList<>();
 		if (options != null) {
@@ -54,21 +53,14 @@ public class DynamicCompiler<T> {
 		logger.info("Dynamic Compiler Initialized");
 	}
 
-	public synchronized Class<T> compile(final String qualifiedClassName, final CharSequence javaSource,
-			final DiagnosticCollector<JavaFileObject> diagnosticsList, final Class<?>... types)
+	public synchronized Boolean compile(final String qualifiedClassName, final CharSequence javaSource)
 			throws DynamicCompilerException {
-		if (diagnosticsList != null)
-			diags = diagnosticsList;
-		else
-			diags = new DiagnosticCollector<>();
 		Map<String, CharSequence> classes = new HashMap<>(1);
 		classes.put(qualifiedClassName, javaSource);
-		Map<String, Class<T>> compiled = compile(classes, diagnosticsList);
-		return compiled.get(qualifiedClassName);
+		return compile(classes);
 	}
 
-	public synchronized Map<String, Class<T>> compile(Map<String, CharSequence> classes,
-			DiagnosticCollector<JavaFileObject> diagnosticsList) throws DynamicCompilerException {
+	public synchronized Boolean compile(Map<String, CharSequence> classes) throws DynamicCompilerException {
 		List<JavaFileObject> sources = new ArrayList<>();
 		for (Entry<String, CharSequence> entry : classes.entrySet()) {
 			String qualifiedClassName = entry.getKey();
@@ -91,26 +83,11 @@ public class DynamicCompiler<T> {
 		if (result == null || !result) {
 			throw new DynamicCompilerException("Compilation failed.");
 		}
-		try {
-			Map<String, Class<T>> compiled = new HashMap<>();
-			for (String qualifiedClassName : classes.keySet()) {
-				final Class<T> newClass = loadClass(qualifiedClassName);
-				compiled.put(qualifiedClassName, newClass);
-			}
-			return compiled;
-		} catch (ClassNotFoundException e) {
-			throw new DynamicCompilerException("Class Not Found in Compile ", e);
-		} catch (IllegalArgumentException e) {
-			throw new DynamicCompilerException("Illegal Argument in Compile ", e);
-		} catch (SecurityException e) {
-			throw new DynamicCompilerException("Security in Reflection in Compile ", e);
-		}
+		return true;
 	}
 
-	@SuppressWarnings("unchecked")
-	public Class<T> loadClass(String qualifiedClassName) throws ClassNotFoundException {
-		return (Class<T>) classLoader.loadClass(qualifiedClassName);
-	}
+
+
 
 	public static URI toURI(String name) {
 		try {
@@ -124,7 +101,4 @@ public class DynamicCompiler<T> {
 		return javaFileManager;
 	}
 
-	public ClassLoader getClassLoader() {
-		return javaFileManager.getClassLoader();
-	}
 }

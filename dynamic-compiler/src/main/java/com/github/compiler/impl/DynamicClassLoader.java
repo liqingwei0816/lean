@@ -28,7 +28,7 @@ public class DynamicClassLoader extends ClassLoader {
 	protected Class<?> findClass(String name) throws ClassNotFoundException {
 		JavaFileObject file = classes.get(name);
 		if (file != null) {
-			byte[] bytes = ((org.edtoktay.dynamic.compiler.impl.DynamicSimpleFileObject) file).getByteCode();
+			byte[] bytes = ((DynamicSimpleFileObject) file).getByteCode();
 			return defineClass(name, bytes, 0, bytes.length);
 		}
 		try {
@@ -42,7 +42,7 @@ public class DynamicClassLoader extends ClassLoader {
 	public InputStream getResourceAsStream(String name) {
 		if (name.endsWith(".class")) {
 			String qualifiedClassName = name.substring(0, name.length() - ".class".length()).replace('/', '.');
-			org.edtoktay.dynamic.compiler.impl.DynamicSimpleFileObject file = (org.edtoktay.dynamic.compiler.impl.DynamicSimpleFileObject) classes.get(qualifiedClassName);
+			DynamicSimpleFileObject file = (DynamicSimpleFileObject) classes.get(qualifiedClassName);
 			if (file != null) {
 				return new ByteArrayInputStream(file.getByteCode());
 			}
