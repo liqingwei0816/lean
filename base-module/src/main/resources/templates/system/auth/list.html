@@ -85,7 +85,7 @@
                 {align: 'center',width:120, toolbar: '#treeTableBar', title: '操作'}
             ],
             reqData: function (data, callback) {
-                $.get('/auth/dataList', function (res) {
+                $.get('./dataList', function (res) {
                     callback(res.data);
                 });
             },
@@ -102,7 +102,7 @@
             if (obj.value){
             $.ajax({
                 type: "post",
-                url: '/auth/addOrUpdate',
+                url: './addOrUpdate',
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(param),
                 success: function (result) {
@@ -133,7 +133,7 @@
                         let load = layer.load();
                         $.ajax({
                             type: "post",
-                            url: '/auth/addOrUpdate',
+                            url: './addOrUpdate',
                             contentType: "application/json; charset=utf-8",
                             data: JSON.stringify(formData),
                             success: function (result) {
@@ -156,7 +156,7 @@
                     let load = layer.load();
                     $.ajax({
                         type: "post",
-                        url: '/auth/delete',
+                        url: './delete',
                         contentType: "application/json; charset=utf-8",
                         data: JSON.stringify(data),
                         success: function (result) {

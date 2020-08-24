@@ -155,7 +155,7 @@
         let $table = table.render({
             height: 'full-0',
             elem: '#table',
-            url: '/quartz/jobs',
+            url: './jobs',
             toolbar: '#toolbar',
             defaultToolbar: [{
                 title: '刷新'
@@ -255,7 +255,7 @@
                 let load = layer.load();
                 $.ajax({
                     type: "post",
-                    url: '/quartz/' + url,
+                    url: './' + url,
                     contentType: "application/json; charset=utf-8",
                     data: JSON.stringify(data),
                     success: function (result) {
@@ -310,11 +310,11 @@
             if (data) {
                 tplData = {update: 'readonly'};
                 //更新
-                url = '/quartz/update';
+                url = './update';
             } else {
                 tplData = {};
                 //添加
-                url = '/quartz/add';
+                url = './add';
             }
             layer.open({
                 offset: 't',

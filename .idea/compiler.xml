@@ -7,14 +7,15 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="base-generator" />
+        <module name="base-module" />
+        <module name="util" />
+        <module name="base-quartz" />
+        <module name="dynamic-compiler" />
+        <module name="dynamic-example" />
         <module name="demo" />
         <module name="base-base" />
-        <module name="base-quartz" />
-        <module name="base-generator" />
         <module name="base" />
-        <module name="base-module" />
-        <module name="demo1" />
-        <module name="util" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -31,7 +32,8 @@
       <module name="base-module" options="-parameters" />
       <module name="base-quartz" options="-parameters" />
       <module name="demo" options="-parameters" />
-      <module name="demo1" options="-parameters" />
+      <module name="dynamic-compiler" options="-parameters" />
+      <module name="dynamic-example" options="-parameters" />
       <module name="jwt-module" options="-parameters" />
       <module name="util" options="-parameters" />
     </option>

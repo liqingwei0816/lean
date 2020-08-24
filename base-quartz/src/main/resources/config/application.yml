@@ -32,4 +32,3 @@ spring:
             isClustered: true #打开群集功能
     auto-startup: true
     wait-for-jobs-to-complete-on-shutdown: true
-
