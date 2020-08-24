@@ -23,7 +23,7 @@ public class CompilerUtil {
 
         }else {
             String collect = compiler.getDiagnostic().getDiagnostics().stream().map(Object::toString).collect(Collectors.joining("\n"));
-            throw new Exception("编译失败:"+collect.replaceAll("\n","<br>"));
+            throw new Exception("编译失败:\n"+collect);
         }
     }
 
