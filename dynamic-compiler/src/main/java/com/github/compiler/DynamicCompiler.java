@@ -10,10 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.tools.*;
 import javax.tools.JavaCompiler.CompilationTask;
-import java.io.StringWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class DynamicCompiler {
     private static final Logger logger = LoggerFactory.getLogger(DynamicCompiler.class);
@@ -22,7 +20,6 @@ public class DynamicCompiler {
     private final List<String> options;
     private final DiagnosticCollector<JavaFileObject> diagnostic;
     private final DynamicForwardingJavaFileManager javaFileManager;
-
     public DynamicCompiler() {
         super();
         logger.info("Dynamic Compiler Initializing");
@@ -42,22 +39,15 @@ public class DynamicCompiler {
      * @param classes map
      */
     public synchronized Boolean compile(List<JavaSourceObject> classes) {
-        StringWriter stringWriter = new StringWriter();
-        final CompilationTask task = javaCompiler.getTask(stringWriter, javaFileManager, diagnostic, options, null, classes);
+        final CompilationTask task = javaCompiler.getTask(null, javaFileManager, diagnostic, options, null, classes);
         return task.call();
-    }
-
-
-    public static URI toURI(String name) {
-        try {
-            return new URI(name);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public DynamicForwardingJavaFileManager getJavaFileManager() {
         return javaFileManager;
     }
 
+    public DiagnosticCollector<JavaFileObject> getDiagnostic() {
+        return diagnostic;
+    }
 }

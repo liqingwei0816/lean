@@ -45,11 +45,10 @@
 
         <!--动态编译-->
         <dependency>
-            <groupId>org.kohsuke.sorcerer</groupId>
-            <artifactId>sorcerer-javac</artifactId>
-            <version>${javac.compiler.version}</version>
+            <groupId>com.github</groupId>
+            <artifactId>dynamic-compiler</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>

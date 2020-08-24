@@ -2,9 +2,9 @@ package com.github.compiler.impl;
 
 import javax.tools.JavaFileObject;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
-import java.util.Collections;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,7 +54,4 @@ public class DynamicClassLoader extends ClassLoader {
 		classes.put(qualifiedName, file);
 	}
 
-	public Collection<? extends JavaFileObject> files() {
-		return Collections.unmodifiableCollection(classes.values());
-	}
 }

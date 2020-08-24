@@ -9,13 +9,11 @@ public   class JavaSourceObject extends SimpleJavaFileObject {
     //此处为接受Java源代码相关
     //接受源代码
     private CharSequence content;
-    //类名称
-    private String className;
+
     public JavaSourceObject(String className, CharSequence content) {
         //不明用处
         super(URI.create("string:///" + className.replace('.', '/') + Kind.SOURCE.extension), Kind.SOURCE);
         this.content = content;
-        this.className = className;
     }
 
     @Override
@@ -33,10 +31,6 @@ public   class JavaSourceObject extends SimpleJavaFileObject {
     //获取编译后的字节码
     public byte[] getBytes() {
         return bos.toByteArray();
-    }
-
-    public String getClassName() {
-        return className;
     }
 
     @Override
