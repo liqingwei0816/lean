@@ -47,3 +47,46 @@ jobDataMap 任务管理页面中的jobData已data为可以原样存入数据中�
 
 ## 日志管理模块
     日志管理模块 logback
+    
+## 动态编译工具 支持spring boot jar in jar 方式部署 dynamic-compiler模块
+* 使用方式 工具类 使用时最好将dynamic-compiler模块中的类直接放入项目中,便于维护,使用对应类时可以自定义类加载器从指定位置获取类文件,本项目为放入数据库中
+```java
+import com.github.compiler.impl.JavaSourceObject;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+/**
+ * 动态编译工具类
+ * 由内存到内存的动态编译,
+ */
+@Slf4j
+public class CompilerUtil {
+
+    public static Map<String, JavaSourceObject> compile(List<JavaSourceObject> javaSourceObjects) throws Exception {
+        DynamicCompiler compiler = new DynamicCompiler();
+        Boolean compile = compiler.compile(javaSourceObjects);
+        if (compile){
+            return compiler.getJavaFileManager().getFileOutObjects();
+
+        }else {
+            String collect = compiler.getDiagnostic().getDiagnostics().stream().map(Object::toString).collect(Collectors.joining("\n"));
+            throw new Exception("编译失败:\n"+collect);
+        }
+    }
+
+    /**
+     * 不支持内部类
+     * @param className 类名
+     * @param source 源码
+     */
+    public static byte[] compileOne(String className, String source) throws Exception {
+        Map<String, JavaSourceObject> compile = compile(Collections.singletonList(new JavaSourceObject(className, source)));
+        JavaSourceObject javaSourceObject = compile.get(className);
+        return javaSourceObject.getBytes();
+    }
+}
+```

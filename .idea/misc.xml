@@ -14,7 +14,6 @@
         <option value="$PROJECT_DIR$/base-quartz/pom.xml" />
         <option value="$PROJECT_DIR$/util/pom.xml" />
         <option value="$PROJECT_DIR$/dynamic-compiler/pom.xml" />
-        <option value="$PROJECT_DIR$/dynamic-example/pom.xml" />
       </list>
     </option>
   </component>

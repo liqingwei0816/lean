@@ -12,7 +12,6 @@
         <module name="util" />
         <module name="base-quartz" />
         <module name="dynamic-compiler" />
-        <module name="dynamic-example" />
         <module name="demo" />
         <module name="base-base" />
         <module name="base" />
@@ -21,6 +20,7 @@
     <bytecodeTargetLevel>
       <module name="base" target="1.8" />
       <module name="base-base" target="1.8" />
+      <module name="dynamic-example" target="1.8" />
       <module name="jwt-module" target="1.8" />
     </bytecodeTargetLevel>
   </component>

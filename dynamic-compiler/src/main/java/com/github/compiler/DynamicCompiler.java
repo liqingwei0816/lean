@@ -20,6 +20,7 @@ public class DynamicCompiler {
     private final List<String> options;
     private final DiagnosticCollector<JavaFileObject> diagnostic;
     private final DynamicForwardingJavaFileManager javaFileManager;
+
     public DynamicCompiler() {
         super();
         logger.info("Dynamic Compiler Initializing");

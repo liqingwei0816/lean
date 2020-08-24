@@ -15,9 +15,6 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.stream.Stream;
 
-/**
- * @author deniz.toktay
- */
 public class InternalClassFinder {
     private final ClassLoader classLoader;
     private static final String CLASS_EXTENSION = ".class";

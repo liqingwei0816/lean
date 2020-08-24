@@ -5,7 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.net.URI;
 
-public   class JavaSourceObject extends SimpleJavaFileObject {
+public class JavaSourceObject extends SimpleJavaFileObject {
     //此处为接受Java源代码相关
     //接受源代码
     private CharSequence content;
@@ -28,6 +28,7 @@ public   class JavaSourceObject extends SimpleJavaFileObject {
     public JavaSourceObject(String name, Kind kind) {
         super(URI.create("string:///" + name.replace('.', '/') + kind.extension), kind);
     }
+
     //获取编译后的字节码
     public byte[] getBytes() {
         return bos.toByteArray();
