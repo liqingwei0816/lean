@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://10.3.1.16:3306/system?zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2b8&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://10.3.1.16:3306/system?zeroDateTimeBehavior=convertToNull&allowPublicKeyRetrieval=true
     username: root
     password: hqh1@MDN@develop
      #url: jdbc:mysql://localhost:3306/guttv_ums?

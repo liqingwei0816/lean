@@ -1,25 +1,45 @@
 <!DOCTYPE html>
 <!-- saved from url=(0027)http://127.0.0.1:8080/login -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
     <title>Please sign in</title>
+    <style type="text/css">
+        .closeIcon {
+            height: 1rem;
+            width: 1rem;
+        }
+        .closeIcon {
+            display: inline-block;
+            content: "";
+            background-image: url("icon/x.svg");
+            background-repeat: no-repeat;
+            background-size: 1rem 1rem;
+        }
+    </style>
 </head>
 <body>
+<span class="closeIcon" data-toggle="tooltip" title="关闭"></span>
+
 <div class="container">
     <form class="form-signin" method="post" action="login">
         <h2 class="form-signin-heading">Please sign in</h2>
         <p>
             <label for="username" class="sr-only">Username</label>
-            <input type="text" id="username" name="username" class="form-control" placeholder="Username" required="" autofocus="">
+            <input type="text" id="username" name="username" class="form-control" placeholder="Username" required=""
+                   autofocus="">
         </p>
         <p>
             <label for="password" class="sr-only">Password</label>
-            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required="">
+            <input type="password" id="password" name="password" class="form-control" placeholder="Password"
+                   required="">
         </p>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     </form>
 </div>
-</body></html>
+</body>
+</html>

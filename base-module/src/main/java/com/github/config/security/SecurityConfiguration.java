@@ -69,7 +69,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         auths.stream()
                 .filter(a -> !StringUtils.isEmpty(a.getUrl()) && !a.getUrl().trim().isEmpty())
                 .forEach(e -> urlRegistry.antMatchers(e.getUrl().split(";")).hasAuthority(e.getAuthCode()));
-
+        urlRegistry.antMatchers("/icon/**").permitAll();
         http.authorizeRequests().antMatchers("/login**","/loginPage", "/codeLogin").permitAll().anyRequest().authenticated();
         //自定义权限不足是返回信息
         http.exceptionHandling(exceptionHandlingCustomizer -> exceptionHandlingCustomizer.accessDeniedHandler((httpServletRequest, httpServletResponse, e) -> {

@@ -1,9 +1,9 @@
 spring:
   datasource:
     quartz:
-      url: jdbc:mysql://10.3.1.16:3306/quartz?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://localhost:3306/quartz?serverTimezone=UTC
       username: root
-      password: hqh1@MDN@develop
+      password: 123456
     druid:
       stat-view-servlet:
         enabled: true
