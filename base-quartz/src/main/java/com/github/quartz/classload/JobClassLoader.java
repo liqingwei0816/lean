@@ -3,6 +3,9 @@ package com.github.quartz.classload;
 import com.github.quartz.mapper.DynamicJobService;
 import com.github.util.SpringUtil;
 
+/**
+ * 加载外部类文件，可以使用当前项目中的类
+ */
 public class JobClassLoader extends ClassLoader {
     public JobClassLoader(){
         super(JobClassLoader.class.getClassLoader());
