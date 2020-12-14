@@ -20,7 +20,6 @@ public class CompilerUtil {
         Boolean compile = compiler.compile(javaSourceObjects);
         if (compile){
             return compiler.getJavaFileManager().getFileOutObjects();
-
         }else {
             String collect = compiler.getDiagnostic().getDiagnostics().stream().map(Object::toString).collect(Collectors.joining("\n"));
             throw new Exception("编译失败:\n"+collect);
