@@ -1,0 +1,12 @@
+dubbo:
+  application:
+    name: dubbo-consumer
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    address: nacos://127.0.0.1:8888
+  config-center:
+    address: nacos://127.0.0.1:8888
+  metadata-report:
+    address: nacos://127.0.0.1:8888
